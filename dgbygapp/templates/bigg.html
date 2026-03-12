@@ -1,0 +1,640 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-vh-100 d-flex flex-column">
+    <div class="flex-grow-1">
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header-section">
+                <div class="text-center">
+                    <h1 class="title mb-3">
+                        <i class="fas fa-search me-2"></i>
+                        <span class="text-primary">Search</span> GEMs
+                    </h1>
+                    <p class="subtitle-bigg">
+                        Search for models, reactions, metabolites, and genes using BiGG IDs or names
+                    </p>
+                </div>
+            </div>
+
+            <!-- Search Form -->
+            <div class="search-section">
+                <div class="search-container">
+                    <form method="POST" id="searchForm">
+                        {{ form.hidden_tag() }}
+                        <div class="search-input-group">
+                            {{ form.query(class="search-input", placeholder="Enter model name, reaction ID, metabolite name...", id="searchInput") }}
+                            {{ form.submit(class="search-button") }}
+                        </div>
+                        <div class="model-filter-group mt-3">
+                            <label for="model_filter" class="form-label text-muted">Filter by Model (Optional):</label>
+                            {{ form.model_filter(class="form-select", id="model_filter") }}
+                        </div>
+                        {% if form.query.errors %}
+                            <div class="error-message">
+                                {% for error in form.query.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+                
+                <!-- Search Examples -->
+                <div class="search-examples">
+                    <div class="examples-container">
+                        <span class="examples-title">Examples:</span>
+                        <span class="example-item" data-search="Recon3D">Recon3D</span>
+                        <span class="example-item" data-search="3-ketoacyl-CoA thiolase">3-ketoacyl-CoA thiolase</span>
+                        <span class="example-item" data-search="10fthf5glu_l">10fthf5glu_l</span>
+                        <span class="example-item" data-search="LDHC">LDHC</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Display -->
+            {% if error %}
+            <div class="row mb-4">
+                <div class="col-lg-8 mx-auto">
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Search Results -->
+            {% if search_results %}
+            <div class="row mb-4">
+                <div class="col-lg-8 mx-auto">
+                    <div class="alert alert-info">
+                        <strong>Search Results for "{{ search_results.query }}"</strong><br>
+                        Found {{ search_results.summary.total_models_found }} models, 
+                        {{ search_results.summary.total_reactions_found }} reactions, 
+                        {{ search_results.summary.total_metabolites_found }} metabolites,
+                        {{ search_results.summary.total_genes_found }} genes
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Content -->
+        <div class="row">
+            <div class="col-12">
+                <!-- Models Section -->
+                {% if search_results.models %}
+                <div class="row mb-5">
+                    <div class="col-12">
+                        <h3 class="mb-4">Models ({{ search_results.summary.total_models_found }})</h3>
+                        {% for model in search_results.models %}
+                        <div class="mb-5 p-4 border rounded bigg-model-card">
+                            <h4 class="text-primary mb-3">{{ model.model_id }}
+                                <a href="{{ url_for('api_model_download', model_id=model.model_id) }}" class="btn btn-outline-primary btn-sm ms-2" title="Download result CSV">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </h4>
+                            {% if model.model_stats %}
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="chart-container bigg-chart-card">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="chart-accent-bar chart-accent-bar--green"></div>
+                                            <h6 class="mb-0 fw-bold text-dark">Reaction Classification Overview</h6>
+                                        </div>
+                                        {% if model.chart_filename %}
+                                        <div class="chart-frame">
+                                            {{ model.chart_filename | safe }}
+                                        </div>
+                                        {% else %}
+                                        <div class="text-center text-muted chart-empty-state">
+                                            <div>
+                                                <i class="fas fa-chart-pie fa-3x mb-3 text-muted"></i>
+                                                <p class="mb-0">Chart not available</p>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="chart-container bigg-chart-card">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="chart-accent-bar chart-accent-bar--blue"></div>
+                                            <h6 class="mb-0 fw-bold text-dark">Δ<sub><i>r</i></sub>G° Distribution Analysis</h6>
+                                        </div>
+                                        {% if model.dg_chart_filename %}
+                                        <div class="chart-frame">
+                                            {{ model.dg_chart_filename | safe }}
+                                        </div>
+                                        {% else %}
+                                        <div class="text-center text-muted chart-empty-state">
+                                            <div>
+                                                <i class="fas fa-chart-bar fa-3x mb-3 text-muted"></i>
+                                                <p class="mb-0">No Δ<sub><i>r</i></sub>G° data available</p>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Reaction Classification Explanation -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="reaction-classification-explanation">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="classification-header-accent"></div>
+                                            <h6 class="mb-0 text-primary fw-bold"><i class="fas fa-info-circle me-2"></i>Reaction Classification Guide</h6>
+                                        </div>
+                                         <div class="row g-3">
+                                             <div class="col-lg-3 col-md-6">
+                                                 <div class="classification-card classification-card--boundary">
+                                                     <div class="classification-card-header">
+                                                         <div class="classification-color-dot classification-color-dot--boundary"></div>
+                                                         <strong class="classification-card-title classification-card-title--boundary">Boundary reaction</strong>
+                                                     </div>
+                                                     <small class="text-muted">Reaction involving extracellular metabolites (e.g., exchange).</small>                                                 </div>
+                                             </div>
+                                             <div class="col-lg-3 col-md-6">
+                                                 <div class="classification-card classification-card--unstructured">
+                                                     <div class="classification-card-header">
+                                                         <div class="classification-color-dot classification-color-dot--unstructured"></div>
+                                                         <strong class="classification-card-title classification-card-title--unstructured">Unstructured reaction</strong>
+                                                     </div>
+                                                     <small class="text-muted">Cannot be checked for balance due to missing formulas or charges.</small>
+                                                 </div>
+                                             </div>
+                                             <div class="col-lg-3 col-md-6">
+                                                 <div class="classification-card classification-card--unbalanced">
+                                                     <div class="classification-card-header">
+                                                         <div class="classification-color-dot classification-color-dot--unbalanced"></div>
+                                                         <strong class="classification-card-title classification-card-title--unbalanced">Unbalanced reaction</strong>
+                                                     </div>
+                                                     <small class="text-muted">Has complete data but is not mass or charge balanced.</small>
+                                                 </div>
+                                             </div>
+                                             <div class="col-lg-3 col-md-6">
+                                                 <div class="classification-card classification-card--covered">
+                                                     <div class="classification-card-header">
+                                                         <div class="classification-color-dot classification-color-dot--covered"></div>
+                                                         <strong class="classification-card-title classification-card-title--covered">Covered reaction</strong>
+                                                     </div>
+                                                     <small class="text-muted">Fully defined and balanced; suitable for further analysis.</small>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Model Conditions Information -->
+                            {% if model.conditions %}
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="model-conditions">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="fas fa-thermometer-half text-muted me-2"></i>
+                                            <h6 class="mb-0 text-muted fw-bold">Compartment Conditions</h6>
+                                        </div>
+                                        <div class="row g-2">
+                                            {% for comp, cond in model.conditions.items() %}
+                                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                                <div class="condition-compact">
+                                                    <div class="fw-bold text-dark mb-1">{{ comp|title }}</div>
+                                                    <div class="text-muted">
+                                                        <span class="me-2">pH {{ "%.1f"|format(cond.pH) }}</span>
+                                                        <span class="me-2">T {{ "%.0f"|format(cond.T) }}K</span>
+                                                        <span class="me-2">I {{ "%.2f"|format(cond.I) }}M</span>
+                                                        <span class="me-2">pMg {{ "%.0f"|format(cond.pMg) }}</span>
+                                                        <span>E {{ "%.3f"|format(cond.e_potential) }}V</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Reactions Section -->
+                {% if search_results.reactions %}
+                <div class="row mb-5">
+                    <div class="col-12">
+                        <h3 class="mb-4">Reactions ({{ search_results.summary.total_reactions_found }})</h3>
+                        {% for reaction in search_results.reactions %}
+                        <div class="border bg-light reaction-item" 
+                            data-reaction-id="{{ reaction.reaction_info.id }}" 
+                            data-model-list="{{ reaction.reaction_info.model_list|join(',') }}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="flex-grow-1">
+                                    <strong class="text-success">{{ reaction.reaction_info.id }}</strong>
+                                    {% if reaction.reaction_info.name %}
+                                        <span class="text-muted ms-2 reaction-name">{{ reaction.reaction_info.name }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="ms-3 text-end">
+                                    <button class="btn btn-outline-primary btn-sm toggle-dg-btn" data-reaction-id="{{ reaction.reaction_info.id }}">
+                                        <i class="fas fa-chevron-down"></i> Show Δ<sub><i>r</i></sub>G°
+                                    </button>
+                                    <br>
+                                    <small class="text-muted model-count">{{ reaction.reaction_info.model_list|length }} models</small>
+                                </div>
+                            </div>
+                            
+                            <!-- ΔG Data Section (initially hidden) -->
+                            <div class="dg-data-section mt-3" id="dg-data-{{ reaction.reaction_info.id }}">
+                                <div class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">Loading Δ<sub><i>r</i></sub>G° data...</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Metabolites Section -->
+                {% if search_results.metabolites %}
+                <div class="row mb-5">
+                    <div class="col-12">
+                        <h3 class="mb-4">Metabolites ({{ search_results.summary.total_metabolites_found }})</h3>
+                        {% for metabolite in search_results.metabolites %}
+                        <div class="mb-4 p-4 border rounded bg-light">
+                            <h5 class="text-info mb-3">{{ metabolite.metabolite_info.id }}</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Name:</strong> {{ metabolite.metabolite_info.name }}</p>
+                                    <p class="mb-2"><strong>Universal ID:</strong> {{ metabolite.metabolite_info.universal_id }}</p>
+                                    <p class="mb-2"><strong>Formula:</strong> {{ metabolite.metabolite_info.formula }}</p>
+                                    {% if metabolite.metabolite_info.img_data %}
+                                    <img src="data:image/png;base64,{{ metabolite.metabolite_info.img_data }}"
+                                    alt="Metabolite Image" class="metabolite-image">
+                                    {% else %}
+                                    <div class="text-muted metabolite-image-placeholder">
+                                        <span>No structure image available</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    {% if metabolite.reactions %}
+                                    <h6 class="mb-3">Related Reactions:</h6>
+                                    {% for reaction in metabolite.reactions %}
+                                    <div class="border bg-light reaction-item" 
+                                         data-reaction-id="{{ metabolite.metabolite_info.id }}-{{ reaction.reaction_id }}" 
+                                         data-model-list="{{ reaction.model_list|join(',') }}">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="flex-grow-1">
+                                                <strong class="text-success">{{ reaction.reaction_id }}</strong>
+                                                {% if reaction.name %}
+                                                    <span class="text-muted ms-2 reaction-name">{{ reaction.name }}</span>
+                                                {% endif %}
+                                                <br>
+                                                <small><code>{{ reaction.reaction_string }}</code></small>
+                                            </div>
+                                            <div class="ms-3 text-end">
+                                                <button class="btn btn-outline-primary btn-sm toggle-dg-btn" data-reaction-id="{{ metabolite.metabolite_info.id }}-{{ reaction.reaction_id }}">
+                                                    <i class="fas fa-chevron-down"></i> Show Δ<sub><i>r</i></sub>G°
+                                                </button>
+                                                <br>
+                                                <small class="text-muted model-count">{{ reaction.model_list|length }} models</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- ΔG Data Section (initially hidden) -->
+                                        <div class="dg-data-section mt-3" id="dg-data-{{ metabolite.metabolite_info.id }}-{{ reaction.reaction_id }}">
+                                            <div class="text-center">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                                <p class="mt-2">Loading Δ<sub><i>r</i></sub>G° data...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Genes Section -->
+                {% if search_results.genes %}
+                <div class="row mb-5">
+                    <div class="col-12">
+                        <h3 class="mb-4">Genes ({{ search_results.summary.total_genes_found }})</h3>
+                        {% for gene in search_results.genes %}
+                        <div class="mb-4 p-4 border rounded bigg-model-card">
+                            <h5 class="text-success mb-3">
+                                <i class="fas fa-dna me-2"></i>{{ gene.id }}
+                                {% if gene.name %}
+                                <span class="text-muted">({{ gene.name }})</span>
+                                {% endif %}
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Gene ID:</strong> {{ gene.id }}</p>
+                                    {% if gene.name %}
+                                    <p class="mb-2"><strong>Gene Name:</strong> {{ gene.name }}</p>
+                                    {% endif %}
+                                    <p class="mb-2"><strong>Models:</strong> 
+                                        {% for model in gene.model_list %}
+                                        <span class="badge bg-secondary me-1">{{ model }}</span>
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Associated Reactions:</strong> {{ gene.reactions|length }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Associated Reactions -->
+                            {% if gene.reactions %}
+                            <div class="mt-3">
+                                <h6 class="text-muted mb-2">Associated Reactions:</h6>
+                                <div class="row">
+                                    {% for reaction in gene.reactions[:5] %}
+                                    <div class="col-md-6 mb-2">
+                                        <div class="p-2 bg-white rounded border reaction-chip">
+                                            <strong>{{ reaction.id }}</strong>
+                                            {% if reaction.name %}
+                                            <br><span class="text-muted">{{ reaction.name }}</span>
+                                            {% endif %}
+                                            {% if reaction.gpr_info %}
+                                            <br><small class="text-info">
+                                                {% for gpr_item in reaction.gpr_info %}
+                                                GPR: {{ gpr_item.gpr }} 
+                                                {% if gpr_item.models %}
+                                                ({{ gpr_item.models|join(', ') }})
+                                                {% endif %}
+                                                {% if not loop.last %}<br>{% endif %}
+                                                {% endfor %}
+                                            </small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {% if gene.reactions|length > 5 %}
+                                    <div class="col-12">
+                                        <small class="text-muted">... and {{ gene.reactions|length - 5 }} more reactions</small>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<!-- JavaScript for BiGG search functionality -->
+<script>
+    const BiggSearch = {
+        // 配置常量
+        config: {
+            selectors: {
+                searchResults: '.alert-info',
+                exampleItems: '.example-item',
+                searchInput: '#searchInput',
+                searchForm: '#searchForm',
+                toggleButtons: '.toggle-dg-btn',
+                reactionItems: '.reaction-item',
+                spinnerBorder: '.spinner-border'
+            },
+            classes: {
+                chevronUp: 'fas fa-chevron-up',
+                chevronDown: 'fas fa-chevron-down',
+                hidden: 'd-none'
+            },
+            urls: {
+                reactionData: '/get_reaction_dg_data/'
+            },
+            texts: {
+                showGibbs: 'Show Δ<sub><i>r</i></sub>G°',
+                hideGibbs: 'Hide Δ<sub><i>r</i></sub>G°',
+                loading: 'Loading Δ<sub><i>r</i></sub>G° data...',
+                noData: 'No Δ<sub><i>r</i></sub>G° data found for this reaction in any model.',
+                errorLoading: 'Error loading Δ<sub><i>r</i></sub>G° data: '
+            }
+        },
+
+        // 工具函数
+        utils: {
+            scrollToElement: function(element, options = {}) {
+                const defaultOptions = { behavior: 'smooth', block: 'start' };
+                element.scrollIntoView({ ...defaultOptions, ...options });
+            },
+
+            addHighlightEffect: function(element, duration = 2000) {
+                element.style.transition = 'box-shadow 0.3s ease';
+                element.style.boxShadow = '0 0 20px rgba(13, 110, 253, 0.3)';
+                setTimeout(() => {
+                    element.style.boxShadow = '';
+                }, duration);
+            },
+
+            extractReactionId: function(complexId) {
+                return complexId.includes('-') ? complexId.split('-').slice(-1)[0] : complexId;
+            },
+
+            buildUrl: function(baseUrl, reactionId, modelList) {
+                let url = baseUrl + reactionId;
+                if (modelList && modelList.trim()) {
+                    url += '?model_list=' + encodeURIComponent(modelList);
+                }
+                return url;
+            }
+        },
+
+        // 搜索结果处理
+        searchResults: {
+            init: function() {
+                const searchResults = document.querySelector(BiggSearch.config.selectors.searchResults);
+                if (searchResults && searchResults.textContent.includes('Search Results for')) {
+                    BiggSearch.utils.scrollToElement(searchResults);
+                    BiggSearch.utils.addHighlightEffect(searchResults);
+                }
+            }
+        },
+
+        // 示例链接处理
+        examples: {
+            init: function() {
+                const exampleItems = document.querySelectorAll(BiggSearch.config.selectors.exampleItems);
+                const searchInput = document.getElementById('searchInput');
+                const searchForm = document.getElementById('searchForm');
+
+                exampleItems.forEach(function(item) {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const searchTerm = this.getAttribute('data-search');
+                        searchInput.value = searchTerm;
+
+                        if (searchForm) {
+                            const submitButton = searchForm.querySelector('input[type="submit"]');
+                            if (submitButton) {
+                                submitButton.click();
+                            } else {
+                                searchForm.submit();
+                            }
+                        }
+                    });
+                });
+            }
+        },
+
+        // ΔG数据处理
+        reactionData: {
+            init: function() {
+                const buttons = document.querySelectorAll(BiggSearch.config.selectors.toggleButtons);
+                buttons.forEach(function(button) {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        BiggSearch.reactionData.toggleSection(this);
+                    });
+                });
+            },
+
+            toggleSection: function(button) {
+                const reactionId = button.getAttribute('data-reaction-id');
+                const dgSection = document.getElementById('dg-data-' + reactionId);
+
+                if (!dgSection) return;
+
+                const isHidden = dgSection.style.display === 'none' || dgSection.style.display === '';
+
+                if (isHidden) {
+                    BiggSearch.reactionData.showSection(button, dgSection, reactionId);
+                } else {
+                    BiggSearch.reactionData.hideSection(button, dgSection);
+                }
+            },
+
+            showSection: function(button, dgSection, reactionId) {
+                dgSection.style.display = 'block';
+                button.innerHTML = `<i class="${BiggSearch.config.classes.chevronUp}"></i> ${BiggSearch.config.texts.hideGibbs}`;
+
+                const spinner = dgSection.querySelector(BiggSearch.config.selectors.spinnerBorder);
+                if (spinner) {
+                    BiggSearch.reactionData.loadData(reactionId, dgSection);
+                }
+            },
+
+            hideSection: function(button, dgSection) {
+                dgSection.style.display = 'none';
+                button.innerHTML = `<i class="${BiggSearch.config.classes.chevronDown}"></i> ${BiggSearch.config.texts.showGibbs}`;
+            },
+
+            loadData: function(reactionId, dgSection) {
+                const reactionItem = dgSection.closest(BiggSearch.config.selectors.reactionItems);
+                const modelList = reactionItem ? reactionItem.getAttribute('data-model-list') : '';
+                const actualReactionId = BiggSearch.utils.extractReactionId(reactionId);
+                const url = BiggSearch.utils.buildUrl(BiggSearch.config.urls.reactionData, actualReactionId, modelList);
+
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network error: ' + response.status);
+                        return response.json();
+                    })
+                    .then(data => BiggSearch.reactionData.handleResponse(data, dgSection))
+                    .catch(error => BiggSearch.reactionData.handleError(error, dgSection));
+            },
+
+            handleResponse: function(data, dgSection) {
+                if (data.success && data.models_data && data.models_data.length > 0) {
+                    dgSection.innerHTML = BiggSearch.reactionData.createTable(data.models_data);
+                } else {
+                    dgSection.innerHTML = BiggSearch.reactionData.createWarning(BiggSearch.config.texts.noData);
+                }
+            },
+
+            handleError: function(error, dgSection) {
+                dgSection.innerHTML = BiggSearch.reactionData.createError(BiggSearch.config.texts.errorLoading + error.message);
+            },
+
+            createTable: function(modelsData) {
+                let tableHTML = `
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>Reaction Equation</th>
+                                    <th>Δ<sub><i>r</i></sub>G° (kJ/mol)</th>
+                                    <th>SD (kJ/mol)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                modelsData.forEach(function(modelData) {
+                    const dgValue = modelData.standard_dGr_prime === null ? 'NaN' : modelData.standard_dGr_prime.toFixed(2);
+                    const sdValue = modelData.SD === null ? 'NaN' : modelData.SD.toFixed(2);
+
+                    tableHTML += `
+                        <tr>
+                            <td>${modelData.model_id}</td>
+                            <td><code class="code-equation">${modelData.equation || 'N/A'}</code></td>
+                            <td>${dgValue}</td>
+                            <td>${sdValue}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                return tableHTML;
+            },
+
+            createWarning: function(message) {
+                return `<div class="alert alert-warning">${message}</div>`;
+            },
+
+            createError: function(message) {
+                return `<div class="alert alert-danger">${message}</div>`;
+            }
+        },
+
+        // 初始化所有功能
+        init: function() {
+            document.addEventListener('DOMContentLoaded', function() {
+                BiggSearch.searchResults.init();
+                BiggSearch.examples.init();
+                BiggSearch.reactionData.init();
+            });
+        }
+    };
+
+    // 启动应用
+    BiggSearch.init();
+</script>
+{% endblock %}

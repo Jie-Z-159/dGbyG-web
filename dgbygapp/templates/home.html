@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}dGbyG - Gibbs Free Energy Prediction Tool | Graph Neural Networks for Biochemical Thermodynamics{% endblock %}
+
+{% block description %}dGbyG is a cutting-edge web server for predicting standard Gibbs free energy changes of biochemical reactions using graph neural networks. Explore thermodynamics across genome-scale metabolic models (GEMs) and analyze biochemical reaction feasibility.{% endblock %}
+
+{% block keywords %}dGbyG, Gibbs free energy prediction, graph neural networks, biochemical reactions, thermodynamics, metabolic models, GEMs, bioinformatics, reaction prediction, enzyme kinetics, systems biology{% endblock %}
+
+{% block og_title %}dGbyG - Advanced Gibbs Free Energy Prediction using AI{% endblock %}
+
+{% block og_description %}Revolutionary tool for predicting biochemical reaction thermodynamics using graph neural networks. Free access to Gibbs free energy calculations and metabolic model analysis.{% endblock %}
+
+{% block content %}
+<div class="main-section home-demo">
+    <div class="container">
+        <div class="row align-items-center home-container w-100">
+            <div class="col-lg-7 col-md-12 col-left">
+                <div class="content-wrapper">
+                    <h1 class="title">Predict standard Gibbs free energy changes using graph neural networks.</h1>
+                    <p class="subtitle">Explore thermodynamics across genome-scale metabolic models (GEMs).</p>
+                    <div class="action-buttons">
+                        <a href="{{ url_for('gem_dg') }}" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Search GEMs
+                        </a>
+                        <a href="{{ url_for('prediction') }}" class="btn btn-primary">
+                            <i class="fas fa-calculator me-2"></i>Predict Δ<sub><i>r</i></sub>G°
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-12 col-right">
+                <div class="visual-wrapper">
+                    <div class="logo-container">
+                        <div class="molecule-structure">
+                            <div class="atom"></div>
+                            <div class="bond bond-1"></div>
+                            <div class="bond bond-2"></div>
+                            <div class="bond bond-3"></div>
+                        </div>
+                        <div class="logo-text">
+                            <span class="logo-dg">dG</span><span class="logo-byg">byG</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,857 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container prediction-container">
+<div class="row justify-content-center">
+        <div class="col-lg-11">
+            <!-- Main Card Wrapper -->
+            <div class="prediction-main-card">
+                <!-- Header with Mode Switcher -->
+                <div class="prediction-card-header">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <h4 class="prediction-page-title mb-0">
+                            <i class="fas fa-calculator me-2"></i> Δ<sub><i>r</i></sub>G° prediction for reactions
+                        </h4>
+                        <div class="prediction-mode">
+                            <div class="btn-group" role="group">
+                                <input type="radio" class="btn-check" name="inputMode" id="singleMode" value="single" checked>
+                                <label class="btn btn-outline-primary" for="singleMode">
+                                    <i class="fas fa-flask me-2"></i>Single Equation
+                                </label>
+                                
+                                <input type="radio" class="btn-check" name="inputMode" id="batchMode" value="batch">
+                                <label class="btn btn-outline-primary" for="batchMode">
+                                    <i class="fas fa-list me-2"></i>Batch Equations
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Form -->
+                <form method="POST" id="prediction-form">
+                    {{ form.hidden_tag() }}
+                
+                    <div class="form-section">
+
+                        <!-- Identifier Type (Shared by both modes) -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-tag me-1"></i>Identifier Type
+                            </label>
+                            {{ form.identifier_type(class="form-select", id="identifier_type") }}
+                        </div>
+                    
+                    <!-- Single Mode -->
+                    <div id="singleInputSection">
+                        <!-- Equation Input with Examples -->
+                        <div class="mb-2">
+                            <div class="d-flex align-items-center mb-2 flex-wrap">
+                                <label for="equation-input" class="form-label mb-0 me-3">
+                                    <i class="fas fa-flask me-1"></i>Equation
+                                    </label>
+                                <div class="examples-inline-wrapper">
+                                    <small class="text-muted me-2">Examples:</small>
+                                    <a href="#" class="example-link" data-equation="2 [H][H] + O=O = 2 O" data-identifier="smiles">SMILES</a>
+                                    <a href="#" class="example-link" data-equation="Pyruvate + NADH = L-Lactate + NAD(+)" data-identifier="name">Name</a>
+                                    <a href="#" class="example-link" data-equation="pyr + nadh = lac__L + nad" data-identifier="bigg">BiGG</a>
+                                    <a href="#" class="example-link" data-equation="CHEBI:37736 = SMILES:O=C(CO)COP(=O)(O)O + name:D-Glyceraldehyde 3-phosphate" data-identifier="mixed">Mixed</a>
+                                </div>
+                            </div>
+                            {{ form.equation(id="equation-input", class="form-control") }}
+                                    {% for error in form.equation.errors %}
+                                <div class="text-danger small mt-1">
+                                            <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                        </div>
+                                    {% endfor %}
+                            <small class="text-muted d-block mt-2">Use spaced <span class="badge bg-light text-dark"> = </span> between reactants and products, and space after coefficients.</small>
+                                </div>
+
+                        <!-- Reaction Conditions -->
+                        <div class="mb-3">
+                            <label class="form-label mb-2">
+                                <i class="fas fa-sliders-h me-1"></i>Reaction Condition
+                            </label>
+                            
+                            <!-- Preset Conditions Group -->
+                            <div class="mb-2">
+                                <div class="conditions-group-label mb-1">
+                                    <small class="text-muted fw-semibold">Preset Conditions</small>
+                                </div>
+                                <div class="reaction-conditions-grid">
+                                    <label class="condition-card">
+                                        <input type="radio" name="reaction_condition" value="d" checked>
+                                        <div class="condition-content">
+                                            <div class="condition-name">Standard</div>
+                                            <div class="condition-params">pH 7.00, I = 0.25 M, pMg = 14.0, T = 298.15 K, e = 0.000 V</div>
+                                        </div>
+                                    </label>
+                                    <label class="condition-card">
+                                        <input type="radio" name="reaction_condition" value="c">
+                                        <div class="condition-content">
+                                            <div class="condition-name">Cytosol</div>
+                                            <div class="condition-params">pH 7.20, I = 0.25 M, pMg = 14.0, T = 298.15 K, e = 0.000 V</div>
+                                        </div>
+                                    </label>
+                                    <label class="condition-card">
+                                        <input type="radio" name="reaction_condition" value="n">
+                                        <div class="condition-content">
+                                            <div class="condition-name">Nucleus</div>
+                                            <div class="condition-params">pH 7.20, I = 0.25 M, pMg = 14.0, T = 298.15 K, e = 0.000 V</div>
+                                        </div>
+                                    </label>
+                                    <label class="condition-card">
+                                        <input type="radio" name="reaction_condition" value="r">
+                                        <div class="condition-content">
+                                            <div class="condition-name">Endoplasmic Reticulum</div>
+                                            <div class="condition-params">pH 7.20, I = 0.25 M, pMg = 14.0, T = 298.15 K, e = 0.000 V</div>
+                                        </div>
+                                    </label>
+                                    <label class="condition-card">
+                                        <input type="radio" name="reaction_condition" value="g">
+                                        <div class="condition-content">
+                                            <div class="condition-name">Golgi</div>
+                                            <div class="condition-params">pH 6.35, I = 0.25 M, pMg = 14.0, T = 298.15 K, e = 0.000 V</div>
+                                        </div>
+                                    </label>
+                                    <label class="condition-card">
+                                        <input type="radio" name="reaction_condition" value="l">
+                                        <div class="condition-content">
+                                            <div class="condition-name">Lysosome</div>
+                                            <div class="condition-params">pH 5.50, I = 0.25 M, pMg = 14.0, T = 298.15 K, e = 0.019 V</div>
+                                        </div>
+                                    </label>
+                                    <label class="condition-card">
+                                        <input type="radio" name="reaction_condition" value="m">
+                                        <div class="condition-content">
+                                            <div class="condition-name">Mitochondria</div>
+                                            <div class="condition-params">pH 8.00, I = 0.25 M, pMg = 14.0, T = 298.15 K, e = -0.155 V</div>
+                                        </div>
+                                    </label>
+                                    <label class="condition-card">
+                                        <input type="radio" name="reaction_condition" value="i">
+                                        <div class="condition-content">
+                                            <div class="condition-name">Intermembrane Space</div>
+                                            <div class="condition-params">pH 8.00, I = 0.25 M, pMg = 14.0, T = 298.15 K, e = -0.155 V</div>
+                                        </div>
+                                    </label>
+                                    <label class="condition-card">
+                                        <input type="radio" name="reaction_condition" value="x">
+                                        <div class="condition-content">
+                                            <div class="condition-name">Peroxisome</div>
+                                            <div class="condition-params">pH 7.00, I = 0.25 M, pMg = 14.0, T = 298.15 K, e = 0.012 V</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Custom Conditions Group -->
+                            <div>
+                                <div class="conditions-group-label mb-1">
+                                    <small class="text-muted fw-semibold">Advanced Options</small>
+                                </div>
+                                <div class="reaction-conditions-grid">
+                                    <label class="condition-card condition-card-custom">
+                                        <input type="radio" name="reaction_condition" value="custom">
+                                        <div class="condition-content">
+                                            <div class="condition-name">Custom conditions</div>
+                                            <div class="condition-params"><strong>multi-compartment reaction</strong></div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom Conditions Panel -->
+                        <div class="custom-conditions-panel hidden-panel" id="customConditionsPanel">
+                            <div class="custom-conditions-header">
+                                <i class="fas fa-cogs me-2"></i>Custom Conditions for Each Compound
+                            </div>
+                            <div id="conditions-container"></div>
+                        </div>
+                    </div>
+
+                    <!-- Batch Mode -->
+                    <div id="batchInputSection" class="hidden-panel">
+                        <!-- Batch Equations Input -->
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2 flex-wrap">
+                                <label for="batch-equations" class="form-label mb-0 me-3">
+                                    <i class="fas fa-list me-1"></i>Equations (one per line, max 100)
+                                </label>
+                                <div class="examples-inline-wrapper">
+                                    <small class="text-muted me-2">Example:</small>
+                                    <a href="#" class="example-link batch-example-link" data-identifier="kegg">KEGG</a>
+                                </div>
+                            </div>
+                            <div class="position-relative">
+                                <textarea id="batch-equations" class="form-control" rows="6" placeholder="Enter equations here..."></textarea>
+                                <button type="button" id="clear-equations-btn" class="btn btn-outline-secondary btn-sm position-absolute"
+                                        style="top: 8px; right: 8px; z-index: 10;" title="Clear all equations">
+                                    <i class="fas fa-times me-1"></i>Clear
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Batch Conditions -->
+                        <div class="batch-conditions-panel">
+                            <div class="batch-conditions-header">
+                                <i class="fas fa-cogs me-1"></i>Global Conditions
+                            </div>
+                            <div class="batch-conditions-body">
+                                <div class="row g-2">
+                                    <div class="col-6 col-md-3">
+                                        <label class="form-label-sm">pH</label>
+                                        <input type="number" id="global-pH" name="global-pH" 
+                                            min="0" max="14" step="0.1" value="7.0" class="form-control form-control-sm">
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <label class="form-label-sm">Ionic Strength (M)</label>
+                                        <input type="number" id="global-I" name="global-I" 
+                                            min="0" max="1" step="0.01" value="0.25" class="form-control form-control-sm">
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <label class="form-label-sm">pMg</label>
+                                        <input type="number" id="global-pMg" name="global-pMg" 
+                                            min="0" max="14" step="0.1" value="14.0" class="form-control form-control-sm">
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <label class="form-label-sm">Electrical Potential (V)</label>
+                                        <input type="number" id="global-e_potential" name="global-e_potential" 
+                                            min="-1" max="1" step="0.01" value="0.0" class="form-control form-control-sm">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </form>
+
+                <!-- Calculate Button (Shared) -->
+                <div class="prediction-action-section">
+                    <div class="text-center">
+                        <button type="button" id="btnSubmit" class="btn btn-primary btn-lg px-5 shadow">
+                            <i class="fas fa-calculator me-2"></i>Calculate Δ<sub><i>r</i></sub>G°
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- End Main Card Wrapper -->
+        </div>
+            </div>
+        </div>
+
+<!-- Single Result Modal -->
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="resultModalLabel">
+                    <i class="fas fa-check-circle me-2"></i>Calculation Result
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100 result-card-gradient-blue">
+                            <div class="card-body text-center p-3">
+                                <i class="fas fa-chart-line fa-2x mb-2 modal-result-icon"></i>
+                                <h6 class="mb-2 modal-result-label">Δ<sub><i>r</i></sub>G°</h6>
+                                <h2 class="mb-0 modal-result-value" id="modal-dG-value">
+                                    <span class="result-value">--</span>
+                                </h2>
+                                <small class="modal-result-unit">kJ/mol</small>
+                            </div>
+                        </div>
+                    </div>
+                <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100 result-card-gradient-pink">
+                            <div class="card-body text-center p-3">
+                                <i class="fas fa-chart-bar fa-2x mb-2 modal-result-icon"></i>
+                                <h6 class="mb-2 modal-result-label">Standard Deviation</h6>
+                                <h2 class="mb-0 modal-result-value" id="modal-stddev-value">
+                                    <span class="result-value">--</span>
+                                </h2>
+                                <small class="modal-result-unit">kJ/mol</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3 p-3 bg-light rounded">
+                    <div class="mb-2">
+                        <strong><i class="fas fa-tags me-2"></i>Identifier:</strong>
+                        <span id="modal-identifier" class="ms-2"></span>
+                    </div>
+                    <div class="mb-2">
+                        <strong><i class="fas fa-flask me-2"></i>Equation:</strong>
+                        <code id="modal-equation" class="ms-2"></code>
+                    </div>
+                    <div class="mt-2">
+                        <strong><i class="fas fa-sliders-h me-2"></i>Condition:</strong>
+                        <span id="modal-condition" class="ms-2"></span>
+                    </div>
+                </div>
+                <div class="mt-3 text-end">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="copyResultBtn">
+                        <i class="fas fa-copy me-1"></i>Copy Result
+                    </button>
+                </div>
+                <div id="modal-error-message" class="mt-3 d-none">
+                    <div class="alert alert-danger mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <span id="modal-error-text"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="calculateAgainBtn">Calculate Again</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Batch Results Modal -->
+<div class="modal fade" id="batchResultModal" tabindex="-1" aria-labelledby="batchResultModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="batchResultModalLabel">
+                    <i class="fas fa-table me-2"></i>Batch Results
+                </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="table-responsive batch-results-table">
+                    <table class="table table-striped table-hover" id="batchResultsTable">
+                        <thead class="table-dark sticky-top">
+                            <tr>
+                                <th class="batch-col-equation">Equation</th>
+                                <th class="batch-col-dg">Δ<sub><i>r</i></sub>G° (kJ/mol)</th>
+                                <th class="batch-col-stddev">Std Dev (kJ/mol)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <!-- Global Conditions Display -->
+                    <div class="p-3 bg-light rounded mb-3">
+                        <div class="mb-2">
+                            <strong><i class="fas fa-tag me-2"></i>Identifier:</strong>
+                            <span id="batch-modal-identifier" class="ms-2"></span>
+                        </div>
+                        <div>
+                            <strong><i class="fas fa-cogs me-2"></i>Global Conditions:</strong>
+                            <span id="batch-modal-conditions" class="ms-2"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Summary and Download -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div id="batch-summary" class="text-muted"></div>
+                        <button class="btn btn-success" id="downloadResults">
+                            <i class="fas fa-download me-2"></i>Download CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="batchCalculateAgainBtn">Calculate Again</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const PredictionApp = {
+        // 配置常量
+        config: {
+            conditionParameters: {
+                'd': {pH: 7.00, e_potential: 0, T: 298.15, I: 0.25, pMg: 14.0, name: 'Standard'},
+                'c': {pH: 7.20, e_potential: 0, T: 298.15, I: 0.25, pMg: 14.0, name: 'Cytosol'},
+                'n': {pH: 7.20, e_potential: 0, T: 298.15, I: 0.25, pMg: 14.0, name: 'Nucleus'},
+                'r': {pH: 7.20, e_potential: 0, T: 298.15, I: 0.25, pMg: 14.0, name: 'Endoplasmic Reticulum'},
+                'g': {pH: 6.35, e_potential: 0, T: 298.15, I: 0.25, pMg: 14.0, name: 'Golgi'},
+                'l': {pH: 5.50, e_potential: 0.019, T: 298.15, I: 0.25, pMg: 14.0, name: 'Lysosome'},
+                'm': {pH: 8.00, e_potential: -0.155, T: 298.15, I: 0.25, pMg: 14.0, name: 'Mitochondria'},
+                'i': {pH: 8.00, e_potential: -0.155, T: 298.15, I: 0.25, pMg: 14.0, name: 'Intermembrane Space'},
+                'x': {pH: 7.00, e_potential: 0.012, T: 298.15, I: 0.25, pMg: 14.0, name: 'Peroxisome'},
+                'custom': {name: 'Custom (multi-compartment)'}
+            },
+            keggExampleEquations: [
+                'C00154 + C00016 = C05272 + C01352',
+                '2 C00051 + C00027 = C00127 + 2 C00001',
+                'C00031 + C00002 = C00092 + C00008'
+            ]
+        },
+
+        // 工具函数
+        utils: {
+            addFlashEffect: function($element) {
+                $element.addClass('flash-highlight');
+                setTimeout(() => $element.removeClass('flash-highlight'), 1200);
+            },
+
+            showButtonLoading: function($btn, loadingText = 'Calculating...') {
+                const originalText = $btn.html();
+                $btn.prop('disabled', true).html(`<i class="fas fa-spinner fa-spin me-2"></i>${loadingText}`);
+                return originalText;
+            },
+
+            resetButton: function($btn, originalText) {
+                $btn.prop('disabled', false).html(originalText);
+            },
+
+            parseJsonResponse: function(data) {
+                if (typeof data === 'string') {
+                    try {
+                        return JSON.parse(data);
+                    } catch (e) {
+                        throw new Error('Invalid response format');
+                    }
+                }
+                return data;
+            },
+
+            extractErrorMessage: function(xhr) {
+                try {
+                    const errorData = JSON.parse(xhr.responseText);
+                    return errorData.error || xhr.responseText;
+                } catch (e) {
+                    return xhr.responseText || 'Request failed';
+                }
+            }
+        },
+
+        // 事件处理器
+        events: {
+            initializeExampleLinks: function() {
+                $('.batch-example-link').click(function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const identifier = $(this).data('identifier');
+                    const exampleEquations = PredictionApp.config.keggExampleEquations.join('\n');
+
+                    $('#batch-equations').val(exampleEquations);
+                    $('#identifier_type').val(identifier);
+                    PredictionApp.utils.addFlashEffect($('#batch-equations'));
+                });
+
+                $('.example-link:not(.batch-example-link)').click(function(e) {
+                    e.preventDefault();
+                    const equation = $(this).data('equation');
+                    const identifier = $(this).data('identifier');
+
+                    $('#equation-input').val(equation);
+                    $('#identifier_type').val(identifier);
+                    PredictionApp.utils.addFlashEffect($('#equation-input'));
+                });
+            },
+
+            initializeModeSwitch: function() {
+                $('input[name="inputMode"]').change(function() {
+                    const isSingleMode = $(this).val() === 'single';
+                    $('#singleInputSection').toggle(isSingleMode);
+                    $('#batchInputSection').toggle(!isSingleMode);
+                    if (isSingleMode) $('#customConditionsPanel').hide();
+                });
+            },
+
+            initializeReactionConditions: function() {
+                $('input[name="reaction_condition"]').change(function() {
+                    if ($(this).val() === 'custom') {
+                        PredictionApp.customConditions.parseAndRender();
+                    } else {
+                        $('#customConditionsPanel').slideUp();
+                        $('#conditions-container').empty();
+                    }
+                });
+
+                $('input[name="reaction_condition"][value="custom"]').click(function() {
+                    if ($(this).is(':checked')) {
+                        PredictionApp.customConditions.parseAndRender();
+                    }
+                });
+            },
+
+            initializeSubmitButton: function() {
+                $('#btnSubmit').on('click', function(event) {
+                    event.preventDefault();
+                    const mode = $('input[name="inputMode"]:checked').val();
+                    const $btn = $(this);
+                    const originalText = PredictionApp.utils.showButtonLoading($btn);
+
+                    if (mode === 'single') {
+                        PredictionApp.calculation.submitSingle($btn, originalText);
+                    } else {
+                        PredictionApp.calculation.submitBatch($btn, originalText);
+                    }
+                });
+            },
+
+            initializeModalEvents: function() {
+                $('#copyResultBtn').click(PredictionApp.modal.copyResult);
+                $('#calculateAgainBtn, #batchCalculateAgainBtn').click(PredictionApp.modal.calculateAgain);
+                $('#downloadResults').click(PredictionApp.modal.downloadResults);
+            },
+
+            initializeClearButton: function() {
+                $('#clear-equations-btn').click(function(e) {
+                    e.preventDefault();
+                    $('#batch-equations').val('').focus();
+                    PredictionApp.utils.addFlashEffect($('#batch-equations'));
+                });
+            }
+        },
+
+        // 自定义条件处理
+        customConditions: {
+            parseAndRender: function() {
+                const equation = $('#equation-input').val();
+                if (!equation) {
+                    alert('Please enter the equation first.');
+                    $('input[name="reaction_condition"][value="d"]').prop('checked', true);
+                    return;
+                }
+
+                $('#customConditionsPanel').slideDown();
+                $.ajax({
+                    url: "{{ url_for('parse_equation_route') }}",
+                    type: "POST",
+                    data: { equation: equation },
+                    success: function(response) {
+                        if (response.compounds) {
+                            PredictionApp.customConditions.render(response.compounds);
+                        } else if (response.error) {
+                            alert('Error: ' + response.error);
+                        }
+                    },
+                    error: function() {
+                        alert('Failed to parse equation');
+                    }
+                });
+            },
+
+            render: function(compounds) {
+                const container = $('#conditions-container').empty();
+                compounds.forEach(function(compound, index) {
+                    const html = `
+                        <div class="custom-compound-item">
+                            <div class="custom-compound-name">
+                                ${index + 1}. ${compound}
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6 col-md-3">
+                                    <label class="form-label-sm">pH</label>
+                                    <input type="number" name="custom_conditions-${index}-pH"
+                                        min="0" max="14" step="0.1" value="7.0" class="form-control form-control-sm">
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <label class="form-label-sm">Ionic Strength (M)</label>
+                                    <input type="number" name="custom_conditions-${index}-I"
+                                        min="0" max="1" step="0.01" value="0.25" class="form-control form-control-sm">
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <label class="form-label-sm">pMg</label>
+                                    <input type="number" name="custom_conditions-${index}-pMg"
+                                        min="0" max="14" step="0.1" value="14.0" class="form-control form-control-sm">
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <label class="form-label-sm">Electrical Potential (V)</label>
+                                    <input type="number" name="custom_conditions-${index}-e_potential"
+                                        min="-1" max="1" step="0.01" value="0.0" class="form-control form-control-sm">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.append(html);
+                });
+            }
+        },
+
+        // 计算相关
+        calculation: {
+            submitSingle: function($btn, originalText) {
+                const form = $('#prediction-form');
+                const equation = $('#equation-input').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url_for('calculate') }}",
+                    data: form.serialize(),
+                    success: function(data) {
+                        PredictionApp.utils.resetButton($btn, originalText);
+                        try {
+                            data = PredictionApp.utils.parseJsonResponse(data);
+                            if (data.error) {
+                                PredictionApp.modal.showError(data.error);
+                            } else {
+                                PredictionApp.modal.showResult(data, equation);
+                            }
+                        } catch (e) {
+                            PredictionApp.modal.showError('Invalid response format');
+                        }
+                    },
+                    error: function(xhr) {
+                        PredictionApp.utils.resetButton($btn, originalText);
+                        const errorMsg = PredictionApp.utils.extractErrorMessage(xhr);
+                        PredictionApp.modal.showError(errorMsg);
+                    }
+                });
+            },
+
+            submitBatch: function($btn, originalText) {
+                const equations = $('#batch-equations').val().split('\n').filter(eq => eq.trim());
+
+                if (equations.length === 0) {
+                    PredictionApp.utils.resetButton($btn, originalText);
+                    alert('Please enter at least one equation');
+                    return;
+                }
+                if (equations.length > 100) {
+                    PredictionApp.utils.resetButton($btn, originalText);
+                    alert('Maximum 100 equations allowed');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('equations', equations.join('\n'));
+                formData.append('identifier_type', $('#identifier_type').val());
+                formData.append('reaction_condition', 'custom');
+                formData.append('global_pH', $('#global-pH').val());
+                formData.append('global_I', $('#global-I').val());
+                formData.append('global_pMg', $('#global-pMg').val());
+                formData.append('global_e_potential', $('#global-e_potential').val());
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url_for('batch_calculate') }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        PredictionApp.utils.resetButton($btn, originalText);
+                        if (response.results) {
+                            PredictionApp.modal.showBatchResults(response.results);
+                        } else {
+                            PredictionApp.modal.showError(response.error || 'Unknown error');
+                        }
+                    },
+                    error: function(xhr) {
+                        PredictionApp.utils.resetButton($btn, originalText);
+                        const errorMsg = PredictionApp.utils.extractErrorMessage(xhr);
+                        PredictionApp.modal.showError(errorMsg);
+                    }
+                });
+            }
+        },
+
+        // 模态框相关
+        modal: {
+            showResult: function(data, equation) {
+                const modal = new bootstrap.Modal(document.getElementById('resultModal'));
+                $('#modal-error-message').addClass('d-none');
+
+                const conditionValue = $('input[name="reaction_condition"]:checked').val();
+                const conditionText = PredictionApp.modal.getConditionText(conditionValue);
+
+                if (data.dG_prime === null || data.dG_std_dev === null ||
+                    (typeof data.dG_prime === 'number' && isNaN(data.dG_prime)) ||
+                    (typeof data.dG_std_dev === 'number' && isNaN(data.dG_std_dev))) {
+                    $('#modal-dG-value .result-value').text('NaN');
+                    $('#modal-stddev-value .result-value').text('NaN');
+                    $('#modal-error-message').removeClass('d-none');
+                    $('#modal-error-text').text('Missing data in database');
+                } else {
+                    $('#modal-dG-value .result-value').text(data.dG_prime);
+                    $('#modal-stddev-value .result-value').text(data.dG_std_dev);
+                }
+
+                // Show identifier type instead of server response
+                const identifierType = $('#identifier_type').val() || 'N/A';
+                const identifierDisplayName = $('#identifier_type option:selected').text() || identifierType;
+                $('#modal-identifier').text(identifierDisplayName);
+
+                $('#modal-equation').text(equation);
+                $('#modal-condition').html(conditionText);
+                modal.show();
+            },
+
+            showError: function(errorMessage) {
+                const modal = new bootstrap.Modal(document.getElementById('resultModal'));
+                $('#modal-dG-value .result-value').text('--');
+                $('#modal-stddev-value .result-value').text('--');
+                $('#modal-equation').text($('#equation-input').val() || 'N/A');
+
+                // Show identifier type instead of just the value
+                const identifierType = $('#identifier_type').val() || 'N/A';
+                const identifierDisplayName = $('#identifier_type option:selected').text() || identifierType;
+                $('#modal-identifier').text(identifierDisplayName);
+
+                const conditionValue = $('input[name="reaction_condition"]:checked').val();
+                const conditionText = PredictionApp.modal.getConditionText(conditionValue);
+                $('#modal-condition').html(conditionText);
+
+                $('#modal-error-message').removeClass('d-none');
+                $('#modal-error-text').text(errorMessage);
+                modal.show();
+            },
+
+            showBatchResults: function(results) {
+                const tbody = $('#batchResultsTable tbody').empty();
+                let successCount = 0, errorCount = 0;
+
+                results.forEach(result => {
+                    if (result.status === 'error') {
+                        errorCount++;
+                        const errorMsg = result.error || 'Unknown error';
+                        tbody.append(`
+                            <tr class="table-danger">
+                                <td><code>${result.equation}</code></td>
+                                <td colspan="2"><span class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i>${errorMsg}</span></td>
+                            </tr>
+                        `);
+                    } else {
+                        successCount++;
+                        tbody.append(`
+                            <tr>
+                                <td><code>${result.equation}</code></td>
+                                <td><strong>${result.dG_prime}</strong></td>
+                                <td>${result.dG_std_dev || 'N/A'}</td>
+                            </tr>
+                        `);
+                    }
+                });
+
+                $('#batch-summary').html(`
+                    <small>
+                        <i class="fas fa-check-circle text-success me-1"></i>${successCount} successful,
+                        <i class="fas fa-times-circle text-danger me-1"></i>${errorCount} failed
+                    </small>
+                `);
+
+                // Set identifier display
+                const identifierType = $('#identifier_type').val() || 'N/A';
+                const identifierDisplayName = $('#identifier_type option:selected').text() || identifierType;
+                $('#batch-modal-identifier').text(identifierDisplayName);
+
+                // Set conditions display
+                const pH = $('#global-pH').val();
+                const I = $('#global-I').val();
+                const pMg = $('#global-pMg').val();
+                const e = $('#global-e_potential').val();
+                const conditionsText = `pH = ${pH}, I = ${I} M, pMg = ${pMg}, T = 298.15 K, e = ${e} V`;
+                $('#batch-modal-conditions').text(conditionsText);
+
+                const modal = new bootstrap.Modal(document.getElementById('batchResultModal'));
+                modal.show();
+            },
+
+            getConditionText: function(conditionValue) {
+                const conditionData = PredictionApp.config.conditionParameters[conditionValue];
+                if (!conditionData) return '<strong>Unknown</strong>';
+
+                const name = conditionData.name;
+
+                if (conditionValue === 'custom') {
+                    const customConditions = [];
+                    $('#conditions-container .custom-compound-item').each(function(index) {
+                        const compoundName = $(this).find('.custom-compound-name').text().trim();
+                        const pH = $(`input[name="custom_conditions-${index}-pH"]`).val();
+                        const I = $(`input[name="custom_conditions-${index}-I"]`).val();
+                        const pMg = $(`input[name="custom_conditions-${index}-pMg"]`).val();
+                        const e = $(`input[name="custom_conditions-${index}-e_potential"]`).val();
+                        customConditions.push(`${compoundName}: pH = ${pH}, I = ${I} M, pMg = ${pMg}, e = ${e} V`);
+                    });
+
+                    if (customConditions.length > 0) {
+                        return `<strong>${name}</strong><br><small class="text-muted">${customConditions.join('<br>')}</small>`;
+                    } else {
+                        return `<strong>${name}</strong><br><small class="text-muted">Custom parameters for each compound</small>`;
+                    }
+                } else {
+                    return `<strong>${name}</strong><br><small class="text-muted">pH ${conditionData.pH.toFixed(2)}, I = ${conditionData.I} M, pMg = ${conditionData.pMg}, T = ${conditionData.T} K, e = ${conditionData.e_potential.toFixed(3)} V</small>`;
+                }
+            },
+
+            copyResult: function() {
+                const dG = $('#modal-dG-value .result-value').text();
+                const stdDev = $('#modal-stddev-value .result-value').text();
+                const equation = $('#modal-equation').text();
+                const identifier = $('#modal-identifier').text();
+                const condition = $('#modal-condition').text().replace(/\s+/g, ' ').trim();
+
+                const resultText = `Identifier: ${identifier}\nEquation: ${equation}\nCondition: ${condition}\nΔᵣG°: ${dG} kJ/mol\nStandard Deviation: ${stdDev} kJ/mol`;
+
+                navigator.clipboard.writeText(resultText).then(() => {
+                    const btn = $(this);
+                    const originalHtml = btn.html();
+                    btn.html('<i class="fas fa-check me-1"></i>Copied!').addClass('btn-success').removeClass('btn-outline-secondary');
+                    setTimeout(() => {
+                        btn.html(originalHtml).removeClass('btn-success').addClass('btn-outline-secondary');
+                    }, 2000);
+                }).catch(() => {
+                    alert('Failed to copy');
+                });
+            },
+
+            calculateAgain: function() {
+                const modalId = $(this).attr('id') === 'calculateAgainBtn' ? 'resultModal' : 'batchResultModal';
+                const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
+                modal.hide();
+                $('html, body').animate({ scrollTop: 0 }, 300);
+            },
+
+            downloadResults: function() {
+                const results = [];
+                $('#batchResultsTable tbody tr').each(function() {
+                    const cells = $(this).find('td');
+                    const equation = cells.eq(0).find('code').text() || cells.eq(0).text();
+                    const dG = cells.eq(1).text().trim();
+                    const stdDev = cells.eq(2).text().trim();
+
+                    if (!dG.includes('Error') && !dG.includes('exclamation')) {
+                        results.push({ equation, dG, std_dev: stdDev });
+                    }
+                });
+
+                if (results.length === 0) {
+                    alert('No valid results to download');
+                    return;
+                }
+
+                let csv = 'Equation,DeltaG (kJ/mol),Standard Deviation (kJ/mol)\n';
+                results.forEach(r => {
+                    csv += `"${r.equation}",${r.dG},${r.std_dev}\n`;
+                });
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'batch_results.csv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }
+        },
+
+        // 初始化函数
+        init: function() {
+            this.events.initializeExampleLinks();
+            this.events.initializeModeSwitch();
+            this.events.initializeReactionConditions();
+            this.events.initializeSubmitButton();
+            this.events.initializeModalEvents();
+            this.events.initializeClearButton();
+        }
+    };
+
+    $(document).ready(function() {
+        PredictionApp.init();
+    });
+</script>
+{% endblock %}

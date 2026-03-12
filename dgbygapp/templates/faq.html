@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-11">
+      <h2 class="text-center mb-5">
+        <i class="fas fa-question-circle me-2"></i>Frequently Asked Questions
+      </h2>
+
+      <!-- General Questions -->
+      <section class="mb-5">
+        <h3 class="border-bottom pb-2 mb-4">
+          <i class="fas fa-info-circle me-2"></i>General Questions
+        </h3>
+
+        <div class="accordion" id="generalAccordion">
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="whatIsGibbs">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#whatIsGibbsCollapse" aria-expanded="false">
+                <strong>What is Δ<sub><i>r</i></sub>G°?</strong>
+              </button>
+            </h2>
+            <div id="whatIsGibbsCollapse" class="accordion-collapse collapse" data-bs-parent="#generalAccordion">
+              <div class="accordion-body">
+                <p><strong>G:</strong> Gibbs free energy is a thermodynamic potential (<em>G = H − TS</em>) that, at constant temperature and pressure, represents the maximum non-expansion work a system can perform.</p>
+                <p><strong>Δ<sub><i>r</i></sub>G:</strong> The Gibbs free energy change of a reaction under a given set of (e.g., physiological) metabolite concentrations, which determines thermodynamic feasibility.</p>
+                <p><strong>Δ<sub><i>r</i></sub>G°:</strong> The Gibbs free energy change of a reaction under standard conditions, reflecting the relative thermodynamic stability of reactants and products.</p>
+                <p>
+                  The actual and standard reaction free energies are related by
+                  <code>Δ<sub><i>r</i></sub>G = Δ<sub><i>r</i></sub>G° + RT&nbsp;ln&nbsp;Q</code>,
+                  where <em>R</em> is the universal gas constant, <em>T</em> is the absolute temperature,
+                  and <em>Q</em> is the reaction quotient determined by reactant and product concentrations.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="whatIsDgbyg">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#whatIsDgbygCollapse" aria-expanded="false">
+                <strong>What is dGbyG web?</strong>
+              </button>
+            </h2>
+            <div id="whatIsDgbygCollapse" class="accordion-collapse collapse" data-bs-parent="#generalAccordion">
+              <div class="accordion-body">
+                <p>
+                  dGbyG web is a web-based platform that uses graph neural networks to predict the standard Gibbs free energy change
+                  (Δ<sub><i>r</i></sub>G°) of biochemical reactions. The name stands for “Δ<sub><i>r</i></sub>G° predicted by Graph neural networks.”
+                </p>
+                <p class="mb-2">The platform provides two main services:</p>
+                <ul class="mt-2">
+                  <li><strong>Search GEMs:</strong> Browse 100+ genome-scale metabolic models (GEMs) with precomputed Δ<sub><i>r</i></sub>G° values.</li>
+                  <li><strong>Predict Δ<sub><i>r</i></sub>G°:</strong> Compute Δ<sub><i>r</i></sub>G° for custom reactions using our AI model.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="howItWorks">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#howItWorksCollapse" aria-expanded="false">
+                <strong>How does dGbyG work?</strong>
+              </button>
+            </h2>
+            <div id="howItWorksCollapse" class="accordion-collapse collapse" data-bs-parent="#generalAccordion">
+              <div class="accordion-body">
+                <p>
+                  dGbyG is a graph neural network–based tool for predicting the standard reaction Gibbs free energy change
+                  (Δ<sub><i>r</i></sub>G°) of metabolic reactions.
+                </p>
+                <ol class="mt-3">
+                  <li><strong>Molecular graphs:</strong> Each metabolite is represented as an atom–bond graph with rich chemical features.</li>
+                  <li><strong>GNN prediction:</strong> The model learns thermodynamic representations from these graphs and predicts Δ<sub><i>f</i></sub>G° for metabolites. Δ<sub><i>r</i></sub>G° is then computed as the stoichiometry-weighted sum of Δ<sub><i>f</i></sub>G° values of substrates and products.</li>
+                  <li><strong>Methodological advantage:</strong> Unlike group-contribution methods that rely on predefined chemical groups, dGbyG models atoms and bonds directly, improving robustness and generalization when training data are limited or reaction mechanisms are unseen.</li>
+                  <li><strong>Condition parameters:</strong> Users can specify <em>pH</em>, <em>ionic strength (I)</em>, <em>pMg</em>, and <em>electrical potential (V)</em> to reflect physiological environments.</li>
+                  <li><strong>Output:</strong> The predicted Δ<sub><i>r</i></sub>G° together with an uncertainty estimate.</li>
+                </ol>
+                <p class="mt-3 mb-0">
+                  Compared with the best existing approaches, dGbyG reduces the median prediction error on the validation set from
+                  5.33 kJ/mol to 4.11 kJ/mol, while increasing reaction coverage in the human genome-scale metabolic model Recon3D
+                  from 64.14% to 71.22%.
+                </p>
+                <p class="mb-0">
+                  For more details, please refer to:
+                  <a href="https://doi.org/10.1016/j.cels.2025.101393" target="_blank" rel="noopener">
+                    <em>Unraveling principles of thermodynamics for genome-scale metabolic networks using graph neural networks.</em>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="accuracy">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#accuracyCollapse" aria-expanded="false">
+                <strong>What does the standard deviation (SD) shown next to Δ<sub><i>r</i></sub>G° mean?</strong>
+              </button>
+            </h2>
+
+            <div id="accuracyCollapse" class="accordion-collapse collapse" data-bs-parent="#generalAccordion">
+              <div class="accordion-body">
+                <p>
+                  <strong>SD</strong> reports the estimated <em>model uncertainty</em> (kJ/mol) from a bootstrap-based ensemble.
+                  It captures how much the predicted Δ<sub><i>r</i></sub>G° varies when the model is trained on different noise-perturbed
+                  versions of the training data.
+                </p>
+
+                <ul class="mt-3">
+                  <li>
+                    <strong>How we compute it:</strong> We assume experimental Δ<sub><i>r</i></sub>G° measurements have Gaussian uncertainty.
+                    In each bootstrap run, we perturb training labels according to their estimated measurement variability, train an
+                    independent model, and repeat this process <strong>100</strong> times. For a query reaction, we compute Δ<sub><i>r</i></sub>G°
+                    for each model and report the <strong>standard deviation across the 100 predictions</strong>. A variability index <em>α</em>
+                    is also used to weight training points in the loss so that noisier measurements have less influence.
+                  </li>
+                  <li>
+                    <strong>How to interpret it:</strong> A smaller SD indicates higher agreement across the ensemble (higher confidence).
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Search GEMs Questions -->
+      <section class="mb-5">
+        <h3 class="border-bottom pb-2 mb-4">
+          <i class="fas fa-search me-2"></i>Search GEMs
+        </h3>
+
+        <div class="accordion" id="searchAccordion">
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="whatModels">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#whatModelsCollapse" aria-expanded="false">
+                <strong>What models are available in Search GEMs?</strong>
+              </button>
+            </h2>
+            <div id="whatModelsCollapse" class="accordion-collapse collapse" data-bs-parent="#searchAccordion">
+              <div class="accordion-body">
+                <p>Our GEM library currently includes <strong>115</strong> genome-scale metabolic models:</p>
+                <ul class="mt-3">
+                  <li>
+                    <strong>BiGG Models (107 GEMs, excluding Recon3D):</strong> sourced from
+                    <a href="http://bigg.ucsd.edu/" target="_blank" rel="noopener">BiGG Models</a>.
+                  </li>
+                  <li>
+                    <strong>Metabolic Atlas (7 GEMs):</strong> sourced from
+                    <a href="https://metabolicatlas.org/gems/repository" target="_blank" rel="noopener">the Metabolic Atlas GEM repository</a>.
+                    <span class="text-muted">(For these 7 models, we retain only reactions and metabolites annotated with BiGG IDs.)</span>
+                  </li>
+                  <li>
+                    <strong>Recon3D (1 GEM):</strong> the human Recon3D model from the latest release by Elizabeth Brunk et&nbsp;al.
+                    (<a href="https://github.com/SBRG/Recon3D" target="_blank" rel="noopener">SBRG/Recon3D</a>).
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="searchTypes">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#searchTypesCollapse" aria-expanded="false">
+                <strong>What can I search for?</strong>
+              </button>
+            </h2>
+            <div id="searchTypesCollapse" class="accordion-collapse collapse" data-bs-parent="#searchAccordion">
+              <div class="accordion-body">
+                <p class="mb-2">You can search for:</p>
+                <ul class="mt-2">
+                  <li><strong>Models:</strong> By model name (e.g., "Mouse-GEM", "iML1515", "Recon3D")</li>
+                  <li><strong>Reactions:</strong> By reaction BiGG ID or name (e.g., "HEX1", "Hexokinase")</li>
+                  <li><strong>Metabolites:</strong> By metabolite BiGG ID (with compartment, e.g., "g6p_c") or BiGG Universal ID (without compartment, e.g., "g6p")</li>
+                  <li><strong>Genes:</strong> By gene ID or name (e.g., "3948_AT2", "LDHC")</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="compartmentConditions">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#compartmentConditionsCollapse" aria-expanded="false">
+                <strong>How are compartment-specific conditions set when predicting Δ<sub><i>r</i></sub>G° for GEM reactions?</strong>
+              </button>
+            </h2>
+            <div id="compartmentConditionsCollapse" class="accordion-collapse collapse" data-bs-parent="#searchAccordion">
+              <div class="accordion-body">
+                <p>
+                  For each model compartment (e.g., cytosol, mitochondrion, lysosome), we set the parameters used in Δ<sub><i>r</i></sub>G°
+                  calculations—<em>pH</em>, <em>ionic strength (I)</em>, <em>pMg</em>, and <em>electrical potential (E)</em>—as follows:
+                </p>
+                <ol class="mt-3">
+                  <li><strong>Literature:</strong> Values reported for the relevant species and compartment.</li>
+                  <li><strong>BioNumbers:</strong> If not available in the literature, we use typical compartment values from
+                    <a href="https://bionumbers.hms.harvard.edu/search.aspx?trm=ph+of++cytosol" target="_blank" rel="noopener">BioNumbers</a>.
+                  </li>
+                  <li><strong>Closest-species:</strong> If neither source provides a value, we adopt conservative values from closely related species.</li>
+                </ol>
+                <p class="mb-0">The selected parameters are shown on the model page under “Compartment Conditions.”</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Reaction Predictor Questions -->
+      <section class="mb-5">
+        <h3 class="border-bottom pb-2 mb-4">
+          <i class="fas fa-calculator me-2"></i>Predict Δ<sub><i>r</i></sub>G°
+        </h3>
+
+        <div class="accordion" id="predictorAccordion">
+
+          <!-- 1) What input formats are supported? -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="supportedFormats">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#supportedFormatsCollapse" aria-expanded="false">
+                <strong>What input formats are supported?</strong>
+              </button>
+            </h2>
+            <div id="supportedFormatsCollapse" class="accordion-collapse collapse" data-bs-parent="#predictorAccordion">
+              <div class="accordion-body">
+                <p class="mb-2">We support multiple compound identifier formats:</p>
+                <ul class="mt-2">
+                  <li><strong>SMILES:</strong> Simplified Molecular Input Line Entry System (e.g., <code>CCO</code> for ethanol)</li>
+                  <li><strong>InChI:</strong> International Chemical Identifier (e.g., <code>InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3</code> for ethanol)</li>
+                  <li><strong>InChI Key:</strong> Hashed version of InChI (e.g., <code>LFQSCWFLJHTTHZ-UHFFFAOYSA-N</code> for ethanol)</li>
+                  <li><strong>KEGG ID:</strong> KEGG compound identifiers (e.g., <code>C00031</code> for glucose)</li>
+                  <li><strong>MetaNetX ID:</strong> MetaNetX database identifiers (e.g., <code>MNXM7381</code> for glucose)</li>
+                  <li><strong>ChEBI ID:</strong> Chemical Entities of Biological Interest identifiers (e.g., <code>17234</code> for glucose)</li>
+                  <li><strong>PubChem CID:</strong> PubChem compound IDs (e.g., <code>702</code> for ethanol)</li>
+                  <li><strong>HMDB ID:</strong> Human Metabolome Database identifiers (e.g., <code>HMDB0000122</code> for glucose)</li>
+                  <li><strong>Compound Name:</strong> Common chemical names (e.g., <code>phosphate</code>, <code>acetate</code>)</li>
+                  <li><strong>BiGG Universal ID:</strong> BiGG identifiers <em>without</em> compartment suffixes (e.g., <code>succ</code>, not <code>succ_c</code>)</li>
+                  <li><strong>Mixed Identifiers:</strong> A single query can combine formats using TYPE:ID (e.g., <code>CHEBI:37736</code>).</li>
+                </ul>
+
+                <p class="mt-3 mb-0"><strong>Recommendation:</strong> Use SMILES or InChI for the best accuracy and reliability.</p>
+
+                <!-- Tips block -->
+                <div class="alert alert-info d-flex align-items-start mt-3" role="alert">
+                  <i class="fas fa-lightbulb me-2 mt-1"></i>
+                  <div>
+                    <strong>Tips:</strong> When using compound names, please use standardized naming where possible. For example:
+                    <ul class="mt-2 mb-0">
+                      <li><code>Pi</code> → <code>phosphate</code></li>
+                      <li><code>Ppi</code> → <code>diphosphate</code></li>
+                      <li><code>NAD<sup>+</sup></code> → <code>NAD(+)</code></li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- 2) How should I format chemical equations? -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="equationFormat">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#equationFormatCollapse" aria-expanded="false">
+                <strong>How should I format chemical equations?</strong>
+              </button>
+            </h2>
+            <div id="equationFormatCollapse" class="accordion-collapse collapse" data-bs-parent="#predictorAccordion">
+              <div class="accordion-body">
+                <p class="mb-2"><strong>Rules:</strong></p>
+                <ul class="mt-2">
+                  <li>Use <code> = </code> (with spaces) to separate reactants and products.</li>
+                  <li>Use <code>+</code> between compounds, and place coefficients in front (e.g., <code>2 H2O</code>).</li>
+                </ul>
+
+                <p class="mt-3 mb-2"><strong>Examples:</strong></p>
+                <div class="bg-light p-3 rounded">
+                  <code>glc__D + atp = g6p + adp</code><br>
+                  <small class="text-muted">BiGG Universal IDs (no compartment suffixes)</small><br><br>
+                  <code>C00031 + C00002 = C00668 + C00008</code><br>
+                  <small class="text-muted">KEGG compound IDs</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3) What reaction conditions are available? -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="reactionConditions">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#reactionConditionsCollapse" aria-expanded="false">
+                <strong>What reaction conditions are available?</strong>
+              </button>
+            </h2>
+            <div id="reactionConditionsCollapse" class="accordion-collapse collapse" data-bs-parent="#predictorAccordion">
+              <div class="accordion-body">
+                <p>You can either choose a preset for common compartments or define your own conditions.</p>
+
+                <p class="mb-2"><strong>Presets:</strong> Standard, Cytosol, Mitochondria, Lysosome, Golgi, etc. (each preset fills pH, I, pMg, E, and T)</p>
+
+                <p class="mt-3 mb-2"><strong>Custom conditions:</strong></p>
+                <ul class="mt-2">
+                  <li>pH (0–14)</li>
+                  <li>Ionic strength (0–1 M)</li>
+                  <li>pMg (0–14)</li>
+                  <li>Electrical potential (−1 to 1 V)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4) Can I process multiple reactions at once? -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="batchProcessing">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#batchProcessingCollapse" aria-expanded="false">
+                <strong>Can I process multiple reactions at once?</strong>
+              </button>
+            </h2>
+            <div id="batchProcessingCollapse" class="accordion-collapse collapse" data-bs-parent="#predictorAccordion">
+              <div class="accordion-body">
+                <p><strong>Yes.</strong> Batch mode can process <strong>up to 100 reactions</strong> in a single run.</p>
+                <ul class="mt-3">
+                  <li>Paste one equation per line and, if needed, set global pH / I / pMg / E.</li>
+                  <li>Download the results as a CSV file.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5) Why can't I change the temperature? -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="tempSetting">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#tempSettingCollapse" aria-expanded="false">
+                <strong>Why can't I change the temperature?</strong>
+              </button>
+            </h2>
+            <div id="tempSettingCollapse" class="accordion-collapse collapse" data-bs-parent="#predictorAccordion">
+              <div class="accordion-body">
+                <p>Δ<sub><i>r</i></sub>G° values are reported at <strong>25&nbsp;°C (298.15&nbsp;K)</strong>.</p>
+                <ul class="mt-2">
+                  <li>Most experimental thermodynamic data, as well as our model training, are standardized at 298&nbsp;K.</li>
+                  <li>Reliable temperature adjustment would require reaction-specific <em>ΔH</em> and <em>ΔS</em> (ΔG = ΔH − TΔS), and often heat-capacity terms, which are not available at the genome scale.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

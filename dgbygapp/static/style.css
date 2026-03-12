@@ -1,0 +1,3646 @@
+/* ===================================================================
+   ==================== CSS VARIABLES & DESIGN SYSTEM ===============
+   =================================================================== */
+
+:root {
+    /* Color System */
+    --primary: #3498db;
+    --primary-light: #c6dcfb;
+    --primary-dark: #2980b9;
+    --primary-darker: #21618c;
+    --primary-darkest: #1a5276;
+    --secondary: #2c3e50;
+    --background: #f8fafc;
+    --background-white: #ffffff;
+    --text: #2c3e50;
+    --text-light: #64748b;
+    --text-muted: #6c757d;
+    --text-dark: #4d555c;
+    --border: #e9ecef;
+    --border-light: #dee2e6;
+
+    /* Brand Colors */
+    --brand-blue: #15A6E5;
+    --footer-text: #6c757d;
+
+    /* Button Colors */
+    --btn-green: #10b981;
+    --btn-green-alpha: rgba(107, 184, 168, 0.1);
+    --btn-green-shadow: rgba(107, 184, 168, 0.25);
+
+    /* Font */
+    --font: 'roboto', sans-serif;
+
+    /* Status Colors */
+    --success: #28a745;
+    --warning: #ffc107;
+    --warning-dark: #ff9800;
+    --danger: #dc3545;
+    --info: #0c5460;
+
+    /* Alert Colors */
+    --alert-info-bg: #d1ecf1;
+    --alert-info-border: #bee5eb;
+    --alert-warning-bg: #fff3cd;
+    --alert-warning-border: #ffeaa7;
+    --alert-danger-bg: #f8d7da;
+    --alert-danger-border: #f5c6cb;
+
+    /* Reaction Classification Colors */
+    --reaction-boundary: #ff7f50;
+    --reaction-unstructured: #90ee90;
+    --reaction-unbalanced: #dda0dd;
+    --reaction-covered: #4169e1;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    --gradient-primary-button: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    --gradient-primary-hover: linear-gradient(135deg, var(--primary-dark), var(--primary-darker));
+    --gradient-primary-active: linear-gradient(135deg, var(--primary-darker), var(--primary-darkest));
+    --gradient-background: linear-gradient(135deg, var(--background) 0%, var(--background-white) 100%);
+    --gradient-header: linear-gradient(135deg, #3fa6e8 0%, #2c80bf 100%);
+    --gradient-classification: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    --gradient-custom-condition: linear-gradient(135deg, #fffbf0, #ffffff);
+    --gradient-custom-active: linear-gradient(135deg, #fff8e6, #fffef9);
+
+    /* Alpha Colors - Primary with different opacities */
+    --primary-alpha-01: rgba(52, 152, 219, 0.1);
+    --primary-alpha-15: rgba(52, 152, 219, 0.15);
+    --primary-alpha-2: rgba(52, 152, 219, 0.2);
+    --primary-alpha-25: rgba(52, 152, 219, 0.25);
+    --primary-alpha-3: rgba(52, 152, 219, 0.3);
+    --primary-alpha-4: rgba(52, 152, 219, 0.4);
+    --primary-alpha-5: rgba(52, 152, 219, 0.5);
+    --primary-alpha-6: rgba(52, 152, 219, 0.6);
+    --primary-alpha-08: rgba(52, 152, 219, 0.08);
+
+    /* Alpha Colors - Black for shadows and text */
+    --black-alpha-01: rgba(0, 0, 0, 0.1);
+    --black-alpha-05: rgba(0, 0, 0, 0.05);
+    --black-alpha-06: rgba(0, 0, 0, 0.06);
+    --black-alpha-08: rgba(0, 0, 0, 0.08);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 var(--black-alpha-05);
+    --shadow: 0 4px 6px -1px var(--black-alpha-01), 0 2px 4px -2px var(--black-alpha-01);
+    --shadow-md: 0 2px 8px var(--black-alpha-06);
+    --shadow-lg: 0 10px 15px -3px var(--black-alpha-01), 0 4px 6px -4px var(--black-alpha-01);
+    --shadow-xl: 0 8px 24px var(--primary-alpha-08);
+    --shadow-button: 0 2px 8px var(--primary-alpha-2);
+    --shadow-button-hover: 0 4px 15px var(--primary-alpha-3);
+    --shadow-navbar: 0 2px 4px var(--black-alpha-01);
+
+    /* Spacing */
+    --border-radius: 8px;
+    --border-radius-sm: 6px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
+
+    /* Transitions */
+    --transition: all 0.3s ease;
+    --transition-fast: all 0.2s ease;
+    --transition-button: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Font Sizes */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.85rem;
+    --font-size-base: 0.9rem;
+    --font-size-md: 0.95rem;
+    --font-size-lg: 1rem;
+    --font-size-xl: 1.05rem;
+}
+
+/* ===================================================================
+   ==================== GLOBAL BASE STYLES ========================
+   =================================================================== */
+
+body {
+    font-family: var(--font);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 500;
+}
+
+/* 覆盖Bootstrap container-fluid的默认padding */
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.container {
+    max-width: 1140px;
+    padding: 0 2rem;
+}
+
+/* ===================================================================
+   ==================== BASE TEMPLATE LAYOUT (base.html) ===========
+   =================================================================== */
+
+/* Navigation Bar */
+.navbar {
+    box-shadow: var(--shadow-navbar);
+    padding: 1rem 0;
+    background: linear-gradient(90deg, #e0f2fe 0%, #e8f8f2 100%);
+}
+
+.navbar .container {
+    max-width: 1140px;
+    padding: 0 2rem;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    transition: var(--transition);
+    padding: 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+.navbar-brand:hover {
+    color: var(--primary);
+}
+
+.nav-link {
+    color: var(--text);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    margin: 0 0.3rem;
+    border-radius: 6px;
+    transition: var(--transition);
+    font-size: 0.95rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+    background-color: var(--primary-alpha-01);
+}
+
+.nav-link.active {
+    color: var(--primary)!important;
+    background-color: var(--primary-alpha-01);
+    font-weight: 700;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,.1);
+    border-radius: 8px;
+}
+
+.dropdown-item {
+    padding: 0.7rem 1.5rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.dropdown-item:hover {
+    background-color: var(--primary-alpha-01);
+    color: var(--primary);
+}
+
+.navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+/* Footer */
+.footer {
+    margin-top: 2rem;
+}
+
+.footer p {
+    margin-bottom: 0.5rem;
+}
+
+.footer a {
+    color: #6c757d;
+    text-decoration: underline;
+}
+
+.footer a:hover {
+    color: var(--primary);
+}
+
+/* ===================================================================
+   ==================== HOME PAGE (home.html) ======================
+   =================================================================== */
+
+.main-section {
+    position: relative;
+    overflow: hidden;
+    height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+}
+
+.home-demo {
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.home-container {
+    width: 100%;
+}
+
+.content-wrapper {
+    padding-right: 2rem;
+    margin-left: -1rem;
+}
+
+.title {
+    font-size: 2rem;
+    line-height: 1.25;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    font-family: 'Nunito', sans-serif;
+}
+
+.subtitle {
+    font-size: 1.4rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.action-buttons .btn {
+    padding: 0.7rem 1.25rem;
+    font-size: 1rem;
+    border-radius: 0.6rem;
+    transition: transform .15s ease, box-shadow .2s ease;
+    background: var(--gradient-primary);
+    border: none;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(52,152,219,.18);
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+    width: 200px;
+    text-align: center;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(52,152,219,.28);
+}
+
+.action-buttons .btn + .btn {
+    margin-left: .75rem;
+}
+
+.col-left, .col-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.visual-wrapper {
+    position: relative;
+    height: 100%;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Logo Design */
+.logo-container {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    top: 15px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.molecule-structure {
+    width: 185px;
+    height: 185px;
+    position: relative;
+    margin: 0 auto 1.25rem;
+    animation: rotate 20s linear infinite;
+}
+
+.atom {
+    width: 62px;
+    height: 62px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 15px 30px var(--primary-alpha-3);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.bond {
+    position: absolute;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+    height: 6px;
+    width: 100px;
+    top: 50%;
+    left: 50%;
+    transform-origin: left center;
+    border-radius: 3px;
+    box-shadow: 0 2px 8px var(--primary-alpha-3);
+    animation: bondGlow 3s ease-in-out infinite;
+}
+
+.bond-1 {
+    transform: translateY(-50%) rotate(0deg);
+}
+
+.bond-2 {
+    transform: translateY(-50%) rotate(120deg);
+}
+
+.bond-3 {
+    transform: translateY(-50%) rotate(240deg);
+}
+
+.logo-text {
+    font-weight: 800;
+    font-size: 2.5rem;
+    letter-spacing: .5px;
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    margin: 0 auto;
+    text-shadow: 0 4px 8px var(--black-alpha-01);
+    transform: translate(6px, -10px);
+    font-family: 'Nunito', sans-serif;
+}
+
+.logo-dg {
+    color: var(--primary);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: textShine 3s ease-in-out infinite;
+}
+
+.logo-byg {
+    color: var(--text);
+    text-shadow: 0 2px 4px var(--black-alpha-01);
+}
+
+/* ===================================================================
+   ==================== BIGG SEARCH PAGE (bigg.html) ===============
+   =================================================================== */
+
+.main-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-bottom: 1rem;
+}
+
+/* Header Section */
+.header-section {
+    background: #f8f9fa;
+    border-radius: 12px 12px 0 0;
+    padding: 2rem 2rem 1.5rem 2rem;
+    border: 1px solid #e9ecef;
+    border-bottom: none;
+    text-align: center;
+}
+
+.title .text-primary {
+    color: var(--primary)!important;
+    font-weight: 700;
+}
+
+.subtitle-bigg {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+/* Search Section */
+.search-section {
+    background: white;
+    border-radius: 0 0 12px 12px;
+    border: 1px solid #e9ecef;
+    border-top: none;
+    padding: 2rem;
+    box-shadow: 0 2px 8px var(--black-alpha-01);
+}
+
+/* Search Form */
+.search-input-group {
+    display: flex;
+    gap: 0;
+}
+
+.search-input {
+    flex: 1;
+    border: 1px solid #dee2e6;
+    border-right: none;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 6px 0 0 6px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+}
+
+.search-input::placeholder {
+    color: #6c757d;
+}
+
+.search-button {
+    background: var(--primary);
+    color: white;
+    border: 1px solid var(--primary);
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-button:hover {
+    background: #2980b9;
+    border-color: #2980b9;
+}
+
+.error-message {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    color: #721c24;
+    font-size: 0.9rem;
+}
+
+/* Search Examples */
+.search-examples {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+}
+
+.examples-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.examples-title {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.example-item {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    color: var(--primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.example-item:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px var(--primary-alpha-2);
+}
+
+.example-item:active {
+    transform: translateY(0);
+}
+
+.clickable-placeholder {
+    position: relative;
+}
+
+.clickable-placeholder::placeholder {
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.clickable-placeholder::placeholder:hover {
+    color: #0d6efd;
+    text-decoration: underline;
+}
+
+/* BiGG Result Cards */
+.bigg-model-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 16px var(--black-alpha-06);
+    border-radius: 16px;
+}
+
+.bigg-chart-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 12px var(--black-alpha-08);
+    border: 1px solid #e9ecef;
+}
+
+.chart-accent-bar {
+    width: 3px;
+    height: 20px;
+    border-radius: 2px;
+    margin-right: 10px;
+}
+
+.chart-accent-bar--green {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.chart-accent-bar--blue {
+    background: linear-gradient(135deg, #007bff, #6610f2);
+}
+
+.chart-frame {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.chart-empty-state {
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.model-conditions {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.condition-compact {
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 12px;
+    border-left: 3px solid #6c757d;
+    font-size: 0.85em;
+}
+
+.reaction-classification-explanation {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.classification-header-accent {
+    width: 4px;
+    height: 24px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border-radius: 2px;
+    margin-right: 12px;
+}
+
+.classification-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px var(--black-alpha-01);
+    border-left: 4px solid transparent;
+}
+
+.classification-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.classification-color-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.classification-card-title {
+    font-weight: 600;
+}
+
+.classification-card--boundary {
+    border-left-color: #ff7f50;
+}
+
+.classification-color-dot--boundary {
+    background: #ff7f50;
+}
+
+.classification-card-title--boundary {
+    color: #ff7f50;
+}
+
+.classification-card--unstructured {
+    border-left-color: #90ee90;
+}
+
+.classification-color-dot--unstructured {
+    background: #90ee90;
+}
+
+.classification-card-title--unstructured {
+    color: #90ee90;
+}
+
+.classification-card--unbalanced {
+    border-left-color: #dda0dd;
+}
+
+.classification-color-dot--unbalanced {
+    background: #dda0dd;
+}
+
+.classification-card-title--unbalanced {
+    color: #dda0dd;
+}
+
+.classification-card--covered {
+    border-left-color: #4169e1;
+}
+
+.classification-color-dot--covered {
+    background: #4169e1;
+}
+
+.classification-card-title--covered {
+    color: #4169e1;
+}
+
+.reaction-item {
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    font-size: 1em;
+    line-height: 1.2;
+}
+
+.reaction-name {
+    font-size: 0.97em;
+}
+
+.model-count {
+    font-size: 0.92em;
+}
+
+.dg-data-section {
+    display: none;
+    font-size: 0.9em;
+    line-height: 1.2;
+}
+
+.metabolite-image {
+    width: 80%;
+    height: auto;
+}
+
+.metabolite-image-placeholder {
+    width: 80%;
+    height: 200px;
+    border: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reaction-chip {
+    font-size: 0.9em;
+}
+
+/* ===================================================================
+   ==================== PREDICTION PAGE (prediction.html) ==========
+   =================================================================== */
+
+.prediction-container {
+    max-width: 1400px;
+    padding-top: 1.5rem;
+    padding-bottom: 2.5rem;
+}
+
+/* Main Card Wrapper */
+.prediction-main-card {
+    background: #ffffff;
+    border: 3px solid #e9ecef;
+    border-radius: 16px;
+    padding: 0rem 0rem 0rem;
+    margin-bottom: 2rem;
+    margin-top: 0rem;
+}
+
+/* Header with Mode Switcher */
+.prediction-card-header {
+    padding: 0.75rem 1.75rem;
+    background: linear-gradient(135deg, #f0f7ff 0%, #f8f9fa 100%);
+    border-radius: 16px 16px 0 0;
+    border-bottom: 2px solid #e8eaec;
+}
+
+.prediction-page-title {
+    font-size: 1.3rem;
+    color: #2c3e50;
+    margin-bottom: 0;
+    letter-spacing: 0px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    flex: 1;
+}
+
+/* Icon Colors - Fresh and Colorful */
+
+.form-label .fa-tag {
+    color: #74a8f2;
+}
+
+.form-label .fa-flask {
+    color: #74a8f2;
+}
+
+.form-label .fa-sliders-h {
+    color: #74a8f2;
+}
+
+
+
+/* Mode Switcher */
+.prediction-mode {
+    margin-left: 1.5rem;
+    flex-shrink: 0;
+}
+
+.prediction-mode .btn-group {
+    display: inline-flex;
+    background: white;
+    border-radius: 10px;
+    padding: 0.25rem;
+    border: 1px solid #e0e7ed;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.prediction-mode .btn {
+    font-size: 0.95rem;
+    padding: 0.65rem 2rem;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none !important;
+    background: transparent;
+    color: #64748b;
+    position: relative;
+    z-index: 1;
+    border-radius: 6px;
+}
+
+.prediction-mode .btn:hover {
+    color: var(--primary);
+    background: rgba(52, 152, 219, 0.08);
+    border-radius: 6px;
+}
+
+.prediction-mode .btn-check:checked + .btn-outline-primary {
+    background: linear-gradient(135deg, #eef5fd 0%, #e1ebf5 100%);
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
+    transform: translateY(-1px);
+    border-radius: 6px;
+    border: 1px solid #e0ebf5;
+}
+
+.prediction-mode .btn-check:not(:checked) + .btn-outline-primary {
+    color: #64748b;
+}
+
+/* Form Section */
+.form-section {
+    background: linear-gradient(to bottom, #fafbfc 0%, #ffffff 50px);
+    padding: 1.75rem 1.75rem 1rem 1.75rem;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    margin: 0;
+}
+
+/* Prediction Action Section */
+.prediction-action-section {
+    padding: 0.75rem 2rem 1.25rem 2rem;
+    background: white;
+    border-top: 1px solid #f0f4f8;
+    border-radius: 0 0 16px 16px;
+}
+
+/* Examples inline wrapper */
+.examples-inline-wrapper {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.example-link {
+    display: inline-block;
+    padding: 0.25rem 0.45rem;
+    background: linear-gradient(135deg, #f8f9fa, #ffffff);
+    border: 1.5px solid var(--primary);
+    border-radius: 6px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.example-link:hover {
+    background: var(--gradient-primary-button);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--primary-alpha-3);
+    border-color: #2980b9;
+}
+
+/* Reaction Conditions Grid */
+.reaction-conditions-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.7rem;
+}
+
+.conditions-group-label {
+    margin-top: 0.4rem;
+}
+
+.conditions-group-label:first-child {
+    margin-top: 0;
+}
+
+.condition-card {
+    position: relative;
+    border: 1px solid #e1e8f0;
+    border-radius: 8px;
+    padding: 0.5rem 0.4rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(to bottom, #ffffff 0%, #fafbfc 100%);
+    text-align: center;
+    margin: 0;
+}
+
+.condition-card:hover {
+    border-color: var(--primary);
+    background: linear-gradient(to bottom, #f0f7ff 0%, #e8f4fd 100%);
+    box-shadow: 0 4px 12px var(--primary-alpha-15);
+    transform: translateY(-2px);
+}
+
+.condition-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.condition-card input[type="radio"]:checked + .condition-content {
+    color: var(--primary);
+}
+
+.condition-card input[type="radio"]:checked ~ .condition-content .condition-name {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.condition-card:has(input[type="radio"]:checked) {
+    border-color: var(--primary);
+    border-width: 2px;
+    box-shadow: 0 4px 16px var(--primary-alpha-2);
+    transform: translateY(-2px);
+}
+
+.condition-content {
+    pointer-events: none;
+}
+
+.condition-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+}
+
+.condition-params {
+    font-size: 0.75rem;
+    color: #5a6c7d;
+    line-height: 1.2;
+}
+
+.condition-card-custom {
+    border-color: #ff99009c;
+    border-style: dashed;
+}
+
+.condition-card-custom:hover {
+    border-color: #ff99009c;
+    background: linear-gradient(135deg, #fff5e0 0%, #ffecc7 100%);
+}
+
+.condition-card-custom:has(input[type="radio"]:checked) {
+    border-color: #ff99009c;
+    border-style: solid;
+    border-width: 2px;
+    box-shadow: 0 4px 10px rgba(255, 153, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Custom Conditions Panel */
+.custom-conditions-panel {
+    margin-top: 0.75rem;
+    padding: 0.875rem;
+    background: linear-gradient(135deg, #fff8f0 0%, #fffbf5 100%);
+    border: 1px solid #ffe0b3;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(255, 184, 77, 0.1);
+}
+
+.custom-conditions-header {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #d5dee6;
+}
+
+.custom-compound-item {
+    background: linear-gradient(to bottom, #ffffff 0%, #fafbfc 100%);
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.65rem;
+    border: 1px solid #e1e8f0;
+    transition: all 0.2s ease;
+}
+
+.custom-compound-item:hover {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 100%);
+    box-shadow: 0 2px 8px var(--black-alpha-08);
+    border-color: var(--primary);
+}
+
+.custom-compound-item:last-child {
+    margin-bottom: 0;
+}
+
+.custom-compound-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Batch Conditions Panel */
+.batch-conditions-panel {
+    background: linear-gradient(to bottom, #ffffff 0%, #fafbfc 100%);
+    border: 1px solid #d5e5f0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.batch-conditions-header {
+    background: var(--primary-light);
+    color: var(--text);
+    padding: 0.65rem 1.1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.batch-conditions-body {
+    padding: 0.875rem;
+}
+
+.form-label-sm {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+    display: block;
+}
+
+.form-label-sm i {
+    color: var(--primary);
+}
+
+/* Flash highlight animation */
+@keyframes flashHighlight {
+    0%, 100% {
+        background-color: white;
+        border-color: var(--primary);
+    }
+    50% {
+        background-color: #e3f2fd;
+        border-color: #2196f3;
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+    }
+}
+
+.flash-highlight {
+    animation: flashHighlight 1.2s ease-in-out;
+}
+
+/* Modal condition display */
+#modal-condition {
+    display: inline-block;
+}
+
+#modal-condition strong {
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+#modal-condition small {
+    display: block;
+    line-height: 1.5;
+    margin-top: 0.2rem;
+}
+
+/* Calculate Button */
+#btnSubmit {
+    font-size: 1.05rem;
+    padding: 0.75rem 2.5rem;
+    font-weight: 600;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.25);
+}
+
+#btnSubmit:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.35);
+}
+
+#btnSubmit:active {
+    transform: translateY(0);
+    background: linear-gradient(135deg, var(--primary-darker) 0%, var(--primary-darkest) 100%);
+    box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+}
+
+/* Result Modal */
+/* Single Result Modal Header */
+#resultModal .modal-header {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    padding: 1rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#resultModal .modal-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: 0.3px;
+}
+
+#resultModal .modal-header .btn-close {
+    margin: 0;
+    padding: 0.5rem;
+    opacity: 0.9;
+}
+
+#resultModal .modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+#batchResultModal .modal-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: 0.3px;
+}
+
+#batchResultModal .modal-header .btn-close {
+    margin: 0;
+    padding: 0.5rem;
+    opacity: 0.9;
+}
+
+#batchResultModal .modal-header .btn-close:hover {
+    opacity: 1;
+}
+/* Batch Results Table */
+#batchResultsTable {
+    font-size: 0.9rem;
+}
+
+#batchResultsTable th {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+#batchResultsTable thead.table-dark {
+    background:#177f4f;
+    color: white;
+}
+
+.result-card-gradient-blue {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 100%);
+    border: 2px solid #c6dcfb;
+    border-radius: 12px;
+    color: #1e4a72;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.result-card-gradient-blue:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+.result-card-gradient-pink {
+    background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+    border: 2px solid #ffccaa;
+    border-radius: 12px;
+    color: #8b4513;
+    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.result-card-gradient-pink:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.15);
+}
+
+.result-card-gradient-blue .modal-result-label,
+.result-card-gradient-blue .modal-result-unit {
+    color: #2c5f8d;
+}
+
+.result-card-gradient-blue .modal-result-icon {
+    color: #3498db;
+}
+
+.result-card-gradient-pink .modal-result-label,
+.result-card-gradient-pink .modal-result-unit {
+    color: #a65c2e;
+}
+
+.result-card-gradient-pink .modal-result-icon {
+    color: #ff8c00;
+}
+
+.modal-result-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2c3e50;
+    line-height: 1.2;
+    margin: 0.25rem 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+.modal-result-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: inherit;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.25rem;
+}
+
+.modal-result-unit {
+    font-size: 1rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 0.15rem;
+}
+
+.modal-result-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+
+.result-card-gradient-blue .card-body,
+.result-card-gradient-pink .card-body {
+    padding: 1rem 0.75rem !important;
+}
+
+#batch-summary {
+    font-size: 0.9rem;
+}
+
+#batch-summary .text-success {
+    color: var(--success);
+}
+
+#batch-summary .text-danger {
+    color: var(--danger);
+}
+
+.batch-results-table {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.batch-col-equation {
+    width: 40%;
+}
+
+.batch-col-dg {
+    width: 30%;
+}
+
+.batch-col-stddev {
+    width: 30%;
+}
+
+/* Batch Input Section */
+#batchInputSection {
+    display: none;
+}
+
+
+
+/* ===================================================================
+   ==================== API PAGE (api.html) ========================
+   =================================================================== */
+
+/* Table Styles */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #4d555c;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #bad7ca44;
+    font-weight: 600;
+}
+
+.table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(81, 144, 227, 0.05);
+}
+
+/* Table scrollbar */
+.table-responsive::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Code equation style */
+.code-equation {
+    font-size: var(--font-size-sm) !important;
+}
+
+/* ===================================================================
+   ==================== CONTACT PAGE (contact.html) ================
+   =================================================================== */
+
+.contact-page {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.contact-person h5 {
+    color: var(--text);
+    border-bottom: 1px solid var(--primary);
+    padding-bottom: 0.2rem;
+    display: inline-block;
+    font-size: 1.1rem;
+}
+
+.contact-details p {
+    color: #34495e;
+    font-size: 0.9rem;
+}
+
+.contact-details i {
+    color: var(--primary);
+    width: 16px;
+}
+
+/* ===================================================================
+   ==================== CITATION PAGE (citation.html) ==============
+   =================================================================== */
+
+.citation-item h5 {
+    color: var(--text);
+    border-bottom: 1px solid var(--primary);
+    padding-bottom: 0.2rem;
+    display: inline-block;
+    font-size: 1.1rem;
+}
+
+.citation-text {
+    font-size: 0.9rem;
+    color: #34495e;
+}
+
+.citation-text pre {
+    font-size: 0.85rem;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+/* ===================================================================
+   ==================== COMMON FORM ELEMENTS =======================
+   =================================================================== */
+
+.form-label {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+    font-size: var(--font-size-base);
+}
+
+.form-label i {
+    color: var(--primary);
+}
+
+.form-control, .form-select {
+    border: 1px solid #d5e5f0;
+    border-radius: var(--border-radius);
+    padding: 0.55rem 0.9rem;
+    transition: var(--transition);
+    font-size: var(--font-size-base);
+    background-color: #ffffff;
+    color: #2c3e50;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    background-color: #ffffff;
+    color: #2c3e50;
+    background: linear-gradient(to bottom, #ffffff 0%, #fafbfc 100%);
+}
+
+.form-check-input {
+    border: 2px solid var(--border);
+    transition: var(--transition);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.form-check-label {
+    color: var(--text);
+    font-weight: 500;
+}
+
+/* ===================================================================
+   ==================== COMMON BUTTONS ============================
+   =================================================================== */
+
+.btn {
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: var(--gradient-primary-button);
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow-button);
+}
+
+.btn-primary:hover {
+    background: var(--gradient-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-button-hover);
+}
+
+.btn-secondary {
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--border-radius);
+    font-weight: 400;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+    transition: var(--transition);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--background-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-button);
+}
+
+.btn-check:checked + .btn-outline-primary {
+    background-color: var(--primary);
+    color: var(--background-white);
+    border-color: var(--primary);
+}
+
+.btn-check:checked + .btn-outline-primary {
+    background-color: var(--primary);
+    color: var(--background-white);
+    border-color: var(--primary);
+}
+
+/* Button Groups */
+.btn-group {
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.btn-group .btn {
+    position: relative;
+    flex: 1 1 auto;
+}
+
+/* ===================================================================
+   ==================== RANGE INPUTS ==============================
+   =================================================================== */
+
+.form-range {
+    width: 100%;
+    height: 1.5rem;
+    padding: 0;
+    background-color: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.form-range::-webkit-slider-thumb {
+    width: 1rem;
+    height: 1rem;
+    margin-top: -0.25rem;
+    background-color: var(--primary);
+    border: 0;
+    border-radius: 1rem;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-range::-webkit-slider-thumb:hover {
+    background-color: #2980b9;
+    transform: scale(1.1);
+}
+
+.form-range::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 0.5rem;
+    color: transparent;
+    cursor: pointer;
+    background-color: #dee2e6;
+    border-color: transparent;
+    border-radius: 1rem;
+}
+
+.form-range::-moz-range-track {
+    width: 100%;
+    height: 0.5rem;
+    color: transparent;
+    cursor: pointer;
+    background-color: #dee2e6;
+    border-color: transparent;
+    border-radius: 1rem;
+}
+
+.form-range::-moz-range-thumb {
+    width: 1rem;
+    height: 1rem;
+    background-color: var(--primary);
+    border: 0;
+    border-radius: 1rem;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-range::-moz-range-thumb:hover {
+    background-color: #2980b9;
+}
+
+/* ===================================================================
+   ==================== ALERT STYLES ==============================
+   =================================================================== */
+
+.alert {
+    transition: var(--transition);
+    border-radius: var(--border-radius);
+}
+
+.alert-info {
+    background-color: var(--alert-info-bg);
+    border-color: var(--alert-info-border);
+    color: var(--info);
+}
+
+.alert-warning {
+    background-color: var(--alert-warning-bg);
+    border-color: var(--alert-warning-border);
+    color: #856404;
+}
+
+.alert-danger {
+    background-color: var(--alert-danger-bg);
+    border-color: var(--alert-danger-border);
+    color: #721c24;
+}
+
+.alert-secondary {
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
+    color: #383d41;
+}
+
+/* ===================================================================
+   ==================== BADGE STYLES ==============================
+   =================================================================== */
+
+.badge {
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+/* ===================================================================
+   ==================== UTILITY CLASSES ============================
+   =================================================================== */
+
+.brand-logo-text {
+    color: var(--brand-blue);
+}
+
+.footer-text {
+    font-size: var(--font-size-base);
+    color: var(--footer-text);
+}
+
+.footer-link {
+    color: var(--footer-text);
+    text-decoration: underline;
+}
+
+.hidden-panel {
+    display: none;
+}
+
+/* ===================================================================
+   ==================== RESPONSIVE DESIGN (1396x649px Baseline) ====
+   =================================================================== */
+
+/*
+ * 基准：1396x649px - 保持当前所有尺寸不变 (这是正确的基础配置)
+ *
+ * 全新的8档响应式设计策略：
+ * 1. <= 375px：超小手机（iPhone SE等） - 50%极度缩放
+ * 2. 376px-480px：小手机 - 60%大幅缩放
+ * 3. 481px-768px：大手机/小平板 - 70%中度缩放
+ * 4. 769px-1024px：平板 - 80%适度缩放
+ * 5. 1025px-1366px：小笔记本/基准 - 90-100%保持原样
+ * 6. 1367px-1920px：标准桌面 - 110%轻微放大
+ * 7. 1921px-2560px：大屏显示器 - 130%中度放大
+ * 8. 2560px+：4K/8K超大屏 - 160%显著放大
+ */
+
+/* ===================================================================
+   ==================== 1. 超小手机 (≤375px) - iPhone SE等 ========
+   =================================================================== */
+@media (max-width: 375px) {
+    /* 50%极度缩放 - 超小屏幕特殊优化 */
+
+    :root {
+        --font-size-xs: 0.38rem;
+        --font-size-sm: 0.43rem;
+        --font-size-base: 0.45rem;
+        --font-size-md: 0.48rem;
+        --font-size-lg: 0.5rem;
+        --font-size-xl: 0.53rem;
+    }
+
+    /* Navigation - 极简化设计 */
+    .navbar {
+        padding: 0.5rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+    }
+
+    .navbar .container {
+        padding: 0 0.5rem;
+        max-width: 100%;
+    }
+
+    .navbar-brand {
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+
+    .nav-link {
+        font-size: 0.4rem;
+        padding: 0.25rem 0.5rem;
+        margin: 0 0.1rem;
+    }
+
+    /* 导航菜单移动端优化 */
+    .navbar-collapse {
+        border-top: 1px solid #e9ecef;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+    }
+
+    .dropdown-menu {
+        font-size: 0.4rem;
+        min-width: 120px;
+    }
+
+    .dropdown-item {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.4rem;
+    }
+
+    /* Home Page - 单列布局 */
+    .main-section {
+        height: auto;
+        min-height: calc(100vh - 60px);
+        padding: 1rem 0;
+    }
+
+    .home-container .row {
+        flex-direction: column-reverse;
+    }
+
+    .content-wrapper {
+        padding: 0;
+        margin: 1rem 0 0 0;
+        text-align: center;
+    }
+
+    .title {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+    }
+
+    .subtitle {
+        font-size: 0.7rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    /* Logo 极度精简 */
+    .logo-container {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 1rem auto;
+        top: 0;
+    }
+
+    .molecule-structure {
+        width: 93px;
+        height: 93px;
+        margin-bottom: 0.5rem;
+    }
+
+    .atom {
+        width: 31px;
+        height: 31px;
+    }
+
+    .bond {
+        width: 50px;
+        height: 3px;
+    }
+
+    .logo-text {
+        font-size: 1.25rem;
+        transform: translate(3px, -5px);
+        letter-spacing: 0.3px;
+    }
+
+    /* Action Buttons - 堆叠布局 */
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .action-buttons .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.5rem;
+        width: 200px;
+        max-width: 80%;
+        text-align: center;
+    }
+
+    /* Prediction Page */
+    .prediction-container {
+        max-width: 100%;
+        padding: 0.75rem 0.5rem 1.25rem;
+    }
+
+    .prediction-main-card {
+        margin: 0;
+        border-radius: 8px;
+    }
+
+    .prediction-card-header {
+        padding: 0.5rem 0.75rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .prediction-page-title {
+        font-size: 0.65rem;
+        text-align: center;
+    }
+
+    .prediction-mode {
+        margin: 0;
+        align-self: center;
+    }
+
+    .prediction-mode .btn {
+        font-size: 0.4rem;
+        padding: 0.3rem 0.8rem;
+    }
+
+    .form-section {
+        padding: 0.75rem;
+    }
+
+    /* 反应条件 - 单列布局 */
+    .reaction-conditions-grid {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+    }
+
+    .condition-card {
+        padding: 0.4rem 0.3rem;
+        min-height: 60px;
+    }
+
+    .condition-name {
+        font-size: 0.45rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .condition-params {
+        font-size: 0.35rem;
+        line-height: 1.1;
+    }
+
+    #btnSubmit {
+        font-size: 0.5rem;
+        padding: 0.5rem 1.25rem;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    /* Search Page */
+    .main-content {
+        max-width: 100%;
+        padding: 0 0.5rem;
+        margin: 0.5rem auto;
+    }
+
+    .header-section, .search-section {
+        padding: 0.75rem;
+        border-radius: 8px;
+    }
+
+    .subtitle-bigg {
+        font-size: 0.65rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .search-input-group {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .search-input, .search-button {
+        width: 100%;
+        border-radius: 6px;
+        font-size: 0.45rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .examples-container {
+        flex-direction: column;
+        gap: 0.3rem;
+        margin-top: 0.75rem;
+    }
+
+    .example-item {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.4rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* BiGG Results */
+    .bigg-model-card, .bigg-chart-card {
+        margin-bottom: 0.75rem;
+        border-radius: 8px;
+    }
+
+    /* Tables - 水平滚动 */
+    .table-responsive {
+        font-size: 0.4rem;
+    }
+
+    .table th, .table td {
+        padding: 0.3rem 0.2rem;
+        font-size: 0.35rem;
+    }
+
+    /* Modals */
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+
+    .modal-title {
+        font-size: 0.6rem;
+    }
+
+    .modal-body {
+        padding: 0.75rem;
+        font-size: 0.4rem;
+    }
+
+    .modal-result-value {
+        font-size: 1rem;
+        margin: 0.2rem 0;
+    }
+
+    .modal-result-label {
+        font-size: 0.5rem;
+    }
+
+    /* Footer */
+    .footer {
+        margin-top: 1rem;
+        padding: 0.75rem 0;
+    }
+
+    .footer p, .footer a {
+        font-size: 0.4rem;
+    }
+
+    /* Forms */
+    .form-control, .form-select {
+        font-size: 0.45rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    .form-label {
+        font-size: 0.45rem;
+        margin-bottom: 0.25rem;
+    }
+
+    /* Custom Conditions */
+    .custom-conditions-panel {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .custom-compound-item {
+        padding: 0.4rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .custom-compound-name {
+        font-size: 0.4rem;
+        margin-bottom: 0.3rem;
+    }
+
+    /* Hide complex elements on ultra-small screens */
+    .navbar-toggler-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+}
+
+/* ===================================================================
+   ==================== 2. 小手机 (376px-480px) ==================
+   =================================================================== */
+@media (min-width: 376px) and (max-width: 480px) {
+    /* 60%大幅缩放 */
+
+    :root {
+        --font-size-xs: 0.45rem;
+        --font-size-sm: 0.51rem;
+        --font-size-base: 0.54rem;
+        --font-size-md: 0.57rem;
+        --font-size-lg: 0.6rem;
+        --font-size-xl: 0.63rem;
+    }
+
+    .navbar {
+        padding: 0.6rem 0;
+    }
+
+    .navbar .container {
+        padding: 0 1rem;
+    }
+
+    .navbar-brand {
+        font-size: 0.9rem;
+    }
+
+    .nav-link {
+        font-size: 0.57rem;
+        padding: 0.3rem 0.6rem;
+        margin: 0 0.18rem;
+    }
+
+    /* Home Page Layout */
+    .main-section {
+        height: auto;
+        min-height: calc(100vh - 70px);
+        padding: 1.2rem 0;
+    }
+
+    .home-container .row {
+        flex-direction: column-reverse;
+    }
+
+    .content-wrapper {
+        padding: 0;
+        margin: 1.2rem 0 0 0;
+        text-align: center;
+    }
+
+    .title {
+        font-size: 1.2rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+        font-size: 0.84rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .logo-container {
+        width: 180px;
+        height: 180px;
+        margin: 0 auto 1.2rem auto;
+        top: 9px;
+    }
+
+    .molecule-structure {
+        width: 111px;
+        height: 111px;
+        margin-bottom: 0.75rem;
+    }
+
+    .atom {
+        width: 37.2px;
+        height: 37.2px;
+    }
+
+    .bond {
+        width: 60px;
+        height: 3.6px;
+    }
+
+    .logo-text {
+        font-size: 1.5rem;
+        transform: translate(3.6px, -6px);
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.6rem;
+        align-items: center;
+    }
+
+    .action-buttons .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.6rem;
+        width: 220px;
+        max-width: 85%;
+        text-align: center;
+    }
+
+    /* Prediction Page */
+    .prediction-container {
+        padding-top: 0.9rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .prediction-page-title {
+        font-size: 0.78rem;
+    }
+
+    .prediction-mode .btn {
+        font-size: 0.57rem;
+        padding: 0.39rem 1.2rem;
+    }
+
+    .reaction-conditions-grid {
+        grid-template-columns: 1fr;
+        gap: 0.42rem;
+    }
+
+    .condition-card {
+        padding: 0.3rem 0.24rem;
+    }
+
+    .condition-name {
+        font-size: 0.54rem;
+    }
+
+    .condition-params {
+        font-size: 0.45rem;
+    }
+
+    #btnSubmit {
+        font-size: 0.63rem;
+        padding: 0.45rem 1.5rem;
+        width: 100%;
+    }
+
+    .main-content {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+
+    .header-section, .search-section {
+        padding: 1.2rem;
+    }
+
+    .subtitle-bigg {
+        font-size: 0.78rem;
+    }
+
+    .search-input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .search-input, .search-button {
+        width: 100%;
+        border-radius: 6px;
+        font-size: 0.54rem;
+    }
+
+    .examples-container {
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .example-item {
+        font-size: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* ===================================================================
+   ==================== 3. 大手机/小平板 (481px-768px) ===========
+   =================================================================== */
+@media (min-width: 481px) and (max-width: 768px) {
+    /* 70%中度缩放 */
+
+    :root {
+        --font-size-xs: 0.53rem;
+        --font-size-sm: 0.6rem;
+        --font-size-base: 0.63rem;
+        --font-size-md: 0.67rem;
+        --font-size-lg: 0.7rem;
+        --font-size-xl: 0.74rem;
+    }
+
+    .navbar {
+        padding: 0.7rem 0;
+    }
+
+    .navbar .container {
+        padding: 0 1.4rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.05rem;
+    }
+
+    .nav-link {
+        font-size: 0.67rem;
+        padding: 0.35rem 0.7rem;
+        margin: 0 0.21rem;
+    }
+
+    .title {
+        font-size: 1.4rem;
+        margin-bottom: 0.7rem;
+    }
+
+    .subtitle {
+        font-size: 0.98rem;
+        margin-bottom: 1.4rem;
+    }
+
+    .logo-container {
+        width: 210px;
+        height: 210px;
+        top: 10.5px;
+    }
+
+    .molecule-structure {
+        width: 129.5px;
+        height: 129.5px;
+        margin-bottom: 0.88rem;
+    }
+
+    .atom {
+        width: 43.4px;
+        height: 43.4px;
+    }
+
+    .bond {
+        width: 70px;
+        height: 4.2px;
+    }
+
+    .logo-text {
+        font-size: 1.75rem;
+        transform: translate(4.2px, -7px);
+    }
+
+    /* 预测页面 - 开始使用2列布局 */
+    .prediction-container {
+        padding-top: 1.05rem;
+        padding-bottom: 1.75rem;
+    }
+
+    .prediction-page-title {
+        font-size: 0.91rem;
+    }
+
+    .prediction-mode .btn {
+        font-size: 0.67rem;
+        padding: 0.46rem 1.4rem;
+    }
+
+    .reaction-conditions-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.49rem;
+    }
+
+    .condition-card {
+        padding: 0.35rem 0.28rem;
+    }
+
+    .condition-name {
+        font-size: 0.63rem;
+    }
+
+    .condition-params {
+        font-size: 0.53rem;
+    }
+
+    #btnSubmit {
+        font-size: 0.74rem;
+        padding: 0.53rem 1.75rem;
+    }
+
+    .main-content {
+        max-width: 560px;
+        padding: 0 1.4rem;
+    }
+
+    .header-section, .search-section {
+        padding: 1.4rem;
+    }
+
+    .subtitle-bigg {
+        font-size: 0.91rem;
+    }
+
+    .examples-container {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .example-item {
+        font-size: 0.6rem;
+        padding: 0.5rem 0.9rem;
+    }
+}
+
+/* ===================================================================
+   ==================== 4. 平板 (769px-1024px) ===================
+   =================================================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* 80%适度缩放 */
+
+    :root {
+        --font-size-xs: 0.6rem;
+        --font-size-sm: 0.68rem;
+        --font-size-base: 0.72rem;
+        --font-size-md: 0.76rem;
+        --font-size-lg: 0.8rem;
+        --font-size-xl: 0.84rem;
+    }
+
+    .navbar {
+        padding: 0.8rem 0;
+    }
+
+    .navbar .container {
+        padding: 0 1.6rem;
+        max-width: 912px;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .nav-link {
+        font-size: 0.76rem;
+        padding: 0.4rem 0.8rem;
+        margin: 0 0.24rem;
+    }
+
+    .title {
+        font-size: 1.6rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .subtitle {
+        font-size: 1.12rem;
+        margin-bottom: 1.6rem;
+    }
+
+    .logo-container {
+        width: 240px;
+        height: 240px;
+        top: 12px;
+    }
+
+    .molecule-structure {
+        width: 148px;
+        height: 148px;
+        margin-bottom: 1rem;
+    }
+
+    .atom {
+        width: 49.6px;
+        height: 49.6px;
+    }
+
+    .bond {
+        width: 80px;
+        height: 4.8px;
+    }
+
+    .logo-text {
+        font-size: 2rem;
+        transform: translate(4.8px, -8px);
+    }
+
+    /* 恢复两列布局 */
+    .main-section {
+        height: calc(100vh - 70px);
+    }
+
+    .content-wrapper {
+        padding-right: 1.6rem;
+        margin-left: -0.8rem;
+    }
+
+    .prediction-container {
+        max-width: 1120px;
+        padding-top: 1.2rem;
+        padding-bottom: 2rem;
+    }
+
+    .prediction-page-title {
+        font-size: 1.04rem;
+    }
+
+    .prediction-mode .btn {
+        font-size: 0.76rem;
+        padding: 0.52rem 1.6rem;
+    }
+
+    .reaction-conditions-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.56rem;
+    }
+
+    .condition-card {
+        padding: 0.4rem 0.32rem;
+    }
+
+    .condition-name {
+        font-size: 0.72rem;
+    }
+
+    .condition-params {
+        font-size: 0.6rem;
+    }
+
+    #btnSubmit {
+        font-size: 0.84rem;
+        padding: 0.6rem 2rem;
+    }
+
+    .main-content {
+        max-width: 640px;
+        padding: 0 1.6rem;
+    }
+
+    .header-section, .search-section {
+        padding: 1.6rem;
+    }
+
+    .subtitle-bigg {
+        font-size: 1.04rem;
+    }
+
+    .examples-container {
+        gap: 0.6rem;
+    }
+
+    .example-item {
+        font-size: 0.7rem;
+        padding: 0.6rem 1rem;
+    }
+}
+
+/* ===================================================================
+   ==================== 5. 小笔记本 (1025px-1366px) - 基准区间 ===
+   =================================================================== */
+@media (min-width: 1025px) and (max-width: 1366px) {
+    /* 90-100%接近基准，轻微调整 */
+
+    :root {
+        --font-size-xs: 0.68rem;
+        --font-size-sm: 0.77rem;
+        --font-size-base: 0.81rem;
+        --font-size-md: 0.86rem;
+        --font-size-lg: 0.9rem;
+        --font-size-xl: 0.95rem;
+    }
+
+    .container {
+        max-width: 1026px;
+        padding: 0 1.8rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.35rem;
+    }
+
+    .nav-link {
+        font-size: 0.86rem;
+    }
+
+    .title {
+        font-size: 1.8rem;
+    }
+
+    .subtitle {
+        font-size: 1.26rem;
+    }
+
+    .logo-container {
+        width: 270px;
+        height: 270px;
+        top: 13.5px;
+    }
+
+    .molecule-structure {
+        width: 166.5px;
+        height: 166.5px;
+    }
+
+    .atom {
+        width: 55.8px;
+        height: 55.8px;
+    }
+
+    .bond {
+        width: 90px;
+        height: 5.4px;
+    }
+
+    .logo-text {
+        font-size: 2.25rem;
+        transform: translate(5.4px, -9px);
+    }
+
+    .prediction-container {
+        max-width: 1260px;
+        padding-top: 1.35rem;
+        padding-bottom: 2.25rem;
+    }
+
+    .prediction-page-title {
+        font-size: 1.17rem;
+    }
+
+    .prediction-mode .btn {
+        font-size: 0.86rem;
+        padding: 0.59rem 1.8rem;
+    }
+
+    .reaction-conditions-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.63rem;
+    }
+
+    .condition-card {
+        padding: 0.45rem 0.36rem;
+    }
+
+    .condition-name {
+        font-size: 0.81rem;
+    }
+
+    .condition-params {
+        font-size: 0.68rem;
+    }
+
+    #btnSubmit {
+        font-size: 0.95rem;
+        padding: 0.68rem 2.25rem;
+    }
+
+    .main-content {
+        max-width: 720px;
+    }
+
+    .subtitle-bigg {
+        font-size: 1.17rem;
+    }
+}
+
+/* ===================================================================
+   ==================== 6. 基准区间 (1367px-1920px) - 保持原样 ===
+   =================================================================== */
+/* 1367-1920px 区间：不设置任何媒体查询，保持原始CSS样式（基准尺寸1396x649） */
+/* 这是我们的基础参考尺寸，所有其他尺寸都基于此缩放 */
+
+/* ===================================================================
+   ==================== 7. 大屏显示器 (1921px-2560px) ============
+   =================================================================== */
+@media (min-width: 1921px) and (max-width: 2560px) {
+    /* 130%中度放大 */
+
+    :root {
+        --font-size-xs: 0.98rem;
+        --font-size-sm: 1.11rem;
+        --font-size-base: 1.17rem;
+        --font-size-md: 1.24rem;
+        --font-size-lg: 1.3rem;
+        --font-size-xl: 1.37rem;
+    }
+
+    body {
+        font-size: var(--font-size-base);
+    }
+
+    .container {
+        max-width: 1482px;
+        padding: 0 2.6rem;
+    }
+
+    .navbar {
+        padding: 1.3rem 0;
+    }
+
+    .navbar-brand {
+        font-size: 1.95rem;
+    }
+
+    .nav-link {
+        font-size: 1.24rem;
+        padding: 0.65rem 1.3rem;
+        margin: 0 0.39rem;
+        border-radius: 7.8px;
+    }
+
+    .dropdown-item {
+        padding: 0.91rem 1.95rem;
+        font-size: 1.17rem;
+    }
+
+    .title {
+        font-size: 2.6rem;
+        margin-bottom: 1.3rem;
+    }
+
+    .subtitle {
+        font-size: 1.82rem;
+        margin-bottom: 2.6rem;
+    }
+
+    .logo-container {
+        width: 390px;
+        height: 390px;
+        top: 19.5px;
+        padding-top: 15.6px;
+        padding-bottom: 15.6px;
+    }
+
+    .molecule-structure {
+        width: 240.5px;
+        height: 240.5px;
+        margin-bottom: 1.63rem;
+    }
+
+    .atom {
+        width: 80.6px;
+        height: 80.6px;
+    }
+
+    .bond {
+        width: 130px;
+        height: 7.8px;
+    }
+
+    .logo-text {
+        font-size: 3.25rem;
+        letter-spacing: 0.65px;
+        transform: translate(7.8px, -13px);
+    }
+
+    .action-buttons {
+        gap: 1.3rem;
+    }
+
+    .action-buttons .btn {
+        padding: 0.91rem 1.63rem;
+        font-size: 1.3rem;
+        border-radius: 0.78rem;
+    }
+
+    /* Prediction Page */
+    .prediction-container {
+        max-width: 1820px;
+        padding-top: 1.95rem;
+        padding-bottom: 3.25rem;
+    }
+
+    .prediction-main-card {
+        border-radius: 20.8px;
+    }
+
+    .prediction-card-header {
+        padding: 0.98rem 2.28rem;
+        border-radius: 20.8px 20.8px 0 0;
+    }
+
+    .prediction-page-title {
+        font-size: 1.69rem;
+    }
+
+    .prediction-mode {
+        margin-left: 1.95rem;
+    }
+
+    .prediction-mode .btn-group {
+        border-radius: 13px;
+        padding: 0.33rem;
+    }
+
+    .prediction-mode .btn {
+        font-size: 1.24rem;
+        padding: 0.85rem 2.6rem;
+        border-radius: 7.8px;
+    }
+
+    .form-section {
+        padding: 2.28rem;
+    }
+
+    .prediction-action-section {
+        padding: 0.98rem 2.6rem 1.63rem;
+        border-radius: 0 0 20.8px 20.8px;
+    }
+
+    .reaction-conditions-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.91rem;
+    }
+
+    .condition-card {
+        border-radius: 10.4px;
+        padding: 0.65rem 0.52rem;
+    }
+
+    .condition-name {
+        font-size: 1.17rem;
+        margin-bottom: 0.33rem;
+    }
+
+    .condition-params {
+        font-size: 0.98rem;
+    }
+
+    .custom-conditions-panel {
+        margin-top: 0.98rem;
+        padding: 1.14rem;
+        border-radius: 13px;
+    }
+
+    .custom-conditions-header {
+        font-size: 1.24rem;
+        margin-bottom: 0.98rem;
+    }
+
+    .custom-compound-item {
+        padding: 0.98rem;
+        border-radius: 10.4px;
+        margin-bottom: 0.85rem;
+    }
+
+    .custom-compound-name {
+        font-size: 1.11rem;
+        margin-bottom: 0.65rem;
+    }
+
+    #btnSubmit {
+        font-size: 1.37rem;
+        padding: 0.98rem 3.25rem;
+        border-radius: 13px;
+    }
+
+    /* Search Page */
+    .main-content {
+        max-width: 1040px;
+        padding-bottom: 1.3rem;
+    }
+
+    .header-section {
+        border-radius: 15.6px 15.6px 0 0;
+        padding: 2.6rem 2.6rem 1.95rem;
+    }
+
+    .search-section {
+        border-radius: 0 0 15.6px 15.6px;
+        padding: 2.6rem;
+    }
+
+    .subtitle-bigg {
+        font-size: 1.69rem;
+        margin-bottom: 1.3rem;
+    }
+
+    .search-input, .search-button {
+        padding: 0.98rem 1.3rem;
+        font-size: 1.3rem;
+        border-radius: 7.8px;
+    }
+
+    .search-button {
+        padding: 0.98rem 1.95rem;
+    }
+
+    .search-examples {
+        margin-top: 1.95rem;
+        padding-top: 1.95rem;
+    }
+
+    .examples-container {
+        gap: 0.98rem;
+    }
+
+    .examples-title {
+        font-size: 1.17rem;
+    }
+
+    .example-item {
+        padding: 0.78rem 1.56rem;
+        border-radius: 7.8px;
+        font-size: 1.17rem;
+    }
+
+    /* BiGG Results */
+    .bigg-model-card {
+        border-radius: 20.8px;
+    }
+
+    .bigg-chart-card {
+        border-radius: 15.6px;
+        padding: 31.2px;
+    }
+
+    .chart-accent-bar {
+        width: 3.9px;
+        height: 26px;
+        margin-right: 13px;
+    }
+
+    /* API/Tables */
+    .table th, .table td {
+        padding: 0.98rem;
+        font-size: var(--font-size-base);
+    }
+
+    .table thead th {
+        font-size: 1.17rem;
+    }
+
+    /* Forms */
+    .form-label {
+        font-size: var(--font-size-base);
+        margin-bottom: 0.52rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 10.4px;
+        padding: 0.72rem 1.17rem;
+        font-size: var(--font-size-base);
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 3.9px rgba(52, 152, 219, 0.1);
+    }
+
+    /* Buttons */
+    .btn-primary {
+        padding: 0.65rem 1.63rem;
+        border-radius: 10.4px;
+        font-size: 1.17rem;
+    }
+
+    .btn-secondary {
+        padding: 0.65rem 1.63rem;
+        border-radius: 10.4px;
+        font-size: 1.17rem;
+    }
+
+    /* Modals */
+    .modal-title {
+        font-size: 1.5rem;
+    }
+
+    .modal-body {
+        font-size: var(--font-size-base);
+        padding: 1.3rem;
+    }
+
+    .modal-result-value {
+        font-size: 2.28rem;
+        margin: 0.33rem 0;
+    }
+
+    .modal-result-label {
+        font-size: 1.3rem;
+        margin-bottom: 0.33rem;
+    }
+
+    .modal-result-unit {
+        font-size: 1.3rem;
+        margin-top: 0.2rem;
+    }
+
+    .modal-result-icon {
+        font-size: 1.95rem;
+        margin-bottom: 0.65rem;
+    }
+
+    /* Footer */
+    .footer {
+        margin-top: 2.6rem;
+    }
+
+    .footer p {
+        margin-bottom: 0.65rem;
+    }
+
+    /* Alert & Badge */
+    .alert {
+        border-radius: 10.4px;
+    }
+
+    .badge {
+        font-size: 1.14rem;
+        padding: 0.46rem 0.85rem;
+    }
+
+    /* Example links */
+    .example-link {
+        padding: 0.33rem 0.59rem;
+        border-radius: 7.8px;
+        font-size: 0.98rem;
+    }
+
+    /* Batch Results */
+    #batchResultsTable {
+        font-size: 1.17rem;
+    }
+
+    #batchResultsTable th {
+        font-size: 1.24rem;
+    }
+}
+
+/* ===================================================================
+   ==================== 8. 4K/8K超大屏 (2561px+) ================
+   =================================================================== */
+@media (min-width: 2561px) {
+    /* 160%显著放大 */
+
+    :root {
+        --font-size-xs: 1.2rem;
+        --font-size-sm: 1.36rem;
+        --font-size-base: 1.44rem;
+        --font-size-md: 1.52rem;
+        --font-size-lg: 1.6rem;
+        --font-size-xl: 1.68rem;
+    }
+
+    body {
+        font-size: var(--font-size-base);
+        line-height: 1.7;
+    }
+
+    .container {
+        max-width: 1824px;
+        padding: 0 3.2rem;
+    }
+
+    .navbar {
+        padding: 1.6rem 0;
+    }
+
+    .navbar-brand {
+        font-size: 2.4rem;
+        font-weight: 700;
+    }
+
+    .nav-link {
+        font-size: 1.52rem;
+        padding: 0.8rem 1.6rem;
+        margin: 0 0.48rem;
+        border-radius: 9.6px;
+    }
+
+    .dropdown-menu {
+        border-radius: 12.8px;
+    }
+
+    .dropdown-item {
+        padding: 1.12rem 2.4rem;
+        font-size: 1.44rem;
+    }
+
+    .title {
+        font-size: 3.2rem;
+        margin-bottom: 1.6rem;
+    }
+
+    .subtitle {
+        font-size: 2.24rem;
+        margin-bottom: 3.2rem;
+        line-height: 1.7;
+    }
+
+    .logo-container {
+        width: 480px;
+        height: 480px;
+        top: 24px;
+        gap: 2rem;
+        padding-top: 19.2px;
+        padding-bottom: 19.2px;
+    }
+
+    .molecule-structure {
+        width: 296px;
+        height: 296px;
+        margin: 0 auto 2rem;
+    }
+
+    .atom {
+        width: 99.2px;
+        height: 99.2px;
+    }
+
+    .bond {
+        height: 9.6px;
+        width: 160px;
+        border-radius: 4.8px;
+    }
+
+    .logo-text {
+        font-size: 4rem;
+        letter-spacing: 0.8px;
+        transform: translate(9.6px, -16px);
+    }
+
+    .action-buttons {
+        gap: 1.6rem;
+    }
+
+    .action-buttons .btn {
+        padding: 1.12rem 2rem;
+        font-size: 1.6rem;
+        border-radius: 0.96rem;
+    }
+
+    /* Prediction Page */
+    .prediction-container {
+        max-width: 2240px;
+        padding-top: 2.4rem;
+        padding-bottom: 4rem;
+    }
+
+    .prediction-main-card {
+        border-width: 4.8px;
+        border-radius: 25.6px;
+    }
+
+    .prediction-card-header {
+        padding: 1.2rem 2.8rem;
+        border-radius: 25.6px 25.6px 0 0;
+        border-bottom-width: 3.2px;
+    }
+
+    .prediction-page-title {
+        font-size: 2.08rem;
+    }
+
+    .prediction-mode {
+        margin-left: 2.4rem;
+    }
+
+    .prediction-mode .btn-group {
+        border-radius: 16px;
+        padding: 0.4rem;
+        border-width: 1.6px;
+    }
+
+    .prediction-mode .btn {
+        font-size: 1.52rem;
+        padding: 1.04rem 3.2rem;
+        border-radius: 9.6px;
+    }
+
+    .form-section {
+        padding: 2.8rem;
+    }
+
+    .prediction-action-section {
+        padding: 1.2rem 3.2rem 2rem;
+        border-radius: 0 0 25.6px 25.6px;
+    }
+
+    .reaction-conditions-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1.12rem;
+    }
+
+    .conditions-group-label {
+        margin-top: 0.64rem;
+    }
+
+    .condition-card {
+        border-radius: 12.8px;
+        padding: 0.8rem 0.64rem;
+        border-width: 1.6px;
+    }
+
+    .condition-card:hover {
+        transform: translateY(-3.2px);
+    }
+
+    .condition-card:has(input[type="radio"]:checked) {
+        border-width: 3.2px;
+        transform: translateY(-3.2px);
+    }
+
+    .condition-name {
+        font-size: 1.44rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .condition-params {
+        font-size: 1.2rem;
+    }
+
+    .custom-conditions-panel {
+        margin-top: 1.2rem;
+        padding: 1.4rem;
+        border-radius: 16px;
+        border-width: 1.6px;
+    }
+
+    .custom-conditions-header {
+        font-size: 1.52rem;
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.8rem;
+    }
+
+    .custom-compound-item {
+        padding: 1.2rem;
+        border-radius: 12.8px;
+        margin-bottom: 1.04rem;
+        border-width: 1.6px;
+    }
+
+    .custom-compound-name {
+        font-size: 1.36rem;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.56rem;
+    }
+
+    #btnSubmit {
+        font-size: 1.68rem;
+        padding: 1.2rem 4rem;
+        border-radius: 16px;
+    }
+
+    /* Search Page */
+    .main-content {
+        max-width: 1280px;
+        padding-bottom: 1.6rem;
+    }
+
+    .header-section {
+        border-radius: 19.2px 19.2px 0 0;
+        padding: 3.2rem 3.2rem 2.4rem;
+        border-width: 1.6px;
+    }
+
+    .search-section {
+        border-radius: 0 0 19.2px 19.2px;
+        padding: 3.2rem;
+        border-width: 1.6px;
+    }
+
+    .subtitle-bigg {
+        font-size: 2.08rem;
+        margin-bottom: 1.6rem;
+    }
+
+    .search-input, .search-button {
+        padding: 1.2rem 1.6rem;
+        font-size: 1.6rem;
+        border-radius: 9.6px;
+        border-width: 1.6px;
+    }
+
+    .search-button {
+        padding: 1.2rem 2.4rem;
+        border-width: 1.6px;
+    }
+
+    .search-examples {
+        margin-top: 2.4rem;
+        padding-top: 2.4rem;
+        border-top-width: 1.6px;
+    }
+
+    .examples-container {
+        gap: 1.2rem;
+    }
+
+    .examples-title {
+        font-size: 1.44rem;
+    }
+
+    .example-item {
+        padding: 0.96rem 1.92rem;
+        border-radius: 9.6px;
+        font-size: 1.44rem;
+        border-width: 1.6px;
+    }
+
+    .example-item:hover {
+        transform: translateY(-1.6px);
+    }
+
+    /* BiGG Results */
+    .bigg-model-card {
+        border-radius: 25.6px;
+        border-width: 1.6px;
+    }
+
+    .bigg-chart-card {
+        border-radius: 19.2px;
+        padding: 38.4px;
+        border-width: 1.6px;
+    }
+
+    .chart-accent-bar {
+        width: 4.8px;
+        height: 32px;
+        border-radius: 3.2px;
+        margin-right: 16px;
+    }
+
+    .model-conditions {
+        border-radius: 12.8px;
+        padding: 25.6px;
+        border-width: 1.6px;
+    }
+
+    .condition-compact {
+        border-radius: 9.6px;
+        padding: 19.2px;
+        border-left-width: 4.8px;
+        font-size: 1.36rem;
+    }
+
+    .reaction-classification-explanation {
+        border-radius: 19.2px;
+        padding: 38.4px;
+        border-width: 1.6px;
+    }
+
+    .classification-card {
+        border-radius: 12.8px;
+        padding: 25.6px;
+        border-left-width: 6.4px;
+    }
+
+    .classification-color-dot {
+        width: 19.2px;
+        height: 19.2px;
+        margin-right: 12.8px;
+    }
+
+    /* API/Tables */
+    .table th, .table td {
+        padding: 1.2rem;
+        font-size: var(--font-size-base);
+    }
+
+    .table thead th {
+        font-size: 1.52rem;
+        border-bottom-width: 3.2px;
+    }
+
+    .table tbody + tbody {
+        border-top-width: 3.2px;
+    }
+
+    /* Forms */
+    .form-label {
+        font-size: var(--font-size-base);
+        margin-bottom: 0.64rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 12.8px;
+        padding: 0.88rem 1.44rem;
+        font-size: var(--font-size-base);
+        border-width: 1.6px;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-width: 1.6px;
+        box-shadow: 0 0 0 4.8px rgba(52, 152, 219, 0.1);
+    }
+
+    .form-check-input {
+        border-width: 3.2px;
+    }
+
+    .form-range::-webkit-slider-thumb {
+        width: 1.6rem;
+        height: 1.6rem;
+        margin-top: -0.4rem;
+        border-radius: 1.6rem;
+    }
+
+    .form-range::-webkit-slider-runnable-track {
+        height: 0.8rem;
+        border-radius: 1.6rem;
+    }
+
+    .form-range::-moz-range-track {
+        height: 0.8rem;
+        border-radius: 1.6rem;
+    }
+
+    .form-range::-moz-range-thumb {
+        width: 1.6rem;
+        height: 1.6rem;
+        border-radius: 1.6rem;
+    }
+
+    /* Buttons */
+    .btn {
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        padding: 0.8rem 2rem;
+        border-radius: 12.8px;
+        font-size: 1.44rem;
+    }
+
+    .btn-secondary {
+        padding: 0.8rem 2rem;
+        border-radius: 12.8px;
+        font-size: 1.44rem;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3.2px);
+    }
+
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary:active {
+        transform: translateY(-1.6px);
+    }
+
+    /* Modals */
+    .modal-dialog {
+        margin: 3.2rem;
+    }
+
+    .modal-content {
+        border-radius: 19.2px;
+        border-width: 1.6px;
+    }
+
+    .modal-header {
+        padding: 1.6rem;
+        border-bottom-width: 1.6px;
+        border-radius: 19.2px 19.2px 0 0;
+    }
+
+    .modal-title {
+        font-size: 1.84rem;
+    }
+
+    .modal-body {
+        font-size: var(--font-size-base);
+        padding: 1.6rem;
+    }
+
+    .modal-footer {
+        padding: 1.6rem;
+        border-top-width: 1.6px;
+    }
+
+    .result-card-gradient-blue, .result-card-gradient-pink {
+        border-radius: 19.2px;
+        border-width: 3.2px;
+    }
+
+    .result-card-gradient-blue:hover, .result-card-gradient-pink:hover {
+        transform: translateY(-3.2px);
+    }
+
+    .modal-result-value {
+        font-size: 2.8rem;
+        margin: 0.4rem 0;
+    }
+
+    .modal-result-label {
+        font-size: 1.6rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .modal-result-unit {
+        font-size: 1.6rem;
+        margin-top: 0.24rem;
+    }
+
+    .modal-result-icon {
+        font-size: 2.4rem;
+        margin-bottom: 0.8rem;
+    }
+
+    /* Footer */
+    .footer {
+        margin-top: 3.2rem;
+    }
+
+    .footer p {
+        margin-bottom: 0.8rem;
+        font-size: var(--font-size-base);
+    }
+
+    /* Alert & Badge */
+    .alert {
+        border-radius: 12.8px;
+        border-width: 1.6px;
+    }
+
+    .badge {
+        font-size: 1.4rem;
+        padding: 0.56rem 1.04rem;
+    }
+
+    /* Example links */
+    .example-link {
+        padding: 0.4rem 0.72rem;
+        border-radius: 9.6px;
+        font-size: 1.2rem;
+        border-width: 2.4px;
+    }
+
+    .example-link:hover {
+        transform: translateY(-3.2px);
+    }
+
+    /* Batch Results */
+    #batchResultsTable {
+        font-size: 1.44rem;
+    }
+
+    #batchResultsTable th {
+        font-size: 1.52rem;
+    }
+
+    /* Contact & Citation Pages */
+    .contact-page, .citation-page {
+        padding-top: 3.2rem;
+        padding-bottom: 3.2rem;
+    }
+
+    .contact-person h5, .citation-item h5 {
+        font-size: 1.76rem;
+        padding-bottom: 0.32rem;
+        border-bottom-width: 1.6px;
+    }
+
+    .contact-details p, .citation-text {
+        font-size: 1.44rem;
+    }
+
+    .contact-details i {
+        width: 25.6px;
+    }
+
+    .citation-text pre {
+        font-size: 1.36rem;
+    }
+}
+
+/* ===================================================================
+   ==================== 响应式工具类和特殊优化 ====================
+   =================================================================== */
+
+/* 小屏幕隐藏/显示工具类 */
+@media (max-width: 768px) {
+    .d-sm-none {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: block !important;
+    }
+
+    /* 小屏幕下的表格优化 */
+    .table-responsive {
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+    }
+
+    /* 小屏幕下的模态框优化 */
+    .modal-dialog-centered {
+        min-height: calc(100vh - 1rem);
+    }
+
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-only {
+        display: none !important;
+    }
+
+    .d-sm-none {
+        display: block !important;
+    }
+}
+
+/* 高分辨率屏幕优化 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo-container,
+    .molecule-structure {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* 打印样式优化 */
+@media print {
+    .navbar, .footer, .btn, .modal, .dropdown-menu {
+        display: none !important;
+    }
+
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+        color: #000;
+        background: #fff;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .main-content {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .table {
+        border-collapse: collapse;
+        border: 1px solid #000;
+    }
+
+    .table th, .table td {
+        border: 1px solid #000;
+        padding: 6pt;
+        font-size: 10pt;
+    }
+}
+
+/* 减少动画的用户偏好支持 */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .molecule-structure {
+        animation: none;
+    }
+
+    .atom {
+        animation: none;
+    }
+
+    .bond {
+        animation: none;
+    }
+
+    .logo-text {
+        animation: none;
+    }
+}
+
+
+/* ===================================================================
+   ==================== PAGE-SPECIFIC STYLES =======================
+   =================================================================== */
+
+/* Help page typography: unify all non-heading text sizes (keep headings unchanged) */
+.dgbyg-help {
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* Unify all body text (paragraphs, lists, small text, Bootstrap helpers) */
+.dgbyg-help p,
+.dgbyg-help li,
+.dgbyg-help .text-muted,
+.dgbyg-help .text-info,
+.dgbyg-help .small,
+.dgbyg-help small {
+  font-size: 1em !important;
+  line-height: inherit;
+}
+
+.dgbyg-help code {
+  font-size: 0.95em;
+}
+
+/* Overview feature box */
+.overview-box {
+  background-color: #f8f9fb;          /* 非常淡的灰蓝背景 */
+  border: 1px solid #e6e8ec;           /* 细边框 */
+  border-radius: 0.5rem;               /* 轻微圆角 */
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.overview-box ul {
+  padding-left: 1.2rem;
+}
+
+.overview-box li {
+  margin-bottom: 0.4rem;
+}
+
+/* API page typography: unify non-heading text */
+.dgbyg-api-page p,
+.dgbyg-api-page li,
+.dgbyg-api-page td,
+.dgbyg-api-page th,
+.dgbyg-api-page small,
+.dgbyg-api-page .text-muted,
+.dgbyg-api-page .table,
+.dgbyg-api-page pre,
+.dgbyg-api-page code {
+  font-size: 1em;
+  line-height: inherit;
+}
+
+/* Make "Base URL" value look like body text, not a big heading jump */
+.dgbyg-api-page .base-url code {
+  font-size: 1em;
+}
+
+
+

@@ -1,0 +1,918 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-5 dgbyg-api-page">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <!-- Introduction -->
+<section class="mb-4">
+  <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+    <h5 class="mb-0">Base URL</h5>
+    <code>https://dgbyg.drziweidai.com</code>
+  </div>
+
+  <p class="text-muted mb-0">
+    Prefer running dGbyG locally? A research version is available as a Python package.
+    The source code and installation instructions are available on
+    <a href="https://github.com/f-wc/dGbyG/tree/main" target="_blank">GitHub</a>.
+  </p>
+</section>
+
+
+
+            <!-- ==================== GEM DATABASE APIs ==================== -->
+            <section class="mb-4">
+              <h5 class="mb-2 border-bottom pb-2">GEM Database Search APIs</h5>
+              <p class="text-muted mb-0">
+          </section>
+
+          <!-- Models API -->
+          <section class="mb-5">
+              <div class="card">
+                  <div class="card-header bg-white">
+                      <h5 class="mb-0">Models API</h5>
+                  </div>
+                  <div class="card-body">
+                      <div class="mb-4">
+                          <h6>Endpoint</h6>
+                          <code class="bg-light p-2 rounded d-block">GET /api/models?q={query}</code>
+                          <small class="text-muted">Search and return matching metabolic models.</small>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Query parameters</h6>
+                          <div class="table-responsive">
+                              <table class="table table-bordered">
+                                  <thead class="table-light">
+                                      <tr>
+                                          <th>Parameter</th>
+                                          <th>Type</th>
+                                          <th>Required</th>
+                                          <th>Description</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td><code>q</code></td>
+                                          <td>string</td>
+                                          <td>Yes</td>
+                                          <td>Model name or ID (e.g., "Recon3D", "Human-GEM")</td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Example request</h6>
+                          <pre class="bg-light p-3 rounded"><code>curl "https://dgbyg.drziweidai.com/api/models?q=Recon3D"</code></pre>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Example response</h6>
+                          <pre class="bg-light p-3 rounded"><code>{
+"models": [
+  {
+    "conditions": {
+      "Cytosol": {
+        "I": 0.25,
+        "T": 298.15,
+        "e_potential": 0,
+        "pH": 7.2,
+        "pMg": 14.0
+      },
+      "Endoplasmic reticulum": {
+        "I": 0.25,
+        "T": 298.15,
+        "e_potential": 0,
+        "pH": 7.2,
+        "pMg": 14.0
+      },
+      "Extracellular": {
+        "I": 0.25,
+        "T": 298.15,
+        "e_potential": 0.03,
+        "pH": 7.4,
+        "pMg": 14.0
+      },
+      "Golgi apparatus": {
+        "I": 0.25,
+        "T": 298.15,
+        "e_potential": 0,
+        "pH": 6.35,
+        "pMg": 14.0
+      },
+      "Inner mitochondria": {
+        "I": 0.25,
+        "T": 298.15,
+        "e_potential": -0.155,
+        "pH": 8.0,
+        "pMg": 14.0
+      },
+      "Lysosome": {
+        "I": 0.25,
+        "T": 298.15,
+        "e_potential": 0.019,
+        "pH": 5.5,
+        "pMg": 14.0
+      },
+      "Mitochondria": {
+        "I": 0.25,
+        "T": 298.15,
+        "e_potential": -0.155,
+        "pH": 8.0,
+        "pMg": 14.0
+      },
+      "Nucleus": {
+        "I": 0.25,
+        "T": 298.15,
+        "e_potential": 0,
+        "pH": 7.2,
+        "pMg": 14.0
+      },
+      "Peroxisome": {
+        "I": 0.25,
+        "T": 298.15,
+        "e_potential": 0.012,
+        "pH": 7.0,
+        "pMg": 14.0
+      }
+    },
+    "download_url": "/api/models/Recon3D/download",
+    "model_id": "Recon3D",
+    "stats": {
+      "boundary_reactions": 1892,
+      "covered_irreversible": 5187,
+      "covered_multi_compartment": 4412,
+      "covered_reactions": 9646,
+      "covered_reversible": 4459,
+      "covered_reversible_vs_irreversible": "4459:5187",
+      "covered_single_compartment": 5234,
+      "covered_single_vs_multi_compartment": "5234:4412",
+      "total_reactions": 13543,
+      "unbalanced_reactions": 565,
+      "unstructured_reactions": 1440
+    }
+  }
+],
+"query": "Recon3D",
+"total_found": 1
+}
+</code></pre>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+          <!-- Reactions API -->
+          <section class="mb-5">
+              <div class="card">
+                  <div class="card-header bg-white">
+                      <h5 class="mb-0">Reactions API</h5>
+                  </div>
+                  <div class="card-body">
+                      <div class="mb-4">
+                          <h6>Endpoint</h6>
+                          <code class="bg-light p-2 rounded d-block">GET /api/reactions?q={query}&amp;include_dg={true|false}</code>
+                          <small class="text-muted">Search reactions. Optionally include Δ<sub><i>r</i></sub>G° results in the response.</small>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Query parameters</h6>
+                          <div class="table-responsive">
+                              <table class="table table-bordered">
+                                  <thead class="table-light">
+                                      <tr>
+                                          <th>Parameter</th>
+                                          <th>Type</th>
+                                          <th>Required</th>
+                                          <th>Default</th>
+                                          <th>Description</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td><code>q</code></td>
+                                          <td>string</td>
+                                          <td>Yes</td>
+                                          <td>-</td>
+                                          <td>Reaction BiGG ID or name (e.g., "10FTHF5GLUtl", "5-glutamyl-10FTHF transport, lysosomal")</td>
+                                      </tr>
+                                      <tr>
+                                          <td><code>model_filter</code></td>
+                                          <td>string</td>
+                                          <td>No</td>
+                                          <td>null</td>
+                                          <td>Limit results to a specific model.</td>
+                                      </tr>
+                                      <tr>
+                                          <td><code>include_dg</code></td>
+                                          <td>boolean</td>
+                                          <td>No</td>
+                                          <td>true</td>
+                                          <td>Include Δ<sub><i>r</i></sub>G° data in the response.</td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Example request</h6>
+                          <pre class="bg-light p-3 rounded"><code>curl "https://dgbyg.drziweidai.com/api/reactions?q=ALADGLNexR&amp;include_dg=true"</code></pre>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Example response</h6>
+                          <pre class="bg-light p-3 rounded"><code>{
+"include_dg": true,
+"model_filter": null,
+"query": "ALADGLNexR",
+"reactions": [
+  {
+    "dg_data": [
+      {
+        "SD": 0.0,
+        "equation": "ala__D_e + gln__L_c <=> ala__D_c + gln__L_e",
+        "model_id": "RECON1",
+        "reaction_id": "ALADGLNexR",
+        "standard_dGr_prime": 3.42
+      },
+      {
+        "SD": 0.0,
+        "equation": "ala_D[e] + gln_L[c] <=> ala_D[c] + gln_L[e]",
+        "model_id": "Recon3D",
+        "reaction_id": "ALADGLNexR",
+        "standard_dGr_prime": 2.61
+      },
+      {
+        "SD": 0.0,
+        "equation": "ala__D_e + gln__L_c <=> ala__D_c + gln__L_e",
+        "model_id": "iCHOv1",
+        "reaction_id": "ALADGLNexR",
+        "standard_dGr_prime": 3.42
+      },
+      {
+        "SD": 0.0,
+        "equation": "ala__D_e + gln__L_c <=> ala__D_c + gln__L_e",
+        "model_id": "iMM1415",
+        "reaction_id": "ALADGLNexR",
+        "standard_dGr_prime": 3.42
+      },
+      {
+        "SD": 0.0,
+        "equation": "ala__D_c + gln__L_e <=> ala__D_e + gln__L_c",
+        "model_id": "Human-GEM",
+        "reaction_id": "ALADGLNexR",
+        "standard_dGr_prime": -3.42
+      },
+      {
+        "SD": 0.0,
+        "equation": "ala__D_c + gln__L_e <=> ala__D_e + gln__L_c",
+        "model_id": "Worm-GEM",
+        "reaction_id": "ALADGLNexR",
+        "standard_dGr_prime": -3.42
+      },
+      {
+        "SD": 0.0,
+        "equation": "ala__D_c + gln__L_e <=> ala__D_e + gln__L_c",
+        "model_id": "Rat-GEM",
+        "reaction_id": "ALADGLNexR",
+        "standard_dGr_prime": -3.42
+      },
+      {
+        "SD": 0.0,
+        "equation": "ala__D_c + gln__L_e <=> ala__D_e + gln__L_c",
+        "model_id": "Zebrafish-GEM",
+        "reaction_id": "ALADGLNexR",
+        "standard_dGr_prime": -3.42
+      },
+      {
+        "SD": 0.0,
+        "equation": "ala__D_c + gln__L_e <=> ala__D_e + gln__L_c",
+        "model_id": "Mouse-GEM",
+        "reaction_id": "ALADGLNexR",
+        "standard_dGr_prime": -3.42
+      },
+      {
+        "SD": 0.0,
+        "equation": "ala__D_c + gln__L_e <=> ala__D_e + gln__L_c",
+        "model_id": "Fruitfly-GEM",
+        "reaction_id": "ALADGLNexR",
+        "standard_dGr_prime": -3.42
+      }
+    ],
+    "equation": "ala__D_e + gln__L_c <=> ala__D_c + gln__L_e",
+    "id": "ALADGLNexR",
+    "model_list": [
+      "Fruitfly-GEM",
+      "Human-GEM",
+      "Mouse-GEM",
+      "RECON1",
+      "Rat-GEM",
+      "Recon3D",
+      "Worm-GEM",
+      "Zebrafish-GEM",
+      "iCHOv1",
+      "iMM1415"
+    ],
+    "name": "L-alanine/glutamine reversible exchange"
+  }
+],
+"total_found": 1
+}</code></pre>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+          <!-- Metabolites API -->
+          <section class="mb-5">
+              <div class="card">
+                  <div class="card-header bg-white">
+                      <h5 class="mb-0">Metabolites API</h5>
+                  </div>
+                  <div class="card-body">
+                      <div class="mb-4">
+                          <h6>Endpoint</h6>
+                          <code class="bg-light p-2 rounded d-block">GET /api/metabolites?q={query}</code>
+                          <small class="text-muted">Search metabolites and return related reactions.</small>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Query parameters</h6>
+                          <div class="table-responsive">
+                              <table class="table table-bordered">
+                                  <thead class="table-light">
+                                      <tr>
+                                          <th>Parameter</th>
+                                          <th>Type</th>
+                                          <th>Required</th>
+                                          <th>Description</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td><code>q</code></td>
+                                          <td>string</td>
+                                          <td>Yes</td>
+                                          <td>Metabolite name or ID (e.g., "10fthf5glu_l", "glucose")</td>
+                                      </tr>
+                                      <tr>
+                                          <td><code>model_filter</code></td>
+                                          <td>string</td>
+                                          <td>No</td>
+                                          <td>Limit results to a specific model.</td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Example request</h6>
+                          <pre class="bg-light p-3 rounded"><code>curl "https://dgbyg.drziweidai.com/api/metabolites?q=10fthf5glu_l&amp;model_filter=RECON1"</code></pre>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Example response</h6>
+                          <pre class="bg-light p-3 rounded"><code>{
+"include_dg": true,
+"metabolites": [
+  {
+    "formula": "C40H45N11O19",
+    "id": "10fthf5glu_l",
+    "name": "10-formyltetrahydrofolate-",
+    "reactions": [
+      {
+        "dg_data": [
+          {
+            "SD": 0.0,
+            "equation": "10fthf5glu_c --> 10fthf5glu_l",
+            "model_id": "RECON1",
+            "reaction_id": "10FTHF5GLUtl",
+            "standard_dGr_prime": -447.94
+          }
+        ],
+        "equation": "10fthf5glu_c --> 10fthf5glu_l",
+        "model_list": [
+          "RECON1"
+        ],
+        "name": "5-glutamyl-10FTHF transport, lysosomal",
+        "reaction_id": "10FTHF5GLUtl"
+      },
+      {
+        "dg_data": [
+          {
+            "SD": 22.2,
+            "equation": "10fthf5glu_l + 4.0 h2o_l --> 10fthf_l + 4.0 glu__L_l",
+            "model_id": "RECON1",
+            "reaction_id": "GGH_10FTHF5GLUl",
+            "standard_dGr_prime": 4.57
+          }
+        ],
+        "equation": "10fthf5glu_l + 4.0 h2o_l --> 10fthf_l + 4.0 glu__L_l",
+        "model_list": [
+          "RECON1"
+        ],
+        "name": "Gamma-glutamyl hydrolase (10FTHF5GLU), lysosomal",
+        "reaction_id": "GGH_10FTHF5GLUl"
+      },
+      {
+        "dg_data": [
+          {
+            "SD": 38.51,
+            "equation": "10fthf6glu_l + h2o_l --> 10fthf5glu_l + glu__L_l",
+            "model_id": "RECON1",
+            "reaction_id": "GGH_10FTHF6GLUl",
+            "standard_dGr_prime": -135.72
+          }
+        ],
+        "equation": "10fthf6glu_l + h2o_l --> 10fthf5glu_l + glu__L_l",
+        "model_list": [
+          "RECON1"
+        ],
+        "name": "Gamma-glutamyl hydrolase (10FTHF6GLU), lysosomal",
+        "reaction_id": "GGH_10FTHF6GLUl"
+      }
+    ],
+    "universal_id": "10fthf5glu"
+  }
+],
+"model_filter": "RECON1",
+"query": "10fthf5glu_l",
+"total_found": 1
+}</code></pre>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+          <!-- Genes API -->
+          <section class="mb-5">
+              <div class="card">
+                  <div class="card-header bg-white">
+                      <h5 class="mb-0">Genes API</h5>
+                  </div>
+                  <div class="card-body">
+                      <div class="mb-4">
+                          <h6>Endpoint</h6>
+                          <code class="bg-light p-2 rounded d-block">GET /api/genes?q={query}</code>
+                          <small class="text-muted">Search genes and return their associated reactions.</small>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Query parameters</h6>
+                          <div class="table-responsive">
+                              <table class="table table-bordered">
+                                  <thead class="table-light">
+                                      <tr>
+                                          <th>Parameter</th>
+                                          <th>Type</th>
+                                          <th>Required</th>
+                                          <th>Description</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td><code>q</code></td>
+                                          <td>string</td>
+                                          <td>Yes</td>
+                                          <td>Gene name or ID (e.g., "ENO1", "LDHC")</td>
+                                      </tr>
+                                      <tr>
+                                          <td><code>max_reactions</code></td>
+                                          <td>integer</td>
+                                          <td>No</td>
+                                          <td>Max reactions per gene (default: 10)</td>
+                                      </tr>
+                                      <tr>
+                                          <td><code>model_filter</code></td>
+                                          <td>string</td>
+                                          <td>No</td>
+                                          <td>Limit results to a specific model.</td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Example request</h6>
+                          <pre class="bg-light p-3 rounded"><code>curl "https://dgbyg.drziweidai.com/api/genes?q=LDHC&amp;max_reactions=1"</code></pre>
+                      </div>
+
+                      <div class="mb-4">
+                          <h6>Example response</h6>
+                          <pre class="bg-light p-3 rounded"><code>{
+"genes": [
+  {
+    "id": "Ldhc",
+    "model_list": [
+      "Mouse-GEM",
+      "Rat-GEM"
+    ],
+    "name": "Ldhc",
+    "reactions": [
+      {
+        "gpr_info": [
+          {
+            "gpr": "Ldha or Ldhal6b or Ldhb or Ldhc or Ldhd",
+            "models": [
+              "Mouse-GEM",
+              "Rat-GEM"
+            ]
+          }
+        ],
+        "id": "2H3MVc",
+        "name": "Formation of 2-Hydroxy-3-Methyl-Valerate"
+      }
+    ],
+    "total_reactions": 4
+  }
+],
+"max_reactions_per_gene": 1,
+"model_filter": null,
+"query": "LDHC",
+"total_found": 6
+}</code></pre>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+
+            <!-- ==================== THERMODYNAMIC CALCULATION APIs ==================== -->
+            <section class="mb-4">
+                <h5 class="mb-2 border-bottom pb-2">Δ<sub><i>r</i></sub>G° Calculation APIs</h5>
+            </section>
+
+            <!-- Single Equation Endpoint -->
+            <section class="mb-5">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Single Reaction Calculation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6>Endpoint</h6>
+                            <code class="bg-light p-2 rounded d-block">POST /calculate</code>
+                            <small class="text-muted">Calculate Δ<sub><i>r</i></sub>G° for one reaction.</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Request parameters</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>equation</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>Reaction equation (e.g., "2 [H][H] + O=O = 2 O")</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>identifier_type</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>One of: "smiles", "inchi", "inchi_key", "kegg", "metanetx", "hmdb", "name", "pubchem", "chebi", "bigg", "mixed"</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>reaction_condition</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>Choose a preset: "d" (default), "c" (cytosol), "m" (mitochondria), "n" (nucleus), "e" (extracellular), "r" (endoplasmic reticulum), 
+                                                "g" (Golgi apparatus), "l" (lysosome), "i" (intermembrane space), "x" (peroxisome), or "custom" (user-defined).</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>custom_condition</code></td>
+                                            <td>object</td>
+                                            <td>No</td>
+                                            <td>Required when <code>reaction_condition</code> is "custom".</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Example request (standard)</h6>
+                            <pre class="bg-light p-3 rounded"><code>curl -X POST https://dgbyg.drziweidai.com/calculate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "equation": "2 [H][H] + O=O = 2 O",
+    "identifier_type": "smiles",
+    "reaction_condition": "d"
+  }'</code></pre>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Example response</h6>
+                            <pre class="bg-light p-3 rounded"><code>{
+  "dG_prime": -529.06,
+  "dG_std_dev": 3.96,
+  "message": "Calculation completed successfully"
+}</code></pre>
+                        </div>                        
+
+                        <div class="mb-4">
+                            <h6>Example request (mixed identifiers)</h6>
+                            <pre class="bg-light p-3 rounded"><code>curl -X POST https://dgbyg.drziweidai.com/calculate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "equation": "CHEBI:37736 = SMILES:O=C(CO)COP(=O)(O)O + name:D-Glyceraldehyde 3-phosphate",
+    "identifier_type": "mixed",
+    "reaction_condition": "custom",
+    "custom_condition": {
+      "0": {"pH": 8.0, "I": 0.25, "pMg": 14.0, "e_potential": 0.0},
+      "1": {"pH": 7.0, "I": 0.25, "pMg": 14.0, "e_potential": 0.0},
+      "2": {"pH": 7.0, "I": 0.25, "pMg": 14.0, "e_potential": 0.0}
+    }
+  }'</code></pre>
+                            <small class="text-muted">
+                                For "mixed", prefix each compound with its identifier type (e.g., CHEBI:37736, SMILES:CCO, name:glucose).
+                            </small>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Example response</h6>
+                            <pre class="bg-light p-3 rounded"><code>{
+  "dG_prime": -35.96,
+  "dG_std_dev": 0.45,
+  "message": "Calculation completed successfully"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Batch Equations Endpoint -->
+            <section class="mb-5">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Batch Reaction Calculation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6>Endpoint</h6>
+                            <code class="bg-light p-2 rounded d-block">POST /batch_calculate</code>
+                            <small class="text-muted">Calculate Δ<sub><i>r</i></sub>G° for multiple reactions in one request.</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Request parameters</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>equations</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>Multiple equations, one per line.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>identifier_type</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>Same as the single-reaction endpoint.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>reaction_condition</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>Same as the single-reaction endpoint.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Example request</h6>
+                            <pre class="bg-light p-3 rounded"><code>curl -X POST https://dgbyg.drziweidai.com/batch_calculate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "equations": "2 [H][H] + O=O = 2 O\nOCC1OC(O)C(O)C(O)C1O + O=P(O)(O)OP(O)(O)=O = OCC1OC(O)C(O)C(O)C1OP(=O)(O)O + O=P(O)(O)O",
+    "identifier_type": "smiles",
+    "reaction_condition": "custom",
+    "custom_condition": {
+        "pH": 7.4,
+        "I": 0.15,
+        "pMg": 3.0,
+        "e_potential": -0.2
+      }
+  }'</code></pre>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Example response</h6>
+                            <pre class="bg-light p-3 rounded"><code>{
+  "message": "Batch calculation completed",
+  "results": [
+    {
+      "dG_prime": -529.06,
+      "dG_std_dev": 3.96,
+      "equation": "2 [H][H] + O=O = 2 O",
+      "status": "success"
+    },
+    {
+      "dG_prime": 6.45,
+      "dG_std_dev": 1.97,
+      "equation": "OCC1OC(O)C(O)C(O)C1O + O=P(O)(O)OP(O)(O)=O = OCC1OC(O)C(O)C(O)C1OP(=O)(O)O + O=P(O)(O)O",
+      "status": "success"
+    }
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== LEGACY ENDPOINTS ==================== -->
+            <section class="mb-5">
+                <h5 class="mb-3 border-bottom pb-2">Legacy Endpoints</h5>
+                <p class="text-muted">
+                    <strong>Note:</strong> These endpoints are kept for backward compatibility. For new integrations, use the APIs above.
+                </p>
+            </section>
+
+            <!-- Unified Search API -->
+            <section class="mb-5">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Unified GEM Search (Legacy)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6>Endpoint</h6>
+                            <code class="bg-light p-2 rounded d-block">POST /gem-dg</code>
+                            <small class="text-muted">Legacy endpoint that searches across all database entities.</small>
+                        </div>
+
+                        <p class="text-muted mb-0">
+                            <strong>Recommendation:</strong> Use the specialized endpoints above for clearer responses and better performance.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== API REFERENCE ==================== -->
+            <section class="mb-5">
+                <h5 class="mb-3 border-bottom pb-2">API Reference</h5>
+            </section>
+
+            <!-- Error Handling -->
+            <section class="mb-5">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Error Handling</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">All endpoints use standard HTTP status codes:</p>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Status Code</th>
+                                        <th>Description</th>
+                                        <th>Common Causes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>200 OK</code></td>
+                                        <td>Request successful</td>
+                                        <td>Valid request with results</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>400 Bad Request</code></td>
+                                        <td>Invalid parameters</td>
+                                        <td>Missing required fields, invalid values</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>404 Not Found</code></td>
+                                        <td>Resource not found</td>
+                                        <td>Invalid endpoint or ID</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>429 Too Many Requests</code></td>
+                                        <td>Rate limit exceeded</td>
+                                        <td>Too many requests in a short period</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>500 Internal Server Error</code></td>
+                                        <td>Server error</td>
+                                        <td>Database or processing issues</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Error response format</h6>
+                            <pre class="bg-light p-3 rounded"><code>{
+  "error": "Invalid query parameter",
+  "status_code": 400,
+  "timestamp": "2024-03-15T10:30:00Z"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Rate Limiting -->
+            <section class="mb-5">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Rate Limiting</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Rate limits help keep the service stable and fair for everyone:</p>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Endpoint Category</th>
+                                        <th>Rate Limit</th>
+                                        <th>Window</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Thermodynamic Calculations</td>
+                                        <td><strong>No limit</strong></td>
+                                        <td>-</td>
+                                        <td>Core functionality</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GEM Database APIs</td>
+                                        <td><strong>300 requests</strong></td>
+                                        <td>Per hour</td>
+                                        <td>Search operations</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Legacy Endpoints</td>
+                                        <td><strong>300 requests</strong></td>
+                                        <td>Per hour</td>
+                                        <td>Backward compatibility</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p class="text-muted mb-0">
+                            <strong>Need higher limits?</strong> Install the Python package to run calculations locally.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact and Support -->
+            <section class="mb-5">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Support & Documentation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Quick Links</h6>
+                                <ul class="list-unstyled">
+                                    <li><a href="/faq">FAQ</a></li>
+                                    <li><a href="/">Web Interface</a></li>
+                                    <li><a href="/prediction">Δ<sub><i>r</i></sub>G° Calculator</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Repository</h6>
+                                <p class="mb-0"><a href="https://github.com/f-wc/dGbyG/tree/main" target="_blank">View on GitHub</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

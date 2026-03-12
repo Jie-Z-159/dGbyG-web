@@ -1,0 +1,13 @@
+{
+  "boundary_reactions": 1283,
+  "covered_reactions": 4554,
+  "unstructured_reactions": 646,
+  "unbalanced_reactions": 57,
+  "total_reactions": 6540,
+  "covered_reversible_vs_irreversible": "2172:2382",
+  "covered_single_vs_multi_compartment": "2067:2487",
+  "covered_reversible": 2172,
+  "covered_irreversible": 2382,
+  "covered_single_compartment": 2067,
+  "covered_multi_compartment": 2487
+}

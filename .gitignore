@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+
+# Application specific
+uploads/
+*.log
+
+# Environment variables
+.env
+
+# ChemAxon license file (sensitive)
+chemaxon.cxl
+*.cxl
+/chemaxon_installation
+
+#big file
+met_rxn_thermo_participation_merged.tsv
+reactions_genes_table_merged.tsv
+
+#dGbyg package
+/dGbyG
+/dGbyG_old_version
+
+#claude
+.claude
+
+#ssl
+*.key
+*.pem
+
+# 其他
+@eaDir
+messages.txt
+start.sh
+gunicorn.conf.py
+docker-compose.yml
+Dockerfile
+.flaskenv
+nginx

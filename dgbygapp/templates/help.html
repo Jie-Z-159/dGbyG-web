@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5 dgbyg-help">
+  <div class="row justify-content-center">
+    <div class="col-lg-11">
+
+      <!-- Page Title -->
+      <div class="text-center mb-4">
+        <h3><i class="fas fa-book-open me-2"></i>User Guide</h3>
+      </div>
+
+        <!-- Overview -->
+        <section class="mb-6 overview-box">
+        <h5 class="mb-2">dGbyG web includes two main functions:</h5>
+
+        <ul class="mb-0">
+            <li>
+            <strong><a href="#gem-search">Search GEMs</a></strong> –
+            Search across 115 GEMs and view thermodynamic information for models, reactions, metabolites, and genes.
+            </li>
+            <li>
+            <strong><a href="#reaction-predictor">Predict Δ<sub><i>r</i></sub>G°</a></strong> –
+            Predict Δ<sub><i>r</i></sub>G° for custom reaction equations, including single-reaction and batch modes.
+            </li>
+        </ul>
+        </section>
+
+
+
+      <!-- Search GEMs -->
+      <section id="gem-search" class="mb-4">
+        <h5 class="border-bottom pb-2 mb-3">Search GEMs</h5>
+
+        <!-- Step 1 -->
+        <div class="card mb-3">
+          <div class="card-header bg-light"><h6 class="mb-0">Step 1 — Enter What You Want to Find</h6></div>
+          <div class="card-body">
+            <p>
+              Type a model, reaction, metabolite, or gene (BiGG ID or name) into the search box.
+              If you want to search within a specific model, select it before submitting.
+            </p>
+
+            <div class="text-center mt-3 border rounded">
+              <img src="{{ url_for('static', filename='images/help/gem-search-input.png') }}"
+                   alt="GEM Search Input" class="img-fluid rounded" style="max-width: 100%; height:auto;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="card mb-3">
+          <div class="card-header bg-light"><h6 class="mb-0">Step 2 — Understand the Result Sections</h6></div>
+          <div class="card-body">
+            <p>After you search, results appear in four sections:</p>
+            <ul>
+              <li><strong>Models</strong> — model-level coverage, reaction quality classes, Δ<sub><i>r</i></sub>G° distributions, and compartment settings.</li>
+              <li><strong>Reactions</strong> — Δ<sub><i>r</i></sub>G° values, equations, and variability across models (SD).</li>
+              <li><strong>Metabolites</strong> — IDs, names, formulas, structures (if available), and related reactions.</li>
+              <li><strong>Genes</strong> — linked models and reactions, plus GPR mappings.</li>
+            </ul>
+
+            <p class="mb-2">
+              To view detailed Δ<sub><i>r</i></sub>G° information for a reaction, click <strong>Show Δ<sub><i>r</i></sub>G°</strong>.
+            </p>
+
+            <div class="text-center mt-3 border rounded">
+              <img src="{{ url_for('static', filename='images/help/gem-search-summary-and-dg-table.png') }}"
+                   alt="Results Summary and ΔrG° Table" class="img-fluid rounded" style="max-width:100%;height:auto;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Model Results -->
+        <div class="card mb-3">
+          <div class="card-header bg-light"><h6 class="mb-0">Model Results</h6></div>
+          <div class="card-body">
+            <ul>
+              <li>
+                <strong>Reaction Classification Chart</strong> — shows how reactions are categorized:
+                boundary, unstructured, unbalanced, and covered (covered is split into reversible and irreversible).
+              </li>
+              <li>
+                <strong>Reaction Class Definitions</strong> — short explanations for each category.
+              </li>
+              <li>
+                <strong>Δ<sub><i>r</i></sub>G° Distribution Chart</strong> — a histogram of Δ<sub><i>r</i></sub>G° with a reference line at Δ<sub><i>r</i></sub>G° = 0.
+              </li>
+              <li>
+                <strong>Compartment Conditions</strong> — pH, T, I, pMg, and E used when calculating Δ<sub><i>r</i></sub>G° for this model.
+              </li>
+              <li>Use the download option to export model-level results.</li>
+            </ul>
+
+            <div class="text-center mt-3 border rounded">
+              <img src="{{ url_for('static', filename='images/help/gem-search-model-results.png') }}"
+                   alt="Model Results" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+
+        <!-- Reaction Results -->
+        <div class="card mb-3">
+          <div class="card-header bg-light"><h6 class="mb-0">Reaction Results</h6></div>
+          <div class="card-body">
+            <p>
+              For reactions, you will see BiGG IDs, names, Δ<sub><i>r</i></sub>G° values, SD, and reaction equations,
+              including how the same reaction appears across different models.
+            </p>
+
+            <div class="text-center mt-3 border rounded">
+              <img src="{{ url_for('static', filename='images/help/gem-search-reaction-results.png') }}"
+                   alt="Reaction Results" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+
+        <!-- Metabolite Results -->
+        <div class="card mb-3">
+          <div class="card-header bg-light"><h6 class="mb-0">Metabolite Results</h6></div>
+          <div class="card-body">
+            <p>
+              For metabolites, you will see BiGG IDs, chemical formulas, structures (if available), and
+              the reactions in which each metabolite participates.
+            </p>
+
+            <div class="text-center mt-3 border rounded">
+              <img src="{{ url_for('static', filename='images/help/gem-search-metabolite-results.png') }}"
+                   alt="Metabolite Results" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+
+        <!-- Gene Results -->
+        <div class="card mb-3">
+          <div class="card-header bg-light"><h6 class="mb-0">Gene Results</h6></div>
+          <div class="card-body">
+            <p>
+              For genes, you will see gene IDs, the models that contain each gene, linked reactions, and
+              the corresponding GPR information.
+            </p>
+
+            <div class="text-center mt-3 border rounded">
+              <img src="{{ url_for('static', filename='images/help/gem-search-gene-results.png') }}"
+                   alt="Gene Results" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Predict ΔrG° -->
+      <section id="reaction-predictor" class="mb-4">
+        <h5 class="border-bottom pb-2 mb-3">Predict Δ<sub><i>r</i></sub>G°</h5>
+
+        <!-- Identifier Support -->
+        <div class="card mb-3">
+          <div class="card-header bg-light"><h6 class="mb-0">1️⃣ Choose an Identifier Type</h6></div>
+          <div class="card-body">
+            <p>
+              Choose the identifier type used in your equation: SMILES, InChI, InChI Key, KEGG, MetaNetX, HMDB, Name,
+              BiGG (universal), ChEBI, PubChem, or Mixed.
+            </p>
+            <p class="text-info mb-1">
+              ✔ For best accuracy, use SMILES or InChI whenever possible.
+            </p>
+            <p class="mb-0">
+              If you use BiGG metabolite IDs, remove compartment suffixes (e.g., <code>succ_c → succ</code>).
+            </p>
+          </div>
+        </div>
+
+        <!-- Formatting Rules -->
+        <div class="card mb-3">
+          <div class="card-header bg-light"><h6 class="mb-0">2️⃣ Enter a Balanced Chemical Equation</h6></div>
+          <div class="card-body">
+            <ul>
+              <li>Put spaces around <code>+</code> and <code>=</code> (example: <code>A + B = C</code>).</li>
+              <li>Put a space between a coefficient and a compound (example: <code>2 H2O</code>).</li>
+              <li>If you mix identifier types, use the format <code>TYPE:ID</code>.</li>
+            </ul>
+            <p class="mb-0">
+              You can load example equations using the auto-fill options on the prediction page.
+            </p>
+
+            <div class="text-center mt-3 border rounded">
+              <img src="{{ url_for('static', filename='images/help/prediction-single-input.png') }}"
+                   alt="Single Equation Input" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Single -->
+        <div class="card mb-3">
+          <div class="card-header bg-light"><h6 class="mb-0">3️⃣ Check the Prediction Output</h6></div>
+          <div class="card-body">
+            <p>For a single reaction, the results page shows:</p>
+            <ul>
+              <li>The predicted Δ<sub><i>r</i></sub>G° (kJ/mol).</li>
+              <li>The standard deviation (SD).</li>
+              <li>The reaction equation you submitted.</li>
+              <li>The conditions used (pH, I, pMg, E, T).</li>
+            </ul>
+
+            <div class="text-center mt-3 border rounded">
+              <img src="{{ url_for('static', filename='images/help/prediction-single-results.png') }}"
+                   alt="Single Prediction Result" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+
+        <!-- Batch Mode -->
+        <div class="card mb-3">
+          <div class="card-header bg-light"><h6 class="mb-0">Batch Mode (Up to 100 Reactions)</h6></div>
+          <div class="card-body">
+            <p>
+              In batch mode, enter one equation per line.
+              All reactions use the same identifier type and the same global settings for pH, I, pMg, and E.
+              Temperature is fixed at 298.15 K.
+            </p>
+
+            <div class="text-center mt-3 border rounded">
+              <img src="{{ url_for('static', filename='images/help/prediction-batch-input.png') }}"
+                   alt="Batch Input Interface" class="img-fluid rounded">
+            </div>
+
+            <h6 class="mt-4 mb-1">Batch Output</h6>
+            <ul>
+              <li>A table with Δ<sub><i>r</i></sub>G° and SD for each reaction.</li>
+              <li>Failed entries are marked with an error message.</li>
+              <li>You can download the results as a CSV file.</li>
+            </ul>
+
+            <div class="text-center mt-3 border rounded">
+              <img src="{{ url_for('static', filename='images/help/prediction-batch-results.png') }}"
+                   alt="Batch Results" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
