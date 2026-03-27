@@ -5,6 +5,65 @@ import seaborn as sns
 import json
 from functools import lru_cache
 
+def get_species_list():
+    """获取所有可用的物种列表"""
+    try:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        species_file = os.path.join(current_dir, 'model_conditions_new.csv')
+
+        if os.path.exists(species_file):
+            df = pd.read_csv(species_file)
+            # 获取所有物种并排序，过滤掉空值和异常值
+            species = df['Species'].dropna().unique()
+            # 过滤掉明显的异常值
+            valid_species = [s for s in species if s not in ['Species']]
+            return sorted(valid_species)
+        else:
+            print(f"Warning: Species file not found at {species_file}")
+            return []
+    except Exception as e:
+        print(f"Error reading species list: {e}")
+        return []
+
+def get_models_by_species(species_name):
+    """根据物种名称获取对应的模型列表"""
+    try:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        species_file = os.path.join(current_dir, 'model_conditions_new.csv')
+
+        if os.path.exists(species_file):
+            df = pd.read_csv(species_file)
+            # 过滤指定物种的模型
+            models = df[df['Species'] == species_name]['BiGG ID'].tolist()
+            return models
+        else:
+            return []
+    except Exception as e:
+        print(f"Error getting models for species {species_name}: {e}")
+        return []
+
+@lru_cache(maxsize=1)
+def get_species_model_mapping():
+    """获取物种到模型的映射字典（缓存版本）"""
+    try:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        species_file = os.path.join(current_dir, 'model_conditions_new.csv')
+
+        if os.path.exists(species_file):
+            df = pd.read_csv(species_file)
+            # 创建物种到模型列表的映射
+            mapping = {}
+            for species in df['Species'].dropna().unique():
+                if species != 'Species':  # 过滤异常值
+                    models = df[df['Species'] == species]['BiGG ID'].tolist()
+                    mapping[species] = models
+            return mapping
+        else:
+            return {}
+    except Exception as e:
+        print(f"Error creating species-model mapping: {e}")
+        return {}
+
 def get_available_models(data_dir="result"):
     """Get list of available models"""
     models = []
@@ -369,12 +428,12 @@ def generate_dg_distribution_chart(model_id, distribution, valid_dg):
 
         fig.update_layout(
             title={
-                'text': f"Δ<sub><i>r</i></sub>G° Distribution - {model_id}<br><sub>Mean: {distribution['mean_dg']:.2f} kJ/mol | Std: {distribution['std_dg']:.2f} kJ/mol | Range: {distribution['min_dg']:.2f} to {distribution['max_dg']:.2f} kJ/mol</sub>",
+                'text': f"Δ<sub>r</sub>G° Distribution - {model_id}<br><sub>Mean: {distribution['mean_dg']:.2f} kJ/mol | Std: {distribution['std_dg']:.2f} kJ/mol | Range: {distribution['min_dg']:.2f} to {distribution['max_dg']:.2f} kJ/mol</sub>",
                 'x': 0.5,
                 'xanchor': 'center',
                 'font': {'size': 16}
             },
-            xaxis_title="Δ<sub><i>r</i></sub>G° (kJ/mol)",
+            xaxis_title="Δ<sub>r</sub>G° (kJ/mol)",
             yaxis_title="Count",
             height=500,
             margin=dict(t=60, l=20, r=20, b=20),

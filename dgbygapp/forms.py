@@ -96,6 +96,13 @@ class UnifiedSearchForm(FlaskForm):
         validators=[],
         render_kw={"class": "form-control"}
     )
+
+    species_filter = SelectField(
+        'Filter by Species (Optional)',
+        choices=[('', 'All Species')],  # 动态填充
+        validators=[],
+        render_kw={"class": "form-control"}
+    )
     
     submit = SubmitField('Search', render_kw={"class": "btn btn-primary"})
 

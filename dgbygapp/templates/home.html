@@ -19,11 +19,11 @@
                     <h1 class="title">Predict standard Gibbs free energy changes using graph neural networks.</h1>
                     <p class="subtitle">Explore thermodynamics across genome-scale metabolic models (GEMs).</p>
                     <div class="action-buttons">
+                        <a href="{{ url_for('prediction') }}" class="btn btn-primary">
+                            <i class="fas fa-calculator me-2"></i>Predict Δ<sub>r</sub>G°
+                        </a>
                         <a href="{{ url_for('gem_dg') }}" class="btn btn-primary">
                             <i class="fas fa-search me-2"></i>Search GEMs
-                        </a>
-                        <a href="{{ url_for('prediction') }}" class="btn btn-primary">
-                            <i class="fas fa-calculator me-2"></i>Predict Δ<sub><i>r</i></sub>G°
                         </a>
                     </div>
                 </div>

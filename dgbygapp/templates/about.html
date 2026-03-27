@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+    <h1 class="mb-4">About</h1>
+
+    <p>
+        The <strong>dGbyG</strong> web server is designed to enable the prediction and exploration of standard Gibbs free energy changes (Δ<sub>r</sub>G°) in biochemical reactions and genome-scale metabolic models (GEMs). 
+        Using biochemical reactions as input, the server applies a graph neural network (GNN)-based framework to estimate thermodynamic properties with broad structural coverage.
+
+        The platform integrates the computational methodology described in 
+        <a href="https://doi.org/10.1016/j.cels.2025.101393" target="_blank"><em>"Unraveling principles of thermodynamics for genome-scale metabolic networks using graph neural networks"</em></a>, 
+        allowing users to predict Δ<sub>r</sub>G° at both the single-reaction and pathway levels. 
+        In addition to on-demand prediction, dGbyG Web provides access to precomputed thermodynamic annotations across <strong>115 integrated GEMs</strong>, 
+        enabling rapid exploration of reaction energetics at the genome-scale level without requiring local software installation.
+    </p>
+
+    <h2 class="mt-5 mb-3">Prediction workflow</h2>
+
+    <div class="text-center my-4">
+        <img src="{{ url_for('static', filename='images/prediction pipline.png') }}"
+             alt="dGbyG prediction workflow"
+             class="img-fluid rounded shadow-sm">
+    </div>
+
+    <p>
+        The dGbyG computational pipeline is illustrated in the figure above and consists of input preprocessing,
+        metabolite-level prediction, condition-specific correction, and reaction-level aggregation.
+    </p>
+
+    <p>
+        In the input stage, users can submit biochemical reactions using multiple identifier types
+        (e.g., SMILES, InChI, KEGG, MetaNetX, HMDB, BiGG, ChEBI, PubChem, or common names), including mixed formats.
+        All identifiers are resolved into standardized molecular structures before prediction. Users can also specify
+        biochemical conditions, including pH, ionic strength (I), pMg, and electrical potential (E).
+    </p>
+
+    <p>
+        At the core prediction stage, each metabolite is processed independently using a GNN to predict its
+        standard Gibbs free energy of formation (&Delta;<sub>f</sub>G&deg;). Molecular structures are converted into
+        graph representations, where atoms are encoded as nodes and bonds as edges. Atomic number, hybridization,
+        aromaticity, and charge are used as node features, while bond types are used as edge features. These features
+        are embedded and processed through two message passing neural network (MPNN) layers, where information is
+        iteratively propagated and aggregated. Residual connections preserve atom-specific features, enabling the model
+        to capture local chemical environments. The resulting representations are passed through feedforward neural
+        network (FNN) layers, and an additive pooling layer sums atom-level contributions to produce
+        &Delta;<sub>f</sub>G&deg; for each metabolite.
+    </p>
+
+    <p>
+        Condition-dependent corrections (&Delta;&Delta;<sub>f</sub>G&prime;&deg;) are applied at the metabolite level to
+        account for deviations from the reference state (pH 7.0, T = 298.15 K, I = 0.25 M, pMg = 14). These corrections
+        are derived using a pseudoisomer-based Legendre transformation framework. Under non-standard conditions,
+        &Delta;&Delta;<sub>f</sub>G&prime;&deg; accounts for changes in protonation, Mg<sup>2+</sup> binding, and ionic
+        strength (via the extended Debye&ndash;H&uuml;ckel equation). For multi-compartment reactions, electrochemical contributions
+        are included as <em>N</em><sub>charge</sub> &middot; <em>F</em> &middot; &Delta;&Psi;. Consequently, predictions for 
+        non-standard conditions (e.g., in a specific cellular compartment) are calculated as: 
+        &Delta;<sub>f</sub>G&prime;&deg; = &Delta;<sub>f</sub>G&deg; + &Delta;&Delta;<sub>f</sub>G&prime;&deg;.
+    </p>
+
+    <p>
+        Finally, reaction Gibbs free energies are obtained by stoichiometric aggregation, summing corrected metabolite
+        energies weighted by their coefficients to yield &Delta;<sub>r</sub>G&deg;.
+    </p>
+
+    <h2 class="mt-5 mb-3">Uncertainty estimation</h2>
+
+    <p>
+        Prediction uncertainty arises from both experimental variability in the training data and model parameter
+        uncertainty. For each reaction in the training set, measurement variability is quantified using a robust variability index  (&alpha;),
+        which balances reaction-specific standard error (SEM) with global dataset variance, ensuring stable uncertainty estimates even for reactions with limited sample sizes.
+    </p>
+
+    <p>
+        Under the assumption of normally distributed noise, we employ an <strong>ensemble modeling strategy</strong>: 100 perturbed training datasets are generated by sampling noise according to each reaction's &alpha; index, and 100 corresponding GNN models are trained. For any user query, the results from these 100 networks are aggregated: the ensemble mean of &Delta;<sub>r</sub>G&deg; is reported as the final predicted free energy, while the ensemble standard deviation (SD) serves as the associated uncertainty estimate.
+    </p>
+
+    <h2 class="mt-5 mb-3">Precomputed thermodynamic data for GEMs</h2>
+
+    <p>
+        A total of 115 GEMs were processed to generate precomputed thermodynamic annotations. Reaction networks and
+        metabolite data were obtained using COBRApy, and compartment-specific conditions (e.g., pH, ionic strength,
+        pMg, electrical potential) were assigned based on literature and curated databases, with fallback estimates
+        from BioNumbers or related organisms when needed. &Delta;<sub>r</sub>G&deg; values were then computed using
+        the dGbyG Python package.
+    </p>
+
+    <p>
+        To enable consistent comparison and efficient querying, identifiers were standardized to BiGG IDs wherever
+        possible. All compartment-specific parameters are provided on model pages under
+        <strong>&ldquo;Compartment Conditions&rdquo;</strong>.
+    </p>
+
+    <h2 class="mt-5 mb-3">Data sources</h2>
+
+    <p>
+        Training data were integrated from
+        <a href="https://doi.org/10.1093/bioinformatics/bth314" target="_blank" rel="noopener noreferrer">TECRDB</a>
+        and curated datasets of metabolite formation energies. Independent validation used a curated subset of the
+        <a href="https://tecrdb.robert-giessmann.de/" target="_blank" rel="noopener noreferrer">openTECR database</a>
+        (96 reactions).
+    </p>
+
+    <p>
+        The GEM library includes 115 models: 107 from
+        <a href="http://bigg.ucsd.edu/" target="_blank" rel="noopener noreferrer">BiGG Models</a>,
+        7 from the
+        <a href="https://metabolicatlas.org/gems/repository" target="_blank" rel="noopener noreferrer">Metabolic Atlas repository</a>,
+        and the latest
+        <a href="https://www.nature.com/articles/nbt.4072" target="_blank" rel="noopener noreferrer">Recon3D human model</a>.
+    </p>
+
+    <h2 class="mt-5 mb-3">Benchmarking and validation</h2>
+
+    <p>
+        dGbyG achieves strong predictive performance. In ten-fold cross-validation, it reached an MAE of
+        9.18 kJ/mol and RMSE of 25.88 kJ/mol, outperforming eQuilibrator 3.0 (MAE 19.46, RMSE 82.88).
+    </p>
+
+    <p>
+        At the genome scale, dGbyG provides broader coverage, predicting 74.63% of reactions in Human1 and
+        71.22% in Recon3D, compared with 46.26% and 43.45% for eQuilibrator.
+    </p>
+
+    <p>
+        Independent validation on 96 openTECR reactions showed full coverage (96/96), while eQuilibrator applied
+        to 67. On the shared subset, dGbyG reduced MAE from 9.66 to 7.19 kJ/mol and RMSE from 20.02 to 13.21 kJ/mol.
+    </p>
+
+    <h2 class="mt-5 mb-3">Libraries</h2>
+
+    <ul>
+        <li>Flask (v3.1.2)</li>
+        <li>NumPy (v2.3.2)</li>
+        <li>pandas (v2.3.2)</li>
+        <li>PyTorch (v2.8.0)</li>
+        <li>PyTorch Geometric (v2.6.1)</li>
+        <li>RDKit (v2025.3.6)</li>
+        <li>COBRApy (v0.29.1)</li>
+        <li>NetworkX (v3.5)</li>
+        <li>Plotly (v6.3.1)</li>
+    </ul>
+
+    <h2 class="mt-5 mb-3">Data and code availability</h2>
+
+    <p>
+        The web server source code and the full thermodynamic dataset (115 GEMs with predicted
+        &Delta;<sub>r</sub>G&deg; values and physiological parameters) are available at
+        <a href="https://doi.org/10.5281/zenodo.18980083" target="_blank" rel="noopener noreferrer">
+            Zenodo
+        </a>.
+        The dGbyG Python package is available at
+        <a href="https://github.com/f-wc/dGbyG" target="_blank" rel="noopener noreferrer">
+            GitHub
+        </a>.
+    </p>
+
+    <p>
+        The web server is freely accessible and provides API documentation.
+    </p>
+</div>
+
+{% endblock %}

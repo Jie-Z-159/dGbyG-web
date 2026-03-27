@@ -20,17 +20,17 @@
             <h2 class="accordion-header" id="whatIsGibbs">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 data-bs-target="#whatIsGibbsCollapse" aria-expanded="false">
-                <strong>What is Δ<sub><i>r</i></sub>G°?</strong>
+                <strong>What is Δ<sub>r</sub>G°?</strong>
               </button>
             </h2>
             <div id="whatIsGibbsCollapse" class="accordion-collapse collapse" data-bs-parent="#generalAccordion">
               <div class="accordion-body">
                 <p><strong>G:</strong> Gibbs free energy is a thermodynamic potential (<em>G = H − TS</em>) that, at constant temperature and pressure, represents the maximum non-expansion work a system can perform.</p>
                 <p><strong>Δ<sub><i>r</i></sub>G:</strong> The Gibbs free energy change of a reaction under a given set of (e.g., physiological) metabolite concentrations, which determines thermodynamic feasibility.</p>
-                <p><strong>Δ<sub><i>r</i></sub>G°:</strong> The Gibbs free energy change of a reaction under standard conditions, reflecting the relative thermodynamic stability of reactants and products.</p>
+                <p><strong>Δ<sub>r</sub>G°:</strong> The Gibbs free energy change of a reaction under standard conditions, reflecting the relative thermodynamic stability of reactants and products.</p>
                 <p>
                   The actual and standard reaction free energies are related by
-                  <code>Δ<sub><i>r</i></sub>G = Δ<sub><i>r</i></sub>G° + RT&nbsp;ln&nbsp;Q</code>,
+                  <code>Δ<sub><i>r</i></sub>G = Δ<sub>r</sub>G° + RT&nbsp;ln&nbsp;Q</code>,
                   where <em>R</em> is the universal gas constant, <em>T</em> is the absolute temperature,
                   and <em>Q</em> is the reaction quotient determined by reactant and product concentrations.
                 </p>
@@ -49,12 +49,12 @@
               <div class="accordion-body">
                 <p>
                   dGbyG web is a web-based platform that uses graph neural networks to predict the standard Gibbs free energy change
-                  (Δ<sub><i>r</i></sub>G°) of biochemical reactions. The name stands for “Δ<sub><i>r</i></sub>G° predicted by Graph neural networks.”
+                  (Δ<sub>r</sub>G°) of biochemical reactions. The name stands for “Δ<sub>r</sub>G° predicted by Graph neural networks.”
                 </p>
                 <p class="mb-2">The platform provides two main services:</p>
                 <ul class="mt-2">
-                  <li><strong>Search GEMs:</strong> Browse 100+ genome-scale metabolic models (GEMs) with precomputed Δ<sub><i>r</i></sub>G° values.</li>
-                  <li><strong>Predict Δ<sub><i>r</i></sub>G°:</strong> Compute Δ<sub><i>r</i></sub>G° for custom reactions using our AI model.</li>
+                  <li><strong>Search GEMs:</strong> Browse 100+ genome-scale metabolic models (GEMs) with precomputed Δ<sub>r</sub>G° values.</li>
+                  <li><strong>Predict Δ<sub>r</sub>G°:</strong> Compute Δ<sub>r</sub>G° for custom reactions using our AI model.</li>
                 </ul>
               </div>
             </div>
@@ -71,14 +71,14 @@
               <div class="accordion-body">
                 <p>
                   dGbyG is a graph neural network–based tool for predicting the standard reaction Gibbs free energy change
-                  (Δ<sub><i>r</i></sub>G°) of metabolic reactions.
+                  (Δ<sub>r</sub>G°) of metabolic reactions.
                 </p>
                 <ol class="mt-3">
                   <li><strong>Molecular graphs:</strong> Each metabolite is represented as an atom–bond graph with rich chemical features.</li>
-                  <li><strong>GNN prediction:</strong> The model learns thermodynamic representations from these graphs and predicts Δ<sub><i>f</i></sub>G° for metabolites. Δ<sub><i>r</i></sub>G° is then computed as the stoichiometry-weighted sum of Δ<sub><i>f</i></sub>G° values of substrates and products.</li>
+                  <li><strong>GNN prediction:</strong> The model learns thermodynamic representations from these graphs and predicts Δ<sub><i>f</i></sub>G° for metabolites. Δ<sub>r</sub>G° is then computed as the stoichiometry-weighted sum of Δ<sub><i>f</i></sub>G° values of substrates and products.</li>
                   <li><strong>Methodological advantage:</strong> Unlike group-contribution methods that rely on predefined chemical groups, dGbyG models atoms and bonds directly, improving robustness and generalization when training data are limited or reaction mechanisms are unseen.</li>
                   <li><strong>Condition parameters:</strong> Users can specify <em>pH</em>, <em>ionic strength (I)</em>, <em>pMg</em>, and <em>electrical potential (V)</em> to reflect physiological environments.</li>
-                  <li><strong>Output:</strong> The predicted Δ<sub><i>r</i></sub>G° together with an uncertainty estimate.</li>
+                  <li><strong>Output:</strong> The predicted Δ<sub>r</sub>G° together with an uncertainty estimate.</li>
                 </ol>
                 <p class="mt-3 mb-0">
                   Compared with the best existing approaches, dGbyG reduces the median prediction error on the validation set from
@@ -99,7 +99,7 @@
             <h2 class="accordion-header" id="accuracy">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 data-bs-target="#accuracyCollapse" aria-expanded="false">
-                <strong>What does the standard deviation (SD) shown next to Δ<sub><i>r</i></sub>G° mean?</strong>
+                <strong>What does the standard deviation (SD) shown next to Δ<sub>r</sub>G° mean?</strong>
               </button>
             </h2>
 
@@ -107,15 +107,15 @@
               <div class="accordion-body">
                 <p>
                   <strong>SD</strong> reports the estimated <em>model uncertainty</em> (kJ/mol) from a bootstrap-based ensemble.
-                  It captures how much the predicted Δ<sub><i>r</i></sub>G° varies when the model is trained on different noise-perturbed
+                  It captures how much the predicted Δ<sub>r</sub>G° varies when the model is trained on different noise-perturbed
                   versions of the training data.
                 </p>
 
                 <ul class="mt-3">
                   <li>
-                    <strong>How we compute it:</strong> We assume experimental Δ<sub><i>r</i></sub>G° measurements have Gaussian uncertainty.
+                    <strong>How we compute it:</strong> We assume experimental Δ<sub>r</sub>G° measurements have Gaussian uncertainty.
                     In each bootstrap run, we perturb training labels according to their estimated measurement variability, train an
-                    independent model, and repeat this process <strong>100</strong> times. For a query reaction, we compute Δ<sub><i>r</i></sub>G°
+                    independent model, and repeat this process <strong>100</strong> times. For a query reaction, we compute Δ<sub>r</sub>G°
                     for each model and report the <strong>standard deviation across the 100 predictions</strong>. A variability index <em>α</em>
                     is also used to weight training points in the loss so that noisier measurements have less influence.
                   </li>
@@ -130,95 +130,11 @@
         </div>
       </section>
 
-      <!-- Search GEMs Questions -->
-      <section class="mb-5">
-        <h3 class="border-bottom pb-2 mb-4">
-          <i class="fas fa-search me-2"></i>Search GEMs
-        </h3>
-
-        <div class="accordion" id="searchAccordion">
-
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="whatModels">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#whatModelsCollapse" aria-expanded="false">
-                <strong>What models are available in Search GEMs?</strong>
-              </button>
-            </h2>
-            <div id="whatModelsCollapse" class="accordion-collapse collapse" data-bs-parent="#searchAccordion">
-              <div class="accordion-body">
-                <p>Our GEM library currently includes <strong>115</strong> genome-scale metabolic models:</p>
-                <ul class="mt-3">
-                  <li>
-                    <strong>BiGG Models (107 GEMs, excluding Recon3D):</strong> sourced from
-                    <a href="http://bigg.ucsd.edu/" target="_blank" rel="noopener">BiGG Models</a>.
-                  </li>
-                  <li>
-                    <strong>Metabolic Atlas (7 GEMs):</strong> sourced from
-                    <a href="https://metabolicatlas.org/gems/repository" target="_blank" rel="noopener">the Metabolic Atlas GEM repository</a>.
-                    <span class="text-muted">(For these 7 models, we retain only reactions and metabolites annotated with BiGG IDs.)</span>
-                  </li>
-                  <li>
-                    <strong>Recon3D (1 GEM):</strong> the human Recon3D model from the latest release by Elizabeth Brunk et&nbsp;al.
-                    (<a href="https://github.com/SBRG/Recon3D" target="_blank" rel="noopener">SBRG/Recon3D</a>).
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="searchTypes">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#searchTypesCollapse" aria-expanded="false">
-                <strong>What can I search for?</strong>
-              </button>
-            </h2>
-            <div id="searchTypesCollapse" class="accordion-collapse collapse" data-bs-parent="#searchAccordion">
-              <div class="accordion-body">
-                <p class="mb-2">You can search for:</p>
-                <ul class="mt-2">
-                  <li><strong>Models:</strong> By model name (e.g., "Mouse-GEM", "iML1515", "Recon3D")</li>
-                  <li><strong>Reactions:</strong> By reaction BiGG ID or name (e.g., "HEX1", "Hexokinase")</li>
-                  <li><strong>Metabolites:</strong> By metabolite BiGG ID (with compartment, e.g., "g6p_c") or BiGG Universal ID (without compartment, e.g., "g6p")</li>
-                  <li><strong>Genes:</strong> By gene ID or name (e.g., "3948_AT2", "LDHC")</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="compartmentConditions">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#compartmentConditionsCollapse" aria-expanded="false">
-                <strong>How are compartment-specific conditions set when predicting Δ<sub><i>r</i></sub>G° for GEM reactions?</strong>
-              </button>
-            </h2>
-            <div id="compartmentConditionsCollapse" class="accordion-collapse collapse" data-bs-parent="#searchAccordion">
-              <div class="accordion-body">
-                <p>
-                  For each model compartment (e.g., cytosol, mitochondrion, lysosome), we set the parameters used in Δ<sub><i>r</i></sub>G°
-                  calculations—<em>pH</em>, <em>ionic strength (I)</em>, <em>pMg</em>, and <em>electrical potential (E)</em>—as follows:
-                </p>
-                <ol class="mt-3">
-                  <li><strong>Literature:</strong> Values reported for the relevant species and compartment.</li>
-                  <li><strong>BioNumbers:</strong> If not available in the literature, we use typical compartment values from
-                    <a href="https://bionumbers.hms.harvard.edu/search.aspx?trm=ph+of++cytosol" target="_blank" rel="noopener">BioNumbers</a>.
-                  </li>
-                  <li><strong>Closest-species:</strong> If neither source provides a value, we adopt conservative values from closely related species.</li>
-                </ol>
-                <p class="mb-0">The selected parameters are shown on the model page under “Compartment Conditions.”</p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
 
       <!-- Reaction Predictor Questions -->
       <section class="mb-5">
         <h3 class="border-bottom pb-2 mb-4">
-          <i class="fas fa-calculator me-2"></i>Predict Δ<sub><i>r</i></sub>G°
+          <i class="fas fa-calculator me-2"></i>Predict Δ<sub>r</sub>G°
         </h3>
 
         <div class="accordion" id="predictorAccordion">
@@ -348,7 +264,7 @@
             </h2>
             <div id="tempSettingCollapse" class="accordion-collapse collapse" data-bs-parent="#predictorAccordion">
               <div class="accordion-body">
-                <p>Δ<sub><i>r</i></sub>G° values are reported at <strong>25&nbsp;°C (298.15&nbsp;K)</strong>.</p>
+                <p>Δ<sub>r</sub>G° values are reported at <strong>25&nbsp;°C (298.15&nbsp;K)</strong>.</p>
                 <ul class="mt-2">
                   <li>Most experimental thermodynamic data, as well as our model training, are standardized at 298&nbsp;K.</li>
                   <li>Reliable temperature adjustment would require reaction-specific <em>ΔH</em> and <em>ΔS</em> (ΔG = ΔH − TΔS), and often heat-capacity terms, which are not available at the genome scale.</li>
@@ -360,6 +276,93 @@
         </div>
       </section>
 
+      <!-- Search GEMs Questions -->
+      <section class="mb-5">
+        <h3 class="border-bottom pb-2 mb-4">
+          <i class="fas fa-search me-2"></i>Search GEMs
+        </h3>
+
+        <div class="accordion" id="searchAccordion">
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="whatModels">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#whatModelsCollapse" aria-expanded="false">
+                <strong>What models are available in Search GEMs?</strong>
+              </button>
+            </h2>
+            <div id="whatModelsCollapse" class="accordion-collapse collapse" data-bs-parent="#searchAccordion">
+              <div class="accordion-body">
+                <p>Our GEM library currently includes <strong>115</strong> genome-scale metabolic models:</p>
+                <ul class="mt-3">
+                  <li>
+                    <strong>BiGG Models (107 GEMs, excluding Recon3D):</strong> sourced from
+                    <a href="http://bigg.ucsd.edu/" target="_blank" rel="noopener">BiGG Models</a>.
+                  </li>
+                  <li>
+                    <strong>Metabolic Atlas (7 GEMs):</strong> sourced from
+                    <a href="https://metabolicatlas.org/gems/repository" target="_blank" rel="noopener">the Metabolic Atlas GEM repository</a>.
+                    <span class="text-muted">(For these 7 models, we retain only reactions and metabolites annotated with BiGG IDs.)</span>
+                  </li>
+                  <li>
+                    <strong>Recon3D (1 GEM):</strong> the human Recon3D model from the latest release by Elizabeth Brunk et&nbsp;al.
+                    (<a href="https://github.com/SBRG/Recon3D" target="_blank" rel="noopener">SBRG/Recon3D</a>).
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="searchTypes">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#searchTypesCollapse" aria-expanded="false">
+                <strong>What can I search for?</strong>
+              </button>
+            </h2>
+            <div id="searchTypesCollapse" class="accordion-collapse collapse" data-bs-parent="#searchAccordion">
+              <div class="accordion-body">
+                <p class="mb-2">You can search for:</p>
+                <ul class="mt-2">
+                  <li><strong>Models:</strong> By model name (e.g., "Mouse-GEM", "iML1515", "Recon3D")</li>
+                  <li><strong>Reactions:</strong> By reaction BiGG ID or name (e.g., "HEX1", "Hexokinase")</li>
+                  <li><strong>Metabolites:</strong> By metabolite BiGG ID (with compartment, e.g., "g6p_c") or BiGG Universal ID (without compartment, e.g., "g6p")</li>
+                  <li><strong>Genes:</strong> By gene ID or name (e.g., "3948_AT2", "LDHC")</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="compartmentConditions">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#compartmentConditionsCollapse" aria-expanded="false">
+                <strong>How are compartment-specific conditions set when predicting Δ<sub>r</sub>G° for GEM reactions?</strong>
+              </button>
+            </h2>
+            <div id="compartmentConditionsCollapse" class="accordion-collapse collapse" data-bs-parent="#searchAccordion">
+              <div class="accordion-body">
+                <p>
+                  For each model compartment (e.g., cytosol, mitochondrion, lysosome), we set the parameters used in Δ<sub>r</sub>G°
+                  calculations—<em>pH</em>, <em>ionic strength (I)</em>, <em>pMg</em>, and <em>electrical potential (E)</em>—as follows:
+                </p>
+                <ol class="mt-3">
+                  <li><strong>Literature:</strong> Values reported for the relevant species and compartment.</li>
+                  <li><strong>BioNumbers:</strong> If not available in the literature, we use typical compartment values from
+                    <a href="https://bionumbers.hms.harvard.edu/search.aspx?trm=ph+of++cytosol" target="_blank" rel="noopener">BioNumbers</a>.
+                  </li>
+                  <li><strong>Closest-species:</strong> If neither source provides a value, we adopt conservative values from closely related species.</li>
+                </ol>
+                <p class="mb-0">The selected parameters are shown on the model page under “Compartment Conditions.”</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      
     </div>
   </div>
 </div>

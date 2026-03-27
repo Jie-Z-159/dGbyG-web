@@ -43,7 +43,6 @@ tqdm>=4.67.0
 # Additional dependencies
 pubchempy>=1.0.4
 networkx>=3.5
-sqlalchemy>=2.0.0
 
 # System utilities
 psutil>=7.0.0

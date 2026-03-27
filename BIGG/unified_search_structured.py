@@ -1,12 +1,12 @@
 import os
-from model_analyzer import get_available_models, search_by_model_structured, get_available_models_cached
+from model_analyzer import get_available_models, search_by_model_structured, get_available_models_cached, get_models_by_species
 from reaction_analyzer import (
     search_by_reaction_structured, 
     search_metabolites_by_query_structured,
     find_genes_by_query
 )
 
-def search_database_structured(query, data_dir="result", model_filter=None):
+def search_database_structured(query, data_dir="result", model_filter=None, species_filter=None):
     """
     结构化版本的统一搜索函数：返回结构化数据而不是print输出
 
@@ -14,6 +14,7 @@ def search_database_structured(query, data_dir="result", model_filter=None):
         query: 搜索关键词
         data_dir: 数据目录（用于模型搜索）
         model_filter: 模型过滤列表
+        species_filter: 物种过滤字符串
 
     Returns:
         dict: 包含模型、反应、代谢物搜索结果的字典
@@ -48,6 +49,13 @@ def search_database_structured(query, data_dir="result", model_filter=None):
         print(f"🏥 [DEBUG] Step 1: Starting model search...")
         step_start = time.time()
         available_models = get_available_models_cached()
+
+        # 应用物种过滤
+        if species_filter:
+            species_models = get_models_by_species(species_filter)
+            available_models = [m for m in available_models if m in species_models]
+            print(f"🏥 [DEBUG] Filtered to {len(available_models)} models for species: {species_filter}")
+
         model_matches = [model for model in available_models if query.lower() in model.lower()]
         print(f"🏥 [DEBUG] Step 1: Found {len(model_matches)} model matches in {time.time()-step_start:.2f}s")
 
@@ -64,10 +72,22 @@ def search_database_structured(query, data_dir="result", model_filter=None):
             results['summary']['total_models_found'] = len(model_details)
             results['summary']['has_results'] = True
 
+        # 构建合并的模型过滤器（包含原有的model_filter和species_filter产生的模型）
+        combined_model_filter = model_filter
+        if species_filter:
+            species_models = get_models_by_species(species_filter)
+            if combined_model_filter:
+                # 如果已有model_filter，取交集
+                combined_model_filter = [m for m in combined_model_filter if m in species_models]
+            else:
+                # 如果没有model_filter，直接使用species的模型列表
+                combined_model_filter = species_models
+            print(f"🏥 [DEBUG] Combined model filter has {len(combined_model_filter)} models")
+
         # 2. Reaction search - 使用优化的搜索函数
         print(f"⚛️ [DEBUG] Step 2: Starting reaction search...")
         step_start = time.time()
-        reaction_results = search_by_reaction_structured(query, model_filter=model_filter)
+        reaction_results = search_by_reaction_structured(query, model_filter=combined_model_filter)
         print(f"⚛️ [DEBUG] Step 2: Found {len(reaction_results) if reaction_results else 0} reactions in {time.time()-step_start:.2f}s")
         if reaction_results:
             results['reactions'] = reaction_results
@@ -77,7 +97,7 @@ def search_database_structured(query, data_dir="result", model_filter=None):
         # 3. Metabolite search - 使用合并后的优化函数
         print(f"🧪 [DEBUG] Step 3: Starting metabolite search...")
         step_start = time.time()
-        metabolite_results = search_metabolites_by_query_structured(query, model_filter=model_filter)
+        metabolite_results = search_metabolites_by_query_structured(query, model_filter=combined_model_filter)
         print(f"🧪 [DEBUG] Step 3: Found {len(metabolite_results) if metabolite_results else 0} metabolites in {time.time()-step_start:.2f}s")
         if metabolite_results:
             results['metabolites'] = metabolite_results
@@ -88,7 +108,7 @@ def search_database_structured(query, data_dir="result", model_filter=None):
         print(f"🧬 [DEBUG] Step 4: Starting gene search...")
         step_start = time.time()
         try:
-            gene_results = find_genes_by_query(query, model_filter=model_filter)
+            gene_results = find_genes_by_query(query, model_filter=combined_model_filter)
             print(f"🧬 [DEBUG] Step 4: Found {len(gene_results) if gene_results else 0} genes in {time.time()-step_start:.2f}s")
             if gene_results:
                 results['genes'] = gene_results

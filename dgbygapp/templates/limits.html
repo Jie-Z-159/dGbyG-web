@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <h1 class="mb-4">
+                <i class="fas fa-server me-2"></i>
+                Server Limits & Usage Guidelines
+            </h1>
+
+            <!-- Rate Limits Section -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>Rate Limits</h4>
+                </div>
+                <div class="card-body">
+                    <p>To ensure fair usage and server stability, the following rate limits are enforced:</p>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Limit</th>
+                                <th>Window</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Search GEMs (<code>/gem-dg</code>)</td>
+                                <td>300 requests</td>
+                                <td>1 hour</td>
+                            </tr>
+                            <tr>
+                                <td>Single Prediction (<code>/calculate</code>)</td>
+                                <td>500 requests</td>
+                                <td>1 hour</td>
+                            </tr>
+                            <tr>
+                                <td>Batch Prediction (<code>/batch_calculate</code>)</td>
+                                <td>100 requests</td>
+                                <td>1 hour</td>
+                            </tr>
+                            <tr>
+                                <td>API Endpoints (<code>/api/*</code>)</td>
+                                <td>300 requests</td>
+                                <td>1 hour</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> Rate limit information is included in API response headers:
+                        <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, <code>X-RateLimit-Reset</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Batch Size Limits -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-layer-group me-2"></i>Batch Processing Limits</h4>
+                </div>
+                <div class="card-body">
+                    <p>For batch calculations, the following limits apply:</p>
+                    <ul>
+                        <li><strong>Maximum batch size:</strong> 100 reactions per request</li>
+                        <li><strong>Processing time:</strong> Typically 1-3 seconds per reaction</li>
+                        <li><strong>Job retention:</strong> Results are stored for 24 hours</li>
+                    </ul>
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Tip:</strong> For large datasets (>100 reactions), split your input into multiple batches.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Persistence -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="fas fa-database me-2"></i>Result Persistence</h4>
+                </div>
+                <div class="card-body">
+                    <p>Search results and batch jobs are temporarily stored:</p>
+                    <ul>
+                        <li><strong>Search results:</strong> Accessible via unique URL for 24 hours</li>
+                        <li><strong>Batch jobs:</strong> Status and results available for 24 hours</li>
+                        <li><strong>Job tracking:</strong> Use <code>/api/job/&lt;job_id&gt;/status</code> to check progress</li>
+                    </ul>
+                    <div class="alert alert-success mt-3">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Sharing:</strong> You can bookmark or share result URLs - they remain valid for 24 hours.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeout Limits -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="fas fa-clock me-2"></i>Timeout Limits</h4>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><strong>Single calculation:</strong> 30 seconds maximum</li>
+                        <li><strong>Batch calculation:</strong> 5 minutes maximum</li>
+                        <li><strong>Search queries:</strong> 30 seconds maximum</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Best Practices</h4>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li>Use batch endpoints for multiple calculations instead of repeated single requests</li>
+                        <li>Monitor rate limit headers to avoid hitting limits</li>
+                        <li>Save result URLs for future reference (valid for 24 hours)</li>
+                        <li>For very large datasets, consider downloading model data and running locally</li>
+                        <li>Use the job status endpoint to track long-running batch calculations</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="alert alert-primary">
+                <i class="fas fa-envelope me-2"></i>
+                Need higher limits for research purposes? <a href="{{ url_for('contact') }}" class="alert-link">Contact us</a> to discuss your requirements.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

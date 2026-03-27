@@ -21,6 +21,210 @@
 
 
 
+
+
+            <!-- ==================== THERMODYNAMIC CALCULATION APIs ==================== -->
+            <section class="mb-4">
+                <h5 class="mb-2 border-bottom pb-2">Δ<sub>r</sub>G° Calculation APIs</h5>
+            </section>
+
+            <!-- Single Equation Endpoint -->
+            <section class="mb-5">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Single Reaction Calculation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6>Endpoint</h6>
+                            <code class="bg-light p-2 rounded d-block">POST /calculate</code>
+                            <small class="text-muted">Calculate Δ<sub>r</sub>G° for one reaction.</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Request parameters</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>equation</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>Reaction equation (e.g., "2 [H][H] + O=O = 2 O")</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>identifier_type</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>One of: "smiles", "inchi", "inchi_key", "kegg", "metanetx", "hmdb", "name", "pubchem", "chebi", "bigg", "mixed"</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>reaction_condition</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>Choose a preset: "d" (default), "c" (cytosol), "m" (mitochondria), "n" (nucleus), "e" (extracellular), "r" (endoplasmic reticulum), 
+                                                "g" (Golgi apparatus), "l" (lysosome), "i" (intermembrane space), "x" (peroxisome), or "custom" (user-defined).</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>custom_condition</code></td>
+                                            <td>object</td>
+                                            <td>No</td>
+                                            <td>Required when <code>reaction_condition</code> is "custom".</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Example request (standard)</h6>
+                            <pre class="bg-light p-3 rounded"><code>curl -X POST https://dgbyg.drziweidai.com/calculate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "equation": "2 [H][H] + O=O = 2 O",
+    "identifier_type": "smiles",
+    "reaction_condition": "d"
+  }'</code></pre>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Example response</h6>
+                            <pre class="bg-light p-3 rounded"><code>{
+  "dG_prime": -529.06,
+  "dG_std_dev": 3.96,
+  "message": "Calculation completed successfully"
+}</code></pre>
+                        </div>                        
+
+                        <div class="mb-4">
+                            <h6>Example request (mixed identifiers)</h6>
+                            <pre class="bg-light p-3 rounded"><code>curl -X POST https://dgbyg.drziweidai.com/calculate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "equation": "CHEBI:37736 = SMILES:O=C(CO)COP(=O)(O)O + name:D-Glyceraldehyde 3-phosphate",
+    "identifier_type": "mixed",
+    "reaction_condition": "custom",
+    "custom_condition": {
+      "0": {"pH": 8.0, "I": 0.25, "pMg": 14.0, "e_potential": 0.0},
+      "1": {"pH": 7.0, "I": 0.25, "pMg": 14.0, "e_potential": 0.0},
+      "2": {"pH": 7.0, "I": 0.25, "pMg": 14.0, "e_potential": 0.0}
+    }
+  }'</code></pre>
+                            <small class="text-muted">
+                                For "mixed", prefix each compound with its identifier type (e.g., CHEBI:37736, SMILES:CCO, name:glucose).
+                            </small>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Example response</h6>
+                            <pre class="bg-light p-3 rounded"><code>{
+  "dG_prime": -35.96,
+  "dG_std_dev": 0.45,
+  "message": "Calculation completed successfully"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Batch Equations Endpoint -->
+            <section class="mb-5">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Batch Reaction Calculation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <h6>Endpoint</h6>
+                            <code class="bg-light p-2 rounded d-block">POST /batch_calculate</code>
+                            <small class="text-muted">Calculate Δ<sub>r</sub>G° for multiple reactions in one request.</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Request parameters</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>equations</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>Multiple equations, one per line.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>identifier_type</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>Same as the single-reaction endpoint.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>reaction_condition</code></td>
+                                            <td>string</td>
+                                            <td>Yes</td>
+                                            <td>Same as the single-reaction endpoint.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Example request</h6>
+                            <pre class="bg-light p-3 rounded"><code>curl -X POST https://dgbyg.drziweidai.com/batch_calculate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "equations": "2 [H][H] + O=O = 2 O\nOCC1OC(O)C(O)C(O)C1O + O=P(O)(O)OP(O)(O)=O = OCC1OC(O)C(O)C(O)C1OP(=O)(O)O + O=P(O)(O)O",
+    "identifier_type": "smiles",
+    "reaction_condition": "custom",
+    "custom_condition": {
+        "pH": 7.4,
+        "I": 0.15,
+        "pMg": 3.0,
+        "e_potential": -0.2
+      }
+  }'</code></pre>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6>Example response</h6>
+                            <pre class="bg-light p-3 rounded"><code>{
+  "message": "Batch calculation completed",
+  "results": [
+    {
+      "dG_prime": -529.06,
+      "dG_std_dev": 3.96,
+      "equation": "2 [H][H] + O=O = 2 O",
+      "status": "success"
+    },
+    {
+      "dG_prime": 6.45,
+      "dG_std_dev": 1.97,
+      "equation": "OCC1OC(O)C(O)C(O)C1O + O=P(O)(O)OP(O)(O)=O = OCC1OC(O)C(O)C(O)C1OP(=O)(O)O + O=P(O)(O)O",
+      "status": "success"
+    }
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- ==================== GEM DATABASE APIs ==================== -->
             <section class="mb-4">
               <h5 class="mb-2 border-bottom pb-2">GEM Database Search APIs</h5>
@@ -175,7 +379,7 @@
                       <div class="mb-4">
                           <h6>Endpoint</h6>
                           <code class="bg-light p-2 rounded d-block">GET /api/reactions?q={query}&amp;include_dg={true|false}</code>
-                          <small class="text-muted">Search reactions. Optionally include Δ<sub><i>r</i></sub>G° results in the response.</small>
+                          <small class="text-muted">Search reactions. Optionally include Δ<sub>r</sub>G° results in the response.</small>
                       </div>
 
                       <div class="mb-4">
@@ -211,7 +415,7 @@
                                           <td>boolean</td>
                                           <td>No</td>
                                           <td>true</td>
-                                          <td>Include Δ<sub><i>r</i></sub>G° data in the response.</td>
+                                          <td>Include Δ<sub>r</sub>G° data in the response.</td>
                                       </tr>
                                   </tbody>
                               </table>
@@ -543,207 +747,6 @@
           </section>
 
 
-            <!-- ==================== THERMODYNAMIC CALCULATION APIs ==================== -->
-            <section class="mb-4">
-                <h5 class="mb-2 border-bottom pb-2">Δ<sub><i>r</i></sub>G° Calculation APIs</h5>
-            </section>
-
-            <!-- Single Equation Endpoint -->
-            <section class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Single Reaction Calculation</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <h6>Endpoint</h6>
-                            <code class="bg-light p-2 rounded d-block">POST /calculate</code>
-                            <small class="text-muted">Calculate Δ<sub><i>r</i></sub>G° for one reaction.</small>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6>Request parameters</h6>
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Parameter</th>
-                                            <th>Type</th>
-                                            <th>Required</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><code>equation</code></td>
-                                            <td>string</td>
-                                            <td>Yes</td>
-                                            <td>Reaction equation (e.g., "2 [H][H] + O=O = 2 O")</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>identifier_type</code></td>
-                                            <td>string</td>
-                                            <td>Yes</td>
-                                            <td>One of: "smiles", "inchi", "inchi_key", "kegg", "metanetx", "hmdb", "name", "pubchem", "chebi", "bigg", "mixed"</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>reaction_condition</code></td>
-                                            <td>string</td>
-                                            <td>Yes</td>
-                                            <td>Choose a preset: "d" (default), "c" (cytosol), "m" (mitochondria), "n" (nucleus), "e" (extracellular), "r" (endoplasmic reticulum), 
-                                                "g" (Golgi apparatus), "l" (lysosome), "i" (intermembrane space), "x" (peroxisome), or "custom" (user-defined).</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>custom_condition</code></td>
-                                            <td>object</td>
-                                            <td>No</td>
-                                            <td>Required when <code>reaction_condition</code> is "custom".</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6>Example request (standard)</h6>
-                            <pre class="bg-light p-3 rounded"><code>curl -X POST https://dgbyg.drziweidai.com/calculate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "equation": "2 [H][H] + O=O = 2 O",
-    "identifier_type": "smiles",
-    "reaction_condition": "d"
-  }'</code></pre>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6>Example response</h6>
-                            <pre class="bg-light p-3 rounded"><code>{
-  "dG_prime": -529.06,
-  "dG_std_dev": 3.96,
-  "message": "Calculation completed successfully"
-}</code></pre>
-                        </div>                        
-
-                        <div class="mb-4">
-                            <h6>Example request (mixed identifiers)</h6>
-                            <pre class="bg-light p-3 rounded"><code>curl -X POST https://dgbyg.drziweidai.com/calculate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "equation": "CHEBI:37736 = SMILES:O=C(CO)COP(=O)(O)O + name:D-Glyceraldehyde 3-phosphate",
-    "identifier_type": "mixed",
-    "reaction_condition": "custom",
-    "custom_condition": {
-      "0": {"pH": 8.0, "I": 0.25, "pMg": 14.0, "e_potential": 0.0},
-      "1": {"pH": 7.0, "I": 0.25, "pMg": 14.0, "e_potential": 0.0},
-      "2": {"pH": 7.0, "I": 0.25, "pMg": 14.0, "e_potential": 0.0}
-    }
-  }'</code></pre>
-                            <small class="text-muted">
-                                For "mixed", prefix each compound with its identifier type (e.g., CHEBI:37736, SMILES:CCO, name:glucose).
-                            </small>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6>Example response</h6>
-                            <pre class="bg-light p-3 rounded"><code>{
-  "dG_prime": -35.96,
-  "dG_std_dev": 0.45,
-  "message": "Calculation completed successfully"
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Batch Equations Endpoint -->
-            <section class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Batch Reaction Calculation</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <h6>Endpoint</h6>
-                            <code class="bg-light p-2 rounded d-block">POST /batch_calculate</code>
-                            <small class="text-muted">Calculate Δ<sub><i>r</i></sub>G° for multiple reactions in one request.</small>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6>Request parameters</h6>
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Parameter</th>
-                                            <th>Type</th>
-                                            <th>Required</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><code>equations</code></td>
-                                            <td>string</td>
-                                            <td>Yes</td>
-                                            <td>Multiple equations, one per line.</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>identifier_type</code></td>
-                                            <td>string</td>
-                                            <td>Yes</td>
-                                            <td>Same as the single-reaction endpoint.</td>
-                                        </tr>
-                                        <tr>
-                                            <td><code>reaction_condition</code></td>
-                                            <td>string</td>
-                                            <td>Yes</td>
-                                            <td>Same as the single-reaction endpoint.</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6>Example request</h6>
-                            <pre class="bg-light p-3 rounded"><code>curl -X POST https://dgbyg.drziweidai.com/batch_calculate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "equations": "2 [H][H] + O=O = 2 O\nOCC1OC(O)C(O)C(O)C1O + O=P(O)(O)OP(O)(O)=O = OCC1OC(O)C(O)C(O)C1OP(=O)(O)O + O=P(O)(O)O",
-    "identifier_type": "smiles",
-    "reaction_condition": "custom",
-    "custom_condition": {
-        "pH": 7.4,
-        "I": 0.15,
-        "pMg": 3.0,
-        "e_potential": -0.2
-      }
-  }'</code></pre>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6>Example response</h6>
-                            <pre class="bg-light p-3 rounded"><code>{
-  "message": "Batch calculation completed",
-  "results": [
-    {
-      "dG_prime": -529.06,
-      "dG_std_dev": 3.96,
-      "equation": "2 [H][H] + O=O = 2 O",
-      "status": "success"
-    },
-    {
-      "dG_prime": 6.45,
-      "dG_std_dev": 1.97,
-      "equation": "OCC1OC(O)C(O)C(O)C1O + O=P(O)(O)OP(O)(O)=O = OCC1OC(O)C(O)C(O)C1OP(=O)(O)O + O=P(O)(O)O",
-      "status": "success"
-    }
-  ]
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <!-- ==================== LEGACY ENDPOINTS ==================== -->
             <section class="mb-5">
@@ -900,7 +903,7 @@
                                 <ul class="list-unstyled">
                                     <li><a href="/faq">FAQ</a></li>
                                     <li><a href="/">Web Interface</a></li>
-                                    <li><a href="/prediction">Δ<sub><i>r</i></sub>G° Calculator</a></li>
+                                    <li><a href="/prediction">Δ<sub>r</sub>G° Calculator</a></li>
                                 </ul>
                             </div>
                             <div class="col-md-6">

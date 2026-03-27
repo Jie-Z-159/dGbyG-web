@@ -27,9 +27,19 @@
                             {{ form.query(class="search-input", placeholder="Enter model name, reaction ID, metabolite name...", id="searchInput") }}
                             {{ form.submit(class="search-button") }}
                         </div>
-                        <div class="model-filter-group mt-3">
-                            <label for="model_filter" class="form-label text-muted">Filter by Model (Optional):</label>
-                            {{ form.model_filter(class="form-select", id="model_filter") }}
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="model-filter-group">
+                                    <label for="species_filter" class="form-label text-muted">Filter by Species (Optional):</label>
+                                    {{ form.species_filter(class="form-select", id="species_filter") }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="model-filter-group">
+                                    <label for="model_filter" class="form-label text-muted">Filter by Model (Optional):</label>
+                                    {{ form.model_filter(class="form-select", id="model_filter") }}
+                                </div>
+                            </div>
                         </div>
                         {% if form.query.errors %}
                             <div class="error-message">

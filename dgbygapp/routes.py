@@ -115,6 +115,10 @@ def init_routes(app):
     def home():
         return render_template('home.html')
 
+    @app.route('/about')
+    def about():
+        return render_template('about.html')
+
     @app.route('/contact', methods=['GET', 'POST'])
     def contact():
         form = ContactForm()
@@ -184,12 +188,15 @@ def init_routes(app):
             form = UnifiedSearchForm()
             # 动态填充模型选择
             try:
-                from BIGG.model_analyzer import get_available_models_cached  # type: ignore
+                from BIGG.model_analyzer import get_available_models_cached, get_species_list  # type: ignore
                 available_models = get_available_models_cached()
                 form.model_filter.choices = [('', 'All Models')] + [(model, model) for model in available_models]
+                species_list = get_species_list()
+                form.species_filter.choices = [('', 'All Species')] + [(species, species) for species in species_list]
             except Exception as e:
                 print(f"Warning: Could not load models for filter: {e}")
                 form.model_filter.choices = [('', 'All Models')]
+                form.species_filter.choices = [('', 'All Species')]
             return render_template('bigg.html', form=form, search_results=None, error=None)
 
         # POST请求处理
@@ -314,20 +321,31 @@ def init_routes(app):
 
             # 动态填充模型选择
             try:
-                from BIGG.model_analyzer import get_available_models_cached  # type: ignore
+                from BIGG.model_analyzer import get_available_models_cached, get_species_list, get_models_by_species  # type: ignore
                 available_models = get_available_models_cached()
                 form.model_filter.choices = [('', 'All Models')] + [(model, model) for model in available_models]
+                species_list = get_species_list()
+                form.species_filter.choices = [('', 'All Species')] + [(species, species) for species in species_list]
             except Exception as e:
                 print(f"Warning: Could not load models for filter: {e}")
                 form.model_filter.choices = [('', 'All Models')]
+                form.species_filter.choices = [('', 'All Species')]
 
             if form.validate_on_submit():
                 query = form.query.data.strip()
                 model_filter = form.model_filter.data
+                species_filter = form.species_filter.data
 
                 try:
+                    # 处理物种过滤
+                    model_filter_list = None
+                    if species_filter:
+                        from BIGG.model_analyzer import get_models_by_species  # type: ignore
+                        model_filter_list = get_models_by_species(species_filter)
+                    elif model_filter:
+                        model_filter_list = [model_filter]
+
                     # 调用统一搜索功能，传递模型过滤参数
-                    model_filter_list = [model_filter] if model_filter else None
                     search_results = search_database_structured(query, model_filter=model_filter_list)
                 except Exception as e:
                     error = f"Search error: {str(e)}"
