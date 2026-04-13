@@ -1,1 +1,0 @@
-{"timestamp": "2026-03-27T11:05:40.901854", "results": {"query": "3-ketoacyl-CoA thiolase", "models": [], "reactions": [{"reaction_info": {"id": "ACACT10", "name": "3-ketoacyl-CoA thiolase", "equation": "3oddcoa_c + coa_c --> accoa_c + dcacoa_c", "model_list": 

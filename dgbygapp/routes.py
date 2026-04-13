@@ -7,9 +7,12 @@ import tempfile
 import sys
 import time
 from collections import defaultdict, deque
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_mail import Message
 from dgbygapp import mail
+import uuid
+import json
+import threading
 
 # 添加BIGG目录到Python路径
 bigg_path = os.path.join(os.path.dirname(__file__), '..', 'BIGG')
@@ -45,6 +48,136 @@ class RateLimiter:
         return int(self.requests[ip][0] + window_seconds)
 
 rate_limiter = RateLimiter()
+
+# Job and Result storage helpers
+def get_cache_dir(cache_type='jobs'):
+    """Get cache directory path"""
+    base_dir = current_app.config.get('BASE_DIR', os.path.dirname(os.path.dirname(__file__)))
+    cache_dir = os.path.join(base_dir, 'cache', cache_type)
+    os.makedirs(cache_dir, exist_ok=True)
+    return cache_dir
+
+def save_job(job_id, data):
+    """Save job data to cache"""
+    cache_dir = get_cache_dir('jobs')
+    file_path = os.path.join(cache_dir, f"{job_id}.json")
+    with open(file_path, 'w') as f:
+        json.dump(data, f)
+
+def load_job(job_id):
+    """Load job data from cache"""
+    cache_dir = get_cache_dir('jobs')
+    file_path = os.path.join(cache_dir, f"{job_id}.json")
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            return json.load(f)
+    return None
+
+def save_result(result_id, data):
+    """Save result data to cache"""
+    cache_dir = get_cache_dir('results')
+    file_path = os.path.join(cache_dir, f"{result_id}.json")
+    with open(file_path, 'w') as f:
+        json.dump(data, f)
+
+def load_result(result_id):
+    """Load result data from cache"""
+    cache_dir = get_cache_dir('results')
+    file_path = os.path.join(cache_dir, f"{result_id}.json")
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            return json.load(f)
+    return None
+
+def cleanup_old_cache():
+    """Clean up cache files older than 3 days"""
+    for cache_type in ['jobs', 'results']:
+        cache_dir = get_cache_dir(cache_type)
+        cutoff_time = datetime.now() - timedelta(days=3)
+        for filename in os.listdir(cache_dir):
+            if filename.endswith('.json'):
+                file_path = os.path.join(cache_dir, filename)
+                file_time = datetime.fromtimestamp(os.path.getmtime(file_path))
+                if file_time < cutoff_time:
+                    try:
+                        os.remove(file_path)
+                    except Exception as e:
+                        print(f"Error removing {file_path}: {e}")
+
+def process_batch_job(app, job_id, equations, identifier, reaction_condition, custom_condition):
+    """Background task to process batch calculations"""
+    with app.app_context():
+        try:
+            job_data = load_job(job_id)
+            if not job_data:
+                return
+
+            results = []
+            for idx, equation in enumerate(equations):
+                try:
+                    result = calculate_dg(equation, identifier, reaction_condition, custom_condition)
+                    if 'error' in result:
+                        results.append({
+                            'equation': equation,
+                            'error': result['error'],
+                            'status': 'error'
+                        })
+                    else:
+                        dG_prime = result['dG_prime']
+                        dG_std_dev = result['dG_std_dev']
+
+                        import math
+                        if dG_prime is not None and (isinstance(dG_prime, float) and math.isnan(dG_prime)):
+                            dG_prime = None
+                        if dG_std_dev is not None and (isinstance(dG_std_dev, float) and math.isnan(dG_std_dev)):
+                            dG_std_dev = None
+
+                        if dG_prime is None:
+                            results.append({
+                                'equation': equation,
+                                'error': 'Missing data in database',
+                                'status': 'error'
+                            })
+                        else:
+                            results.append({
+                                'equation': equation,
+                                'dG_prime': dG_prime,
+                                'dG_std_dev': dG_std_dev,
+                                'status': 'success'
+                            })
+                except Exception as e:
+                    results.append({
+                        'equation': equation,
+                        'error': str(e),
+                        'status': 'error'
+                    })
+
+                job_data['completed'] = idx + 1
+                save_job(job_id, job_data)
+
+            result_id = str(uuid.uuid4())[:8]
+            result_data = {
+                'result_id': result_id,
+                'job_id': job_id,
+                'results': results,
+                'identifier': identifier,
+                'reaction_condition': reaction_condition,
+                'custom_condition': custom_condition,
+                'created_at': datetime.now().isoformat()
+            }
+            save_result(result_id, result_data)
+
+            job_data['status'] = 'completed'
+            job_data['result_id'] = result_id
+            save_job(job_id, job_data)
+
+        except Exception as e:
+            print(f"Error in background job {job_id}: {e}")
+            job_data = load_job(job_id)
+            if job_data:
+                job_data['status'] = 'error'
+                job_data['error'] = str(e)
+                save_job(job_id, job_data)
 
 def rate_limit(limit_per_hour=500):
     """限流装饰器 - 设置比较宽松的默认限制"""
@@ -451,10 +584,11 @@ def init_routes(app):
             return jsonify({'error': str(e)}), 500
 
     @app.route('/batch_calculate', methods=['POST'])
-    @rate_limit(limit_per_hour=100)  # 批量预测：每小时100次（更保守）
+    @rate_limit(limit_per_hour=100)
     def batch_calculate():
         try:
-            # 支持JSON和表单数据
+            cleanup_old_cache()
+
             if request.is_json:
                 data = request.get_json()
                 if not data:
@@ -464,7 +598,6 @@ def init_routes(app):
                 reaction_condition = data.get('reaction_condition')
                 custom_condition = data.get('custom_condition') if reaction_condition == 'custom' else None
             else:
-                # 验证必需参数（仅对表单数据）
                 for param in ['equations', 'identifier_type', 'reaction_condition']:
                     if not request.form.get(param):
                         return jsonify({'error': f'Missing required parameter: {param}'}), 400
@@ -480,57 +613,58 @@ def init_routes(app):
                         'e_potential': float(request.form.get('global_e_potential', 0.0))
                     }
 
-            results = []
-            for equation in equations:
-                equation = equation.strip()
-                if not equation:
-                    continue
+            equations = [eq.strip() for eq in equations if eq.strip()]
+            if not equations:
+                return jsonify({'error': 'No valid equations provided'}), 400
 
-                try:
-                    result = calculate_dg(equation, identifier, reaction_condition, custom_condition)
-                    if 'error' in result:
-                        results.append({
-                            'equation': equation,
-                            'error': result['error'],
-                            'status': 'error'
-                        })
-                    else:
-                        # 处理 NaN 值 - 将其转换为 null 以确保 JSON 合法性
-                        dG_prime = result['dG_prime']
-                        dG_std_dev = result['dG_std_dev']
+            job_id = str(uuid.uuid4())[:8]
 
-                        # 检查是否为 NaN 并转换为 null
-                        import math
-                        if dG_prime is not None and (isinstance(dG_prime, float) and math.isnan(dG_prime)):
-                            dG_prime = None
-                        if dG_std_dev is not None and (isinstance(dG_std_dev, float) and math.isnan(dG_std_dev)):
-                            dG_std_dev = None
+            job_data = {
+                'job_id': job_id,
+                'status': 'processing',
+                'total': len(equations),
+                'completed': 0,
+                'created_at': datetime.now().isoformat(),
+                'identifier': identifier,
+                'reaction_condition': reaction_condition,
+                'custom_condition': custom_condition
+            }
+            save_job(job_id, job_data)
 
-                        # 只检查 dG_prime 是否有效，dG_std_dev 为 null 不影响结果
-                        if dG_prime is None:
-                            results.append({
-                                'equation': equation,
-                                'error': 'Missing data in database',
-                                'status': 'error'
-                            })
-                        else:
-                            results.append({
-                                'equation': equation,
-                                'dG_prime': dG_prime,
-                                'dG_std_dev': dG_std_dev,
-                                'status': 'success'
-                            })
-                except Exception as e:
-                    results.append({
-                        'equation': equation,
-                        'error': str(e),
-                        'status': 'error'
-                    })
+            thread = threading.Thread(
+                target=process_batch_job,
+                args=(current_app._get_current_object(), job_id, equations, identifier, reaction_condition, custom_condition)
+            )
+            thread.daemon = True
+            thread.start()
 
             return jsonify({
-                'results': results,
-                'message': 'Batch calculation completed'
+                'job_id': job_id,
+                'status': 'processing',
+                'message': 'Batch calculation started'
             })
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @app.route('/api/job/<job_id>', methods=['GET'])
+    def get_job_status(job_id):
+        """Query job status"""
+        try:
+            job_data = load_job(job_id)
+            if not job_data:
+                return jsonify({'error': 'Job not found'}), 404
+            return jsonify(job_data)
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @app.route('/api/result/<result_id>', methods=['GET'])
+    def get_result(result_id):
+        """Query result by result_id"""
+        try:
+            result_data = load_result(result_id)
+            if not result_data:
+                return jsonify({'error': 'Result not found'}), 404
+            return jsonify(result_data)
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 

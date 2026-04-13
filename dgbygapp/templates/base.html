@@ -37,7 +37,7 @@
           <a class="nav-link {% if request.endpoint == 'home' %}active{% endif %}" aria-current="page" href="{{ url_for('home') }}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if request.endpoint == 'prediction' %}active{% endif %}" href="{{ url_for('prediction') }}">Predict Δ<sub><i>r</i></sub>G°</a>
+          <a class="nav-link {% if request.endpoint == 'prediction' %}active{% endif %}" href="{{ url_for('prediction') }}">Predict Δ<sub>r</sub>G°</a>
         </li>        
         <li class="nav-item">
           <a class="nav-link {% if request.endpoint == 'gem_dg' %}active{% endif %}" href="{{ url_for('gem_dg') }}">Search GEMs</a>

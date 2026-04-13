@@ -18,7 +18,7 @@
                                 <label class="btn btn-outline-primary" for="singleMode">
                                     <i class="fas fa-flask me-2"></i>Single Equation
                                 </label>
-                                
+
                                 <input type="radio" class="btn-check" name="inputMode" id="batchMode" value="batch">
                                 <label class="btn btn-outline-primary" for="batchMode">
                                     <i class="fas fa-list me-2"></i>Batch Equations
@@ -31,19 +31,19 @@
                 <!-- Main Form -->
                 <form method="POST" id="prediction-form">
                     {{ form.hidden_tag() }}
-                
+
                     <div class="form-section">
 
-                        <!-- Identifier Type (Shared by both modes) -->
+                    <!-- Single Mode -->
+                    <div id="singleInputSection">
+                        <!-- Identifier Type -->
                         <div class="mb-3">
                             <label class="form-label">
                                 <i class="fas fa-tag me-1"></i>Identifier Type
                             </label>
                             {{ form.identifier_type(class="form-select", id="identifier_type") }}
                         </div>
-                    
-                    <!-- Single Mode -->
-                    <div id="singleInputSection">
+
                         <!-- Equation Input with Examples -->
                         <div class="mb-2">
                             <div class="d-flex align-items-center mb-2 flex-wrap">
@@ -173,11 +173,52 @@
 
                     <!-- Batch Mode -->
                     <div id="batchInputSection" class="hidden-panel">
+                        <!-- Query Buttons Info Box -->
+                        <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded" 
+                            style="background-color: #f0f3ff; border-left: 5px solid #3B40FF;">
+                            
+                            <div>
+                                <i class="fas fa-fingerprint me-2" style="color: #3B40FF;"></i>
+                                <strong style="color: #212529;">Already have a Job ID or Result ID?</strong>
+                            </div>
+
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm" id="queryJobBtn" 
+                                        style="color: #3B40FF; border: 1px solid #3B40FF; background-color: white;">
+                                    <i class="fas fa-search me-1"></i>Job Progress
+                                </button>
+                                <button type="button" class="btn btn-sm text-white" id="queryResultBtn" 
+                                        style="background-color: #3B40FF; border: 1px solid #3B40FF;">
+                                    <i class="fas fa-history me-1"></i>View Result
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Identifier Type -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-tag me-1"></i>Identifier Type
+                            </label>
+                            <select class="form-select" id="batch-identifier-type">
+                                <option value="smiles">SMILES</option>
+                                <option value="inchi">InChI</option>
+                                <option value="inchi_key">InChI_Key</option>
+                                <option value="kegg">KEGG</option>
+                                <option value="metanetx">MetaNetX</option>
+                                <option value="hmdb">HMDB</option>
+                                <option value="name">Name</option>
+                                <option value="bigg">Bigg (Bigg universal ID)</option>
+                                <option value="chebi">ChEBI</option>
+                                <option value="pubchem">PubChem</option>
+                                <option value="mixed">Mixed Identifiers</option>
+                            </select>
+                        </div>
+
                         <!-- Batch Equations Input -->
                         <div class="mb-3">
                             <div class="d-flex align-items-center mb-2 flex-wrap">
                                 <label for="batch-equations" class="form-label mb-0 me-3">
-                                    <i class="fas fa-list me-1"></i>Equations (one per line, max 100)
+                                    <i class="fas fa-list me-1"></i>Equations (one per line, max 500)
                                 </label>
                                 <div class="examples-inline-wrapper">
                                     <small class="text-muted me-2">Example:</small>
@@ -312,6 +353,56 @@
     </div>
 </div>
 
+<!-- Query Job Modal -->
+<div class="modal fade" id="queryJobModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-search me-2"></i>Query Job Progress</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Job ID</label>
+                    <input type="text" class="form-control" id="jobIdInput" placeholder="Enter Job ID">
+                </div>
+                <div id="jobStatusDisplay" class="d-none">
+                    <div class="alert alert-info">
+                        <div><strong>Status:</strong> <span id="jobStatus"></span></div>
+                        <div><strong>Progress:</strong> <span id="jobProgress"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="queryJobSubmit">Query</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Query Result Modal -->
+<div class="modal fade" id="queryResultModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-history me-2"></i>View Result</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Result ID</label>
+                    <input type="text" class="form-control" id="resultIdInput" placeholder="Enter Result ID">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="queryResultSubmit">View</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Batch Results Modal -->
 <div class="modal fade" id="batchResultModal" tabindex="-1" aria-labelledby="batchResultModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -336,6 +427,23 @@
                     </table>
                 </div>
                 <div class="mt-3">
+                    <!-- Job and Result IDs -->
+                    <div class="p-3 bg-light rounded mb-3">
+                        <div class="mb-2">
+                            <strong><i class="fas fa-fingerprint me-2"></i>Job ID:</strong>
+                            <code id="batch-modal-job-id" class="ms-2"></code>
+                        </div>
+                        <div class="mb-2">
+                            <strong><i class="fas fa-key me-2"></i>Result ID:</strong>
+                            <code id="batch-modal-result-id" class="ms-2"></code>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>Results are kept for 3 days. Save the Result ID to access later.
+                            </small>
+                        </div>
+                    </div>
+
                     <!-- Global Conditions Display -->
                     <div class="p-3 bg-light rounded mb-3">
                         <div class="mb-2">
@@ -429,6 +537,36 @@
 
         // 事件处理器
         events: {
+            initializeQueryButtons: function() {
+                $('#queryJobBtn').click(function() {
+                    const modal = new bootstrap.Modal(document.getElementById('queryJobModal'));
+                    modal.show();
+                });
+
+                $('#queryResultBtn').click(function() {
+                    const modal = new bootstrap.Modal(document.getElementById('queryResultModal'));
+                    modal.show();
+                });
+
+                $('#queryJobSubmit').click(function() {
+                    const jobId = $('#jobIdInput').val().trim();
+                    if (!jobId) {
+                        alert('Please enter Job ID');
+                        return;
+                    }
+                    PredictionApp.query.queryJob(jobId);
+                });
+
+                $('#queryResultSubmit').click(function() {
+                    const resultId = $('#resultIdInput').val().trim();
+                    if (!resultId) {
+                        alert('Please enter Result ID');
+                        return;
+                    }
+                    PredictionApp.query.queryResult(resultId);
+                });
+            },
+
             initializeExampleLinks: function() {
                 $('.batch-example-link').click(function(e) {
                     e.preventDefault();
@@ -437,7 +575,7 @@
                     const exampleEquations = PredictionApp.config.keggExampleEquations.join('\n');
 
                     $('#batch-equations').val(exampleEquations);
-                    $('#identifier_type').val(identifier);
+                    $('#batch-identifier-type').val(identifier);
                     PredictionApp.utils.addFlashEffect($('#batch-equations'));
                 });
 
@@ -504,6 +642,38 @@
                     e.preventDefault();
                     $('#batch-equations').val('').focus();
                     PredictionApp.utils.addFlashEffect($('#batch-equations'));
+                });
+            }
+        },
+
+        // 查询功能
+        query: {
+            queryJob: function(jobId) {
+                $.get(`/api/job/${jobId}`, function(data) {
+                    if (data.status === 'completed' && data.result_id) {
+                        $('#jobStatusDisplay').removeClass('d-none');
+                        $('#jobStatus').text('Completed');
+                        $('#jobProgress').text(`${data.completed}/${data.total}`);
+                        setTimeout(() => {
+                            bootstrap.Modal.getInstance(document.getElementById('queryJobModal')).hide();
+                            PredictionApp.query.queryResult(data.result_id);
+                        }, 1000);
+                    } else {
+                        $('#jobStatusDisplay').removeClass('d-none');
+                        $('#jobStatus').text(data.status);
+                        $('#jobProgress').text(`${data.completed}/${data.total}`);
+                    }
+                }).fail(function() {
+                    alert('Job not found or expired (jobs are kept for 3 days)');
+                });
+            },
+
+            queryResult: function(resultId) {
+                $.get(`/api/result/${resultId}`, function(data) {
+                    bootstrap.Modal.getInstance(document.getElementById('queryResultModal'))?.hide();
+                    PredictionApp.modal.showBatchResults(data.results, data.job_id, resultId, data.identifier, data.custom_condition);
+                }).fail(function() {
+                    alert('Result not found or expired (results are kept for 3 days)');
                 });
             }
         },
@@ -612,15 +782,15 @@
                     alert('Please enter at least one equation');
                     return;
                 }
-                if (equations.length > 100) {
+                if (equations.length > 500) {
                     PredictionApp.utils.resetButton($btn, originalText);
-                    alert('Maximum 100 equations allowed');
+                    alert('Maximum 500 equations allowed');
                     return;
                 }
 
                 const formData = new FormData();
                 formData.append('equations', equations.join('\n'));
-                formData.append('identifier_type', $('#identifier_type').val());
+                formData.append('identifier_type', $('#batch-identifier-type').val());
                 formData.append('reaction_condition', 'custom');
                 formData.append('global_pH', $('#global-pH').val());
                 formData.append('global_I', $('#global-I').val());
@@ -634,11 +804,12 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        PredictionApp.utils.resetButton($btn, originalText);
-                        if (response.results) {
-                            PredictionApp.modal.showBatchResults(response.results);
+                        if (response.job_id) {
+                            PredictionApp.utils.resetButton($btn, originalText);
+                            PredictionApp.polling.startPolling(response.job_id);
                         } else {
-                            PredictionApp.modal.showError(response.error || 'Unknown error');
+                            PredictionApp.utils.resetButton($btn, originalText);
+                            PredictionApp.modal.showError('Failed to start job');
                         }
                     },
                     error: function(xhr) {
@@ -646,6 +817,48 @@
                         const errorMsg = PredictionApp.utils.extractErrorMessage(xhr);
                         PredictionApp.modal.showError(errorMsg);
                     }
+                });
+            }
+        },
+
+        // 轮询功能
+        polling: {
+            pollInterval: null,
+
+            startPolling: function(jobId) {
+                $('#jobIdInput').val(jobId);
+                $('#jobStatusDisplay').removeClass('d-none');
+                $('#jobStatus').text('Processing...');
+                $('#jobProgress').text('0/0');
+
+                const modal = new bootstrap.Modal(document.getElementById('queryJobModal'));
+                modal.show();
+
+                this.pollInterval = setInterval(() => {
+                    PredictionApp.polling.checkJobStatus(jobId);
+                }, 3000);
+
+                PredictionApp.polling.checkJobStatus(jobId);
+            },
+
+            checkJobStatus: function(jobId) {
+                $.get(`/api/job/${jobId}`, function(data) {
+                    $('#jobProgress').text(`${data.completed}/${data.total}`);
+
+                    if (data.status === 'completed' && data.result_id) {
+                        clearInterval(PredictionApp.polling.pollInterval);
+                        $('#jobStatus').text('Completed');
+                        setTimeout(() => {
+                            bootstrap.Modal.getInstance(document.getElementById('queryJobModal')).hide();
+                            PredictionApp.query.queryResult(data.result_id);
+                        }, 1000);
+                    } else if (data.status === 'error') {
+                        clearInterval(PredictionApp.polling.pollInterval);
+                        $('#jobStatus').text('Error: ' + (data.error || 'Unknown error'));
+                    }
+                }).fail(function() {
+                    clearInterval(PredictionApp.polling.pollInterval);
+                    alert('Failed to query job status');
                 });
             }
         },
@@ -701,7 +914,7 @@
                 modal.show();
             },
 
-            showBatchResults: function(results) {
+            showBatchResults: function(results, jobId, resultId, identifier, customCondition) {
                 const tbody = $('#batchResultsTable tbody').empty();
                 let successCount = 0, errorCount = 0;
 
@@ -734,18 +947,18 @@
                     </small>
                 `);
 
-                // Set identifier display
-                const identifierType = $('#identifier_type').val() || 'N/A';
-                const identifierDisplayName = $('#identifier_type option:selected').text() || identifierType;
+                $('#batch-modal-job-id').text(jobId || 'N/A');
+                $('#batch-modal-result-id').text(resultId || 'N/A');
+
+                const identifierDisplayName = identifier ? (identifier === 'kegg' ? 'KEGG' : identifier === 'bigg' ? 'BiGG' : identifier === 'name' ? 'Name' : identifier === 'smiles' ? 'SMILES' : identifier === 'mixed' ? 'Mixed' : identifier) : 'N/A';
                 $('#batch-modal-identifier').text(identifierDisplayName);
 
-                // Set conditions display
-                const pH = $('#global-pH').val();
-                const I = $('#global-I').val();
-                const pMg = $('#global-pMg').val();
-                const e = $('#global-e_potential').val();
-                const conditionsText = `pH = ${pH}, I = ${I} M, pMg = ${pMg}, T = 298.15 K, e = ${e} V`;
-                $('#batch-modal-conditions').text(conditionsText);
+                if (customCondition) {
+                    const conditionsText = `pH = ${customCondition.pH}, I = ${customCondition.I} M, pMg = ${customCondition.pMg}, T = 298.15 K, e = ${customCondition.e_potential} V`;
+                    $('#batch-modal-conditions').text(conditionsText);
+                } else {
+                    $('#batch-modal-conditions').text('N/A');
+                }
 
                 const modal = new bootstrap.Modal(document.getElementById('batchResultModal'));
                 modal.show();
@@ -841,6 +1054,7 @@
 
         // 初始化函数
         init: function() {
+            this.events.initializeQueryButtons();
             this.events.initializeExampleLinks();
             this.events.initializeModeSwitch();
             this.events.initializeReactionConditions();
