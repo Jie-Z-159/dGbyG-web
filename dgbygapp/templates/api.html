@@ -2,34 +2,522 @@
 
 {% block content %}
 
+<style>
+/* ==================== dGbyG API Reference: minimal sky style ==================== */
+:root {
+    --api-sidebar-bg: #fbfdff;
+    --api-page-bg: #ffffff;
+    --api-text: #334155;
+    --api-muted: #64748b;
+    --api-faint: #94a3b8;
+    --api-heading: #0f172a;
+
+    /* restrained sky-blue palette */
+    --api-primary: #0ea5e9;
+    --api-primary-dark: #0369a1;
+    --api-primary-soft: #eef8fc;
+    --api-primary-subtle: #f7fbfd;
+
+    --api-border: #e2e8f0;
+    --api-border-soft: #eef2f6;
+    --api-card-bg: #ffffff;
+    --api-table-header: #f8fafc;
+
+    /* light code block */
+    --api-code-bg: #f6f8fa;
+    --api-code-text: #243447;
+    --api-code-border: #e2e8f0;
+
+    --api-inline-code-bg: #f1f7fb;
+    --api-inline-code-text: #0369a1;
+
+    --api-post-bg: #eaf8ff;
+    --api-post-text: #0369a1;
+    --api-get-bg: #f1f5f9;
+    --api-get-text: #475569;
+
+    --api-radius-sm: 6px;
+    --api-radius-md: 8px;
+    --api-radius-lg: 10px;
+    --font-size-base: 0.9rem;
+    --font-size-sm: 0.84rem;
+    --font-size-xs: 0.72rem;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Override outer container so sidebar + content fill the full viewport */
+body > div.container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* ==================== Sidebar ==================== */
+.api-sidebar {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 248px;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    background: var(--api-sidebar-bg);
+    border-right: 1px solid var(--api-border);
+    padding: 1.75rem 0.7rem 1.25rem;
+    z-index: 100;
+}
+
+.api-sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.api-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.api-sidebar::-webkit-scrollbar-thumb {
+    background-color: #d5e1ea;
+    border-radius: 999px;
+}
+
+.api-sidebar .toc-title {
+    font-weight: 700;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--api-faint);
+    padding: 0.6rem 0.65rem 0.45rem;
+}
+
+.api-sidebar .toc-group {
+    margin-bottom: 0.85rem;
+}
+
+.api-sidebar .nav-link {
+    color: var(--api-muted);
+    padding: 0.38rem 0.65rem;
+    margin: 0.05rem 0;
+    border-radius: var(--api-radius-sm);
+    line-height: 1.35;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    display: block;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+}
+
+.api-sidebar .nav-link:hover {
+    color: var(--api-primary-dark);
+    background: var(--api-primary-subtle);
+}
+
+.api-sidebar .nav-link.active {
+    color: var(--api-primary-dark);
+    background: var(--api-primary-soft);
+    border-left-color: var(--api-primary);
+    font-weight: 650;
+}
+
+.api-sidebar .nav-link.toc-sub {
+    padding-left: 1.25rem;
+    font-size: 0.8rem;
+    color: var(--api-faint);
+    font-weight: 400;
+}
+
+.api-sidebar .nav-link.toc-sub::before {
+    content: none;
+}
+
+.api-sidebar .nav-link.toc-sub:hover,
+.api-sidebar .nav-link.toc-sub.active {
+    color: var(--api-primary-dark);
+}
+
+/* ==================== Layout ==================== */
+.api-content-wrap {
+    margin-left: 248px;
+    padding: 1.5rem 2rem 2rem;
+    min-height: calc(100vh - 70px);
+    background: var(--api-page-bg);
+}
+
+.api-content-wrap > .container {
+    padding-top: 1rem !important;
+    padding-bottom: 1.5rem !important;
+}
+
+.dgbyg-api-page {
+    color: var(--api-text);
+    font-size: var(--font-size-base);
+    line-height: 1.58;
+    max-width: 1040px;
+}
+
+.dgbyg-api-page section {
+    scroll-margin-top: 92px;
+}
+
+.dgbyg-api-page section.mb-4 {
+    margin-bottom: 1.25rem !important;
+}
+
+.dgbyg-api-page section.mb-5 {
+    margin-bottom: 2rem !important;
+}
+
+.dgbyg-api-page .mb-4 {
+    margin-bottom: 1.1rem !important;
+}
+
+/* ==================== Base URL block ==================== */
+.dgbyg-api-page #base-url {
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--api-border);
+    border-radius: var(--api-radius-lg);
+    background: #ffffff;
+}
+
+.dgbyg-api-page #base-url h5 {
+    color: var(--api-muted);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.dgbyg-api-page #base-url .d-flex code {
+    color: var(--api-primary-dark);
+    background: var(--api-code-bg);
+    border: 1px solid var(--api-code-border);
+    border-radius: var(--api-radius-sm);
+    padding: 0.32rem 0.6rem;
+    font-size: 0.92rem;
+}
+
+.dgbyg-api-page #base-url p {
+    margin-top: 0.55rem;
+    color: var(--api-muted) !important;
+}
+
+.dgbyg-api-page #base-url a {
+    color: var(--api-primary-dark);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.dgbyg-api-page #base-url a:hover {
+    text-decoration: underline;
+}
+
+/* ==================== Section headings ==================== */
+.dgbyg-api-page > section[id="calc-apis"] h5,
+.dgbyg-api-page > section[id="gem-apis"] h5 {
+    color: var(--api-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    border-bottom: 1px solid var(--api-border) !important;
+    padding-bottom: 0.55rem !important;
+    margin-bottom: 0 !important;
+}
+
+.dgbyg-api-page > section[id="calc-apis"] h5::before,
+.dgbyg-api-page > section[id="gem-apis"] h5::before {
+    content: "#";
+    color: var(--api-primary);
+    opacity: 0.55;
+    margin-right: 0.4rem;
+    font-weight: 650;
+}
+
+/* ==================== Cards ==================== */
+.dgbyg-api-page .card {
+    border: 1px solid var(--api-border);
+    border-radius: var(--api-radius-lg);
+    background: var(--api-card-bg);
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.dgbyg-api-page .card-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--api-border-soft) !important;
+    padding: 0.82rem 1.1rem;
+}
+
+.dgbyg-api-page .card-header h5 {
+    color: var(--api-heading);
+    font-size: 0.96rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dgbyg-api-page .card-body {
+    padding: 1.05rem 1.15rem;
+}
+
+.dgbyg-api-page .card-body h6 {
+    color: var(--api-muted);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.065em;
+    text-transform: uppercase;
+    margin-bottom: 0.58rem;
+}
+
+.dgbyg-api-page .text-muted {
+    color: var(--api-muted) !important;
+}
+
+/* ==================== Endpoint labels ==================== */
+.endpoint-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0.58rem 0.7rem;
+    border: 1px solid var(--api-border);
+    border-radius: var(--api-radius-md);
+    background: var(--api-primary-subtle);
+}
+
+.endpoint-line code {
+    padding: 0 !important;
+    background: transparent !important;
+    color: var(--api-heading) !important;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    overflow-wrap: anywhere;
+}
+
+.method-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.9rem;
+    padding: 0.18rem 0.42rem;
+    border-radius: 5px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+}
+
+.method-post {
+    background: var(--api-post-bg);
+    color: var(--api-post-text);
+}
+
+.method-get {
+    background: var(--api-get-bg);
+    color: var(--api-get-text);
+}
+
+/* ==================== Tables ==================== */
+.dgbyg-api-page .table-responsive {
+    border: 1px solid var(--api-border);
+    border-radius: var(--api-radius-md);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    background: #ffffff;
+}
+
+.dgbyg-api-page .table-responsive::-webkit-scrollbar,
+.dgbyg-api-page pre::-webkit-scrollbar {
+    height: 7px;
+    width: 7px;
+}
+
+.dgbyg-api-page .table-responsive::-webkit-scrollbar-track,
+.dgbyg-api-page pre::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dgbyg-api-page .table-responsive::-webkit-scrollbar-thumb,
+.dgbyg-api-page pre::-webkit-scrollbar-thumb {
+    background: #d2dce5;
+    border-radius: 999px;
+}
+
+.dgbyg-api-page .table {
+    width: 100%;
+    margin-bottom: 0;
+    color: var(--api-text);
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: var(--font-size-sm);
+}
+
+.dgbyg-api-page .table-bordered,
+.dgbyg-api-page .table-bordered th,
+.dgbyg-api-page .table-bordered td {
+    border: 0 !important;
+}
+
+.dgbyg-api-page .table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--api-table-header) !important;
+    color: var(--api-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.05em;
+    padding: 0.65rem 0.82rem;
+    border-bottom: 1px solid var(--api-border) !important;
+    white-space: nowrap;
+}
+
+.dgbyg-api-page .table td {
+    padding: 0.66rem 0.82rem;
+    vertical-align: top;
+    border-top: 1px solid var(--api-border-soft) !important;
+}
+
+.dgbyg-api-page .table tbody tr:first-child td {
+    border-top: 0 !important;
+}
+
+.dgbyg-api-page .table-striped tbody tr:nth-of-type(odd) {
+    background: #fbfdff;
+}
+
+.dgbyg-api-page .table tbody tr:hover {
+    background: var(--api-primary-subtle);
+}
+
+/* ==================== Inline code and code blocks ==================== */
+.dgbyg-api-page :not(pre) > code {
+    color: var(--api-inline-code-text);
+    background: var(--api-inline-code-bg);
+    padding: 0.12rem 0.28rem;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.dgbyg-api-page pre.bg-light {
+    background: var(--api-code-bg) !important;
+    color: var(--api-code-text) !important;
+    padding: 0.9rem 1rem !important;
+    border-radius: var(--api-radius-md) !important;
+    border: 1px solid var(--api-code-border);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: var(--font-size-sm);
+    line-height: 1.62;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+.dgbyg-api-page pre.bg-light code {
+    color: inherit !important;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 500;
+}
+
+.dgbyg-api-page .code-equation {
+    font-size: var(--font-size-sm) !important;
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 991px) {
+    .api-sidebar {
+        display: none;
+    }
+
+    .api-content-wrap {
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    .api-content-wrap > .container {
+        padding-top: 0.75rem !important;
+    }
+
+    .dgbyg-api-page {
+        max-width: 100%;
+    }
+
+    .dgbyg-api-page .card-body {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .api-content-wrap {
+        padding: 0.8rem;
+    }
+
+    .dgbyg-api-page #base-url {
+        padding: 0.9rem;
+    }
+
+    .endpoint-line {
+        padding: 0.55rem 0.65rem;
+    }
+}
+</style>
+
+<nav class="api-sidebar d-none d-lg-block">
+    <div class="toc-title">Contents</div>    
+    <nav class="nav flex-column">
+        <div class="toc-group">
+            <a class="nav-link " href="#base-url">Base URL</a>
+        </div>        
+        <div class="toc-group">
+            <a class="nav-link" href="#calc-apis">ΔrG° Calculation APIs</a>
+            <a class="nav-link toc-sub" href="#single-reaction">Single Reaction</a>
+            <a class="nav-link toc-sub" href="#batch-reaction">Batch Reaction</a>
+        </div>
+        <div class="toc-group">
+            <a class="nav-link" href="#gem-apis">GEM Database APIs</a>
+            <a class="nav-link toc-sub" href="#models-api">Models API</a>
+            <a class="nav-link toc-sub" href="#reactions-api">Reactions API</a>
+            <a class="nav-link toc-sub" href="#metabolites-api">Metabolites API</a>
+            <a class="nav-link toc-sub" href="#genes-api">Genes API</a>
+        </div>
+
+        <div class="toc-group">
+            <a class="nav-link " href="#rate-limiting">Rate Limiting</a>
+        </div>
+    </nav>
+</nav>
+
+<div class="api-content-wrap">
 <div class="container py-5 dgbyg-api-page">
-    <div class="row justify-content-center">
-        <div class="col-lg-11">
             <!-- Introduction -->
-<section class="mb-4">
-  <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
-    <h5 class="mb-0">Base URL</h5>
-    <code>https://dgbyg.drziweidai.com</code>
-  </div>
+            <section class="mb-4" id="base-url">
+            <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                <h5 class="mb-0">Base URL</h5>
+                <code>https://dgbyg.drziweidai.com</code>
+            </div>
 
-  <p class="text-muted mb-0">
-    Prefer running dGbyG locally? A research version is available as a Python package.
-    The source code and installation instructions are available on
-    <a href="https://github.com/f-wc/dGbyG/tree/main" target="_blank">GitHub</a>.
-  </p>
-</section>
-
-
-
+            <p class="text-muted mb-0">
+                Prefer running dGbyG locally? A research version is available as a Python package.
+                The source code and installation instructions are available on
+                <a href="https://github.com/f-wc/dGbyG/tree/main" target="_blank">GitHub</a>.
+            </p>
+            </section>
 
 
             <!-- ==================== THERMODYNAMIC CALCULATION APIs ==================== -->
-            <section class="mb-4">
+            <section class="mb-4" id="calc-apis">
                 <h5 class="mb-2 border-bottom pb-2">Δ<sub>r</sub>G° Calculation APIs</h5>
             </section>
 
             <!-- Single Equation Endpoint -->
-            <section class="mb-5">
+            <section class="mb-5" id="single-reaction">
                 <div class="card">
                     <div class="card-header bg-white">
                         <h5 class="mb-0">Single Reaction Calculation</h5>
@@ -37,7 +525,7 @@
                     <div class="card-body">
                         <div class="mb-4">
                             <h6>Endpoint</h6>
-                            <code class="bg-light p-2 rounded d-block">POST /calculate</code>
+                            <div class="endpoint-line"><span class="method-badge method-post">POST</span><code>/calculate</code></div>
                             <small class="text-muted">Calculate Δ<sub>r</sub>G° for one reaction.</small>
                         </div>
 
@@ -136,7 +624,7 @@
             </section>
 
             <!-- Batch Equations Endpoint -->
-            <section class="mb-5">
+            <section class="mb-5" id="batch-reaction">
                 <div class="card">
                     <div class="card-header bg-white">
                         <h5 class="mb-0">Batch Reaction Calculation</h5>
@@ -144,7 +632,7 @@
                     <div class="card-body">
                         <div class="mb-4">
                             <h6>Endpoint</h6>
-                            <code class="bg-light p-2 rounded d-block">POST /batch_calculate</code>
+                            <div class="endpoint-line"><span class="method-badge method-post">POST</span><code>/batch_calculate</code></div>
                             <small class="text-muted">Calculate Δ<sub>r</sub>G° for multiple reactions in one request.</small>
                         </div>
 
@@ -226,13 +714,13 @@
             </section>
 
             <!-- ==================== GEM DATABASE APIs ==================== -->
-            <section class="mb-4">
+            <section class="mb-4" id="gem-apis">
               <h5 class="mb-2 border-bottom pb-2">GEM Database Search APIs</h5>
-              <p class="text-muted mb-0">
+              <p class="text-muted mb-0"></p>
           </section>
 
           <!-- Models API -->
-          <section class="mb-5">
+          <section class="mb-5" id="models-api">
               <div class="card">
                   <div class="card-header bg-white">
                       <h5 class="mb-0">Models API</h5>
@@ -240,7 +728,7 @@
                   <div class="card-body">
                       <div class="mb-4">
                           <h6>Endpoint</h6>
-                          <code class="bg-light p-2 rounded d-block">GET /api/models?q={query}</code>
+                          <div class="endpoint-line"><span class="method-badge method-get">GET</span><code>/api/models?q={query}</code></div>
                           <small class="text-muted">Search and return matching metabolic models.</small>
                       </div>
 
@@ -370,7 +858,7 @@
           </section>
 
           <!-- Reactions API -->
-          <section class="mb-5">
+          <section class="mb-5" id="reactions-api">
               <div class="card">
                   <div class="card-header bg-white">
                       <h5 class="mb-0">Reactions API</h5>
@@ -378,7 +866,7 @@
                   <div class="card-body">
                       <div class="mb-4">
                           <h6>Endpoint</h6>
-                          <code class="bg-light p-2 rounded d-block">GET /api/reactions?q={query}&amp;include_dg={true|false}</code>
+                          <div class="endpoint-line"><span class="method-badge method-get">GET</span><code>/api/reactions?q={query}&amp;include_dg={true|false}</code></div>
                           <small class="text-muted">Search reactions. Optionally include Δ<sub>r</sub>G° results in the response.</small>
                       </div>
 
@@ -532,7 +1020,7 @@
           </section>
 
           <!-- Metabolites API -->
-          <section class="mb-5">
+          <section class="mb-5" id="metabolites-api">
               <div class="card">
                   <div class="card-header bg-white">
                       <h5 class="mb-0">Metabolites API</h5>
@@ -540,7 +1028,7 @@
                   <div class="card-body">
                       <div class="mb-4">
                           <h6>Endpoint</h6>
-                          <code class="bg-light p-2 rounded d-block">GET /api/metabolites?q={query}</code>
+                          <div class="endpoint-line"><span class="method-badge method-get">GET</span><code>/api/metabolites?q={query}</code></div>
                           <small class="text-muted">Search metabolites and return related reactions.</small>
                       </div>
 
@@ -654,7 +1142,7 @@
           </section>
 
           <!-- Genes API -->
-          <section class="mb-5">
+          <section class="mb-5" id="genes-api">
               <div class="card">
                   <div class="card-header bg-white">
                       <h5 class="mb-0">Genes API</h5>
@@ -662,7 +1150,7 @@
                   <div class="card-body">
                       <div class="mb-4">
                           <h6>Endpoint</h6>
-                          <code class="bg-light p-2 rounded d-block">GET /api/genes?q={query}</code>
+                          <div class="endpoint-line"><span class="method-badge method-get">GET</span><code>/api/genes?q={query}</code></div>
                           <small class="text-muted">Search genes and return their associated reactions.</small>
                       </div>
 
@@ -748,101 +1236,8 @@
 
 
 
-            <!-- ==================== LEGACY ENDPOINTS ==================== -->
-            <section class="mb-5">
-                <h5 class="mb-3 border-bottom pb-2">Legacy Endpoints</h5>
-                <p class="text-muted">
-                    <strong>Note:</strong> These endpoints are kept for backward compatibility. For new integrations, use the APIs above.
-                </p>
-            </section>
-
-            <!-- Unified Search API -->
-            <section class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Unified GEM Search (Legacy)</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <h6>Endpoint</h6>
-                            <code class="bg-light p-2 rounded d-block">POST /gem-dg</code>
-                            <small class="text-muted">Legacy endpoint that searches across all database entities.</small>
-                        </div>
-
-                        <p class="text-muted mb-0">
-                            <strong>Recommendation:</strong> Use the specialized endpoints above for clearer responses and better performance.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ==================== API REFERENCE ==================== -->
-            <section class="mb-5">
-                <h5 class="mb-3 border-bottom pb-2">API Reference</h5>
-            </section>
-
-            <!-- Error Handling -->
-            <section class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Error Handling</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="mb-3">All endpoints use standard HTTP status codes:</p>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Status Code</th>
-                                        <th>Description</th>
-                                        <th>Common Causes</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><code>200 OK</code></td>
-                                        <td>Request successful</td>
-                                        <td>Valid request with results</td>
-                                    </tr>
-                                    <tr>
-                                        <td><code>400 Bad Request</code></td>
-                                        <td>Invalid parameters</td>
-                                        <td>Missing required fields, invalid values</td>
-                                    </tr>
-                                    <tr>
-                                        <td><code>404 Not Found</code></td>
-                                        <td>Resource not found</td>
-                                        <td>Invalid endpoint or ID</td>
-                                    </tr>
-                                    <tr>
-                                        <td><code>429 Too Many Requests</code></td>
-                                        <td>Rate limit exceeded</td>
-                                        <td>Too many requests in a short period</td>
-                                    </tr>
-                                    <tr>
-                                        <td><code>500 Internal Server Error</code></td>
-                                        <td>Server error</td>
-                                        <td>Database or processing issues</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6>Error response format</h6>
-                            <pre class="bg-light p-3 rounded"><code>{
-  "error": "Invalid query parameter",
-  "status_code": 400,
-  "timestamp": "2024-03-15T10:30:00Z"
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <!-- Rate Limiting -->
-            <section class="mb-5">
+            <section class="mb-5" id="rate-limiting">
                 <div class="card">
                     <div class="card-header bg-white">
                         <h5 class="mb-0">Rate Limiting</h5>
@@ -890,32 +1285,31 @@
                 </div>
             </section>
 
-            <!-- Contact and Support -->
-            <section class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">Support & Documentation</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6>Quick Links</h6>
-                                <ul class="list-unstyled">
-                                    <li><a href="/faq">FAQ</a></li>
-                                    <li><a href="/">Web Interface</a></li>
-                                    <li><a href="/prediction">Δ<sub>r</sub>G° Calculator</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Repository</h6>
-                                <p class="mb-0"><a href="https://github.com/f-wc/dGbyG/tree/main" target="_blank">View on GitHub</a></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        </div>
-    </div>
 </div>
+</div>
+<script>
+(function () {
+    var tocLinks = document.querySelectorAll('.api-sidebar .nav-link');
+    var sectionIds = Array.from(tocLinks).map(function (a) {
+        return a.getAttribute('href').slice(1);
+    });
+
+    function onScroll() {
+        var scrollY = window.scrollY + 120;
+        var current = sectionIds[0];
+        sectionIds.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el && el.offsetTop <= scrollY) {
+                current = id;
+            }
+        });
+        tocLinks.forEach(function (a) {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+        });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+})();
+</script>
 {% endblock %}

@@ -143,6 +143,14 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: var(--shadow-navbar);
     padding: 1rem 0;
     background: linear-gradient(90deg, #e0f2fe 0%, #e8f8f2 100%);
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    transition: box-shadow 0.3s ease;
+}
+
+.navbar.navbar-scrolled {
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
 }
 
 .navbar .container {
@@ -1310,68 +1318,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-/* ===================================================================
-   ==================== API PAGE (api.html) ========================
-   =================================================================== */
 
-/* Table Styles */
-.table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.table {
-    width: 100%;
-    margin-bottom: 1rem;
-    color: #4d555c;
-    border-collapse: collapse;
-}
-
-.table th, .table td {
-    padding: 0.75rem;
-    vertical-align: top;
-    border-top: 1px solid #dee2e6;
-}
-
-.table thead th {
-    vertical-align: bottom;
-    border-bottom: 2px solid #dee2e6;
-    background-color: #bad7ca44;
-    font-weight: 600;
-}
-
-.table tbody + tbody {
-    border-top: 2px solid #dee2e6;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(81, 144, 227, 0.05);
-}
-
-/* Table scrollbar */
-.table-responsive::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-.table-responsive::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.table-responsive::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-}
-
-.table-responsive::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-/* Code equation style */
-.code-equation {
-    font-size: var(--font-size-sm) !important;
-}
 
 /* ===================================================================
    ==================== CONTACT PAGE (contact.html) ================
@@ -1713,9 +1660,6 @@ h1, h2, h3, h4, h5, h6 {
     /* Navigation - 极简化设计 */
     .navbar {
         padding: 0.5rem 0;
-        position: sticky;
-        top: 0;
-        z-index: 1030;
     }
 
     .navbar .container {

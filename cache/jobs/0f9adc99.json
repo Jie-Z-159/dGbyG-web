@@ -1,1 +1,0 @@
-{"job_id": "0f9adc99", "status": "completed", "total": 15, "completed": 15, "created_at": "2026-03-31T18:54:50.998855", "identifier": "kegg", "reaction_condition": "custom", "custom_condition": {"pH": 7.0, "I": 0.25, "pMg": 14.0, "e_potential": 0.0}, "result_id": "0cfdb9bd"}
